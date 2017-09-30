@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>PAGE TITLE</title>
+  <meta name="description" content="Image generator for tip jar progress bars">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link href="css/normalize.css" rel="stylesheet" media="all">
+  <link href="css/styles.css" rel="stylesheet" media="all">
+  <link href="css/fonts.css" rel="stylesheet" media="all">
+
+  <link href="https://fonts.googleapis.com/css?family=Changa+One:400i" rel="stylesheet">
+
+  <!--[if lt IE 9]><script src="js/html5shiv-printshiv.js" media="all"></script><![endif]-->
+  <script src="js/concrete.min.js" media="all"></script>
+  <script src="js/generator.js" media="all"></script>
+
+
+
+  <style>
+    h1,
+    main {
+      text-align: center;
+    }
+    
+    #left,
+    #right {
+      background: rgba(0, 0, 0, 0.1);
+      margin: 0 auto;
+      padding: 10px 20px;
+      display: inline-block;
+      vertical-align: top;
+      height: 760px;
+      overflow-y: scroll;
+    }
+    
+    #right {
+      width: 40%;
+    }
+    
+    canvas {
+      border: 1px solid;
+    }
+    
+    #canvasWrapper {
+      margin-bottom: 32px;
+    }
+    
+    .previewImg img {
+      max-width: 128px;
+      max-height: 128px;
+      border: 1px solid;
+    }
+    
+    .imgOptions input {
+      width: 40%;
+    }
+    
+    .uploader {
+      width: 50%;
+    }
+    
+    .previewImg,
+    .uploader {
+      margin: 0 auto;
+      display: inline-block;
+      vertical-align: middle;
+    }
+    
+    fieldset {
+      margin-bottom: 32px;
+    }
+  </style>
+</head>
+
+<body>
+  <header role="banner">
+    <h1>Tip Jar Generator</h1>
+  </header>
+
+  <div class="wrap">
+    <main role="main">
+      <p>Initial image design by <a href="https://twitter.com/TENTAWFUL">Tenta</a> for <a href="https://twitter.com/HeatPhoenix">HeatPhoenix</a>. Generator script and styles by <a href="https://twitter.com/theflyingkatsu">FlyingKatsu</a>.</p>
+
+      <div id="left">
+        <h2>Canvas</h2>
+
+        <fieldset>
+          <legend>Download and Save to Local Storage</legend>
+          <label for="filename">File Name:</label>
+          <input type="text" id="filename" name="filename" value="genTipJarProgress.png">
+          <button id="download">Download Image</button>
+        </fieldset>
+
+        <div id="canvasWrapper">
+        </div>
+      </div>
+
+      <aside id="right">
+        <h2>Settings</h2>
+
+        <fieldset class="text-editing">
+          <legend>Title</legend>
+          <input type="text" id="title" name="title" value="// TIP JAR">
+        </fieldset>
+        <fieldset class="text-editing">
+          <legend>Goal 1</legend>
+          <input type="text" id="goal-1" name="goal-1" value="Pantheon">
+          <input type="number" id="goal-1-A" name="goal-1-A" value="21">
+          <input type="number" id="goal-1-B" name="goal-1-B" value="120">
+        </fieldset>
+        <fieldset class="text-editing">
+          <legend>Goal 2</legend>
+          <input type="text" id="goal-2" name="goal-2" value="Serenade">
+          <input type="number" id="goal-2-A" name="goal-2-A" value="27">
+          <input type="number" id="goal-2-B" name="goal-2-B" value="45">
+        </fieldset>
+
+        <fieldset class="img-uploads">
+          <legend>Headshot 1</legend>
+          <input type="file" id="upload-1" name="upload-1" class="uploader">
+          <div id="upload-1-preview" class="previewImg"><img width=128 height=128></div>
+          <div class="imgOptions">
+            <input type="number" id="upload-1-W" name="upload-1-W">
+            <input type="number" id="upload-1-H" name="upload-1-H">
+            <input type="number" id="upload-1-cropX" name="upload-1-cropX">
+            <input type="number" id="upload-1-cropY" name="upload-1-cropY">
+            <input type="number" id="upload-1-cropW" name="upload-1-cropW">
+            <input type="number" id="upload-1-cropH" name="upload-1-cropH">
+          </div>
+        </fieldset>
+
+        <fieldset class="img-uploads">
+          <legend>Headshot 2</legend>
+          <input type="file" id="upload-2" name="upload-2" class="uploader">
+          <div id="upload-2-preview" class="previewImg"><img width=128 height=128></div>
+          <div class="imgOptions">
+            <input type="number" id="upload-2-W" name="upload-2-W">
+            <input type="number" id="upload-2-H" name="upload-2-H">
+            <input type="number" id="upload-2-cropX" name="upload-2-cropX">
+            <input type="number" id="upload-2-cropY" name="upload-2-cropY">
+            <input type="number" id="upload-2-cropW" name="upload-2-cropW">
+            <input type="number" id="upload-2-cropH" name="upload-2-cropH">
+          </div>
+        </fieldset>
+
+        <fieldset class="img-uploads">
+          <legend>Headshot 3</legend>
+          <input type="file" id="upload-3" name="upload-3" class="uploader">
+          <div id="upload-3-preview" class="previewImg"><img width=128 height=128></div>
+          <div class="imgOptions">
+            <input type="number" id="upload-3-W" name="upload-3-W">
+            <input type="number" id="upload-3-H" name="upload-3-H">
+            <input type="number" id="upload-3-cropX" name="upload-3-cropX">
+            <input type="number" id="upload-3-cropY" name="upload-3-cropY">
+            <input type="number" id="upload-3-cropW" name="upload-3-cropW">
+            <input type="number" id="upload-3-cropH" name="upload-3-cropH">
+          </div>
+        </fieldset>
+
+        <fieldset class="img-uploads">
+          <legend>Headshot 4</legend>
+          <input type="file" id="upload-4" name="upload-4" class="uploader">
+          <div id="upload-4-preview" class="previewImg"><img width=128 height=128></div>
+          <div class="imgOptions">
+            <input type="number" id="upload-4-W" name="upload-4-W">
+            <input type="number" id="upload-4-H" name="upload-4-H">
+            <input type="number" id="upload-4-cropX" name="upload-4-cropX">
+            <input type="number" id="upload-4-cropY" name="upload-4-cropY">
+            <input type="number" id="upload-4-cropW" name="upload-4-cropW">
+            <input type="number" id="upload-4-cropH" name="upload-4-cropH">
+          </div>
+        </fieldset>
+
+      </aside>
+    </main>
+  </div>
+
+</body>
+
+</html>
