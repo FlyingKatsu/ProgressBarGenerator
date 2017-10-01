@@ -14,6 +14,95 @@ document.addEventListener('DOMContentLoaded', function() {
   PAD_TOP = 64;
   PAD_BOTTOM = 64;
 
+  // User Defined Values
+  let INPUT = {
+    Title: {
+      Data: [
+        { name: "TITLE TEXT", x: 0, y: 0 },
+        { name: "ANOTHER TITLE", x: 0, y: HEIGHT / 2 + 32 }
+      ],
+      Style: {},
+      Font: {
+        size: 48,
+        font: "sans-serif",
+        x: 0,
+        y: 0,
+        baseline: "hanging",
+        align: "left",
+        stroke: 2,
+        line: "#000",
+        fill: "#FFF",
+        gradientA: "#FF0000",
+        gradientB: "#FFFF00"
+      }
+    },
+    Goal: {
+      Data: [
+        { name: "Sample 1", progress: { a: 21, b: 120 }, icon: "" },
+        { name: "Sample 2", progress: { a: 21, b: 120 }, icon: "" },
+        { name: "Sample 3", progress: { a: 27, b: 45 }, icon: "" },
+        { name: "Sample 4", progress: { a: 21, b: 150 }, icon: "" }
+      ],
+      Style: {
+        Position: { x: 0, y: 64 },
+        Space: { x: 0, y: 24 }
+      },
+      Font: {
+        Name: {
+          size: 32,
+          font: "sans-serif",
+          x: 0,
+          y: 0,
+          baseline: "hanging",
+          align: "left",
+          stroke: 1,
+          line: "#000",
+          fill: "#FFF",
+          gradientA: null,
+          gradientB: null
+        },
+        Progress: {
+          size: 24,
+          font: "sans-serif",
+          x: 0,
+          y: 0,
+          baseline: "hanging",
+          align: "right",
+          stroke: 1,
+          line: "#000",
+          fill: "#FFF",
+          gradientA: null,
+          gradientB: null
+        }
+      }
+    },
+    Item: {
+      Data: [
+        "Person: $10",
+        "Someone: $20",
+        "Another: $15"
+      ],
+      Style: {
+        Position: { x: 0, y: HEIGHT / 2 + 64 + 32 },
+        Space: { x: 0, y: 16 }
+      },
+      Font: {
+        size: 32,
+        font: "sans-serif",
+        x: 0,
+        y: 0,
+        baseline: "hanging",
+        align: "left",
+        stroke: 1,
+        line: "#000",
+        fill: "#FFF",
+        gradientA: null,
+        gradientB: null
+      }
+    }
+
+  }
+
   // =========================
   // Concrete Setup
   // =========================
@@ -72,14 +161,38 @@ document.addEventListener('DOMContentLoaded', function() {
     ctx.lineWidth = options.thick;
     ctx.strokeStyle = options.stroke;
     ctx.fillStyle = options.fill;
-    ctx.font = options.font;
+    ctx.font = options.font || options.fontsize + "px " + options.fontfamily;
     ctx.textAlign = options.align || "left";
+    ctx.textBaseline = options.baseline || "hanging";
     ctx.fillText(text, options.x, options.y);
     ctx.strokeText(text, options.x, options.y);
     ctx.restore();
     viewport.render();
   }
 
+  // Test Fonts
+  function testFonts(txt, font) {
+    txt.split("\\n").map(
+      function(subtxt, i) {
+        drawTextOnLayer(textLayer, subtxt, {
+          thick: 2,
+          stroke: "#000",
+          fill: "#fff",
+          font: font,
+          align: "left",
+          x: 16,
+          y: 32 + 64 * i
+        });
+      }
+    );
+  }
+
+  // Preload fonts into cache for quicker display
+  testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Changa One');
+  testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Exo');
+  testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Kanit');
+  testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Open Sans');
+  textLayer.scene.clear();
 
   // =========================
   // Restore Canvas
@@ -92,6 +205,72 @@ document.addEventListener('DOMContentLoaded', function() {
       drawImageOnLayer(bgLayer, img, { x: 0, y: 0, w: WIDTH, h: HEIGHT, cropX: 0, cropY: 0, cropW: WIDTH * 2, cropH: HEIGHT * 2 });
     }
   }
+
+  // Layer Redraws
+
+  function RedrawText() {
+    textLayer.scene.clear();
+
+    // Draw the titles
+    INPUT.Title.Data.map(function(title, i) {
+      drawTextOnLayer(textLayer, title.name, {
+        thick: INPUT.Title.Font.stroke,
+        stroke: INPUT.Title.Font.line,
+        fill: INPUT.Title.Font.fill,
+        fontsize: INPUT.Title.Font.size,
+        fontfamily: INPUT.Title.Font.font,
+        align: INPUT.Title.Font.align,
+        baseline: INPUT.Title.Font.baseline,
+        x: title.x + INPUT.Title.Font.x,
+        y: title.y + INPUT.Title.Font.y
+      });
+    });
+
+    // Draw the goals
+    INPUT.Goal.Data.map(function(goal, i) {
+      // Goal Name
+      drawTextOnLayer(textLayer, goal.name, {
+        thick: INPUT.Goal.Font.Name.stroke,
+        stroke: INPUT.Goal.Font.Name.line,
+        fill: INPUT.Goal.Font.Name.fill,
+        fontsize: INPUT.Goal.Font.Name.size,
+        fontfamily: INPUT.Goal.Font.Name.font,
+        align: INPUT.Goal.Font.Name.align,
+        baseline: INPUT.Goal.Font.Name.baseline,
+        x: INPUT.Goal.Style.Position.x + INPUT.Goal.Font.Name.x,
+        y: INPUT.Goal.Style.Position.y + INPUT.Goal.Font.Name.y + (INPUT.Goal.Font.Name.size + INPUT.Goal.Style.Space.y) * i
+      });
+      // Goal Progress
+      drawTextOnLayer(textLayer, `${goal.progress.a}/${goal.progress.b}`, {
+        thick: INPUT.Goal.Font.Progress.stroke,
+        stroke: INPUT.Goal.Font.Progress.line,
+        fill: INPUT.Goal.Font.Progress.fill,
+        fontsize: INPUT.Goal.Font.Progress.size,
+        fontfamily: INPUT.Goal.Font.Progress.font,
+        align: INPUT.Goal.Font.Progress.align,
+        baseline: INPUT.Goal.Font.Progress.baseline,
+        x: INPUT.Goal.Style.Position.x + INPUT.Goal.Font.Progress.x,
+        y: INPUT.Goal.Style.Position.y + INPUT.Goal.Font.Progress.y + (INPUT.Goal.Font.Name.size + INPUT.Goal.Style.Space.y) * i
+      });
+    });
+
+    // Draw the list items
+    INPUT.Item.Data.map(function(item, i) {
+      drawTextOnLayer(textLayer, item, {
+        thick: INPUT.Item.Font.stroke,
+        stroke: INPUT.Item.Font.line,
+        fill: INPUT.Item.Font.fill,
+        fontsize: INPUT.Item.Font.size,
+        fontfamily: INPUT.Item.Font.font,
+        align: INPUT.Item.Font.align,
+        baseline: INPUT.Item.Font.baseline,
+        x: INPUT.Item.Style.Position.x + INPUT.Item.Font.x,
+        y: INPUT.Item.Style.Position.y + INPUT.Item.Font.y + (INPUT.Item.Font.size + INPUT.Item.Style.Space.y) * i
+      });
+    });
+  }
+
+  RedrawText();
 
   // =========================
   // Button Controls
@@ -176,16 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fill: "#fff",
       font: "48px Changa One",
       x: 16,
-      y: PAD_TOP / 2
-    });
-    textLayer.scene.clear();
-    drawTextOnLayer(textLayer, getElement('title').value, {
-      thick: 2,
-      stroke: "#000",
-      fill: "#fff",
-      font: "48px Changa One",
-      x: 16,
-      y: PAD_TOP / 2
+      y: 0
     });
   });
 
@@ -212,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fill: "#fff",
       font: "32px Changa One",
       x: 16,
-      y: PAD_TOP + 34
+      y: PAD_TOP + 12
     });
     drawTextOnLayer(textLayer, `${getElement('goal-1-A').value}/${getElement('goal-1-B').value}`, {
       thick: 2,
@@ -221,7 +391,7 @@ document.addEventListener('DOMContentLoaded', function() {
       font: "32px Changa One",
       align: "right",
       x: 4 * WIDTH / 5,
-      y: PAD_TOP + 34 + 36
+      y: PAD_TOP + 40 + 12
     });
   });
 
@@ -248,7 +418,7 @@ document.addEventListener('DOMContentLoaded', function() {
       fill: "#fff",
       font: "32px Changa One",
       x: 16,
-      y: PAD_TOP + HEADSIZE * 2 + 58
+      y: PAD_TOP + HEADSIZE * 2 + 30 + 6
     });
     drawTextOnLayer(textLayer, `${getElement('goal-2-A').value}/${getElement('goal-2-B').value}`, {
       thick: 2,
@@ -257,7 +427,7 @@ document.addEventListener('DOMContentLoaded', function() {
       font: "32px Changa One",
       align: "right",
       x: 4 * WIDTH / 5,
-      y: PAD_TOP + HEADSIZE * 2 + 58 + 36
+      y: PAD_TOP + HEADSIZE * 2 + 30 + 48
     });
   });
 
@@ -271,5 +441,26 @@ document.addEventListener('DOMContentLoaded', function() {
       fileName: getElement('filename').value || 'genTipJarProgress.png'
     });
   });
+
+  getElement('font-size').addEventListener('change', function() {
+    textLayer.scene.clear();
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+  });
+
+  getElement('font-sample').addEventListener('change', function() {
+    textLayer.scene.clear();
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+  });
+
+  getElement('font-family').addEventListener('change', function() {
+    getElement('font-family').style = `font-family: '${getElement('font-family').value}';`;
+    textLayer.scene.clear();
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+  });
+
+  // CLEAR CANVAS
+  getElement('clear').addEventListener('click', function() {
+    viewport.scene.clear();
+  })
 
 });

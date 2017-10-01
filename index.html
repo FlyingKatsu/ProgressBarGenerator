@@ -10,8 +10,6 @@
   <link href="css/styles.css" rel="stylesheet" media="all">
   <link href="css/fonts.css" rel="stylesheet" media="all">
 
-  <link href="https://fonts.googleapis.com/css?family=Changa+One:400i" rel="stylesheet">
-
   <!--[if lt IE 9]><script src="js/html5shiv-printshiv.js" media="all"></script><![endif]-->
   <script src="js/concrete.min.js" media="all"></script>
   <script src="js/generator.js" media="all"></script>
@@ -71,6 +69,10 @@
     fieldset {
       margin-bottom: 32px;
     }
+    
+    input[type="number"] {
+      width: 48px;
+    }
   </style>
 </head>
 
@@ -92,6 +94,20 @@
           <input type="text" id="filename" name="filename" value="genTipJarProgress.png">
           <button id="download">Download Image</button>
         </fieldset>
+
+        <fieldset>
+          <legend>Font Tester</legend>
+          <input type="number" id="font-size" name="font-size" value="32">
+          <select id="font-family">
+            <option class="ChangaOne" value="Changa One">Changa One Italic</option>
+            <option class="Exo" value="Exo">Exo BlackItalic</option>
+            <option class="Kanit" value="Kanit">Kanit BlackItalic</option>
+            <option class="OpenSans" value="Open Sans">Open Sans ExtraBoldItalic</option>
+          </select>
+          <input type="text" id="font-sample" name="font-sample" value="//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]">
+        </fieldset>
+
+        <button id="clear">Clear Canvas</button>
 
         <div id="canvasWrapper">
         </div>
