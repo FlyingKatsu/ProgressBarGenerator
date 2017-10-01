@@ -4,6 +4,125 @@
   font-family: 'Changa One';
   font-style: italic;
   font-weight: 400;
-  src: local('Changa One Italic'), local('ChangaOne-Italic'), url(fonts/ChangaOne400i.woff2) format('woff2');
+  src: local('Changa One Italic'), local('ChangaOne-Italic'), url(fonts/ChangaOne-Italic.woff2) format('woff2'), url(fonts/ChangaOne-Italic.ttf) format('truetype');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+
+/* latin-ext */
+
+@font-face {
+  font-family: 'Exo';
+  font-style: italic;
+  font-weight: 900;
+  src: local('Exo Black Italic'), local('Exo-BlackItalic'), url(fonts/Exo-BlackItalic-LatinExt.woff2) format('woff2'), url(fonts/Exo-BlackItalic.ttf) format('truetype');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+/* latin */
+
+@font-face {
+  font-family: 'Exo';
+  font-style: italic;
+  font-weight: 900;
+  src: local('Exo Black Italic'), local('Exo-BlackItalic'), url(fonts/Exo-BlackItalic.woff2) format('woff2'), url(fonts/Exo-BlackItalic.ttf) format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+
+/* latin-ext */
+
+
+/*
+@font-face {
+  font-family: 'Kanit';
+  font-style: italic;
+  font-weight: 800;
+  src: local('Kanit ExtraBold Italic'), local('Kanit-ExtraBoldItalic'), url(fonts/Kanit-ExtraBoldItalic-LatinExt.woff2) format('woff2'), url(fonts/Kanit-ExtraBoldItalic.ttf) format('truetype');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}*/
+
+
+/* latin */
+
+
+/*
+@font-face {
+  font-family: 'Kanit';
+  font-style: italic;
+  font-weight: 800;
+  src: local('Kanit ExtraBold Italic'), local('Kanit-ExtraBoldItalic'), url(fonts/Kanit-ExtraBoldItalic.woff2) format('woff2'), url(fonts/Kanit-ExtraBoldItalic.ttf) format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+*/
+
+
+/* latin-ext */
+
+@font-face {
+  font-family: 'Kanit';
+  font-style: italic;
+  font-weight: 900;
+  src: local('Kanit Black Italic'), local('Kanit-BlackItalic'), url(fonts/Kanit-BlackItalic-LatinExt.woff2) format('woff2'), url(fonts/Kanit-BlackItalic.ttf) format('truetype');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+/* latin */
+
+@font-face {
+  font-family: 'Kanit';
+  font-style: italic;
+  font-weight: 900;
+  src: local('Kanit Black Italic'), local('Kanit-BlackItalic'), url(fonts/Kanit-BlackItalic.woff2) format('woff2'), url(fonts/Kanit-BlackItalic.ttf) format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+
+/* latin-ext */
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 800;
+  src: local('Open Sans ExtraBold Italic'), local('OpenSans-ExtraBoldItalic'), url(fonts/OpenSans-ExtraBoldItalic-LatinExt.woff2) format('woff2'), url(fonts/OpenSans-ExtraBoldItalic.ttf) format('truetype');
+  unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+}
+
+
+/* latin */
+
+@font-face {
+  font-family: 'Open Sans';
+  font-style: italic;
+  font-weight: 800;
+  src: local('Open Sans ExtraBold Italic'), local('OpenSans-ExtraBoldItalic'), url(fonts/OpenSans-ExtraBoldItalic.woff2) format('woff2'), url(fonts/OpenSans-ExtraBoldItalic.ttf) format('truetype');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+}
+
+
+/* Styles for font-family Selector */
+
+
+/* Default Option */
+
+#font-family {
+  font-family: 'Changa One';
+}
+
+#font-family .ChangaOne {
+  font-family: 'Changa One';
+}
+
+#font-family .Exo {
+  font-family: 'Exo';
+}
+
+#font-family .Kanit {
+  font-family: 'Kanit';
+}
+
+#font-family .OpenSans {
+  font-family: 'Open Sans';
 }
