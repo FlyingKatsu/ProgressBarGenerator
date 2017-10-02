@@ -368,7 +368,7 @@ document.addEventListener('DOMContentLoaded', function() {
       color: "#000",
       percent: 1
     });
-    drawOnLayer(frameLayer, {
+    drawOnLayer(fillLayer, {
       x: 0,
       y: PAD_TOP + 10,
       w: 4 * WIDTH / 5 - 4,
@@ -404,7 +404,7 @@ document.addEventListener('DOMContentLoaded', function() {
       color: "#000",
       percent: 1
     });
-    drawOnLayer(frameLayer, {
+    drawOnLayer(fillLayer, {
       x: 0,
       y: PAD_TOP + HEADSIZE * 2 + 34,
       w: 4 * WIDTH / 5 - 4,
@@ -458,8 +458,12 @@ document.addEventListener('DOMContentLoaded', function() {
     testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
   });
 
-  // CLEAR CANVAS
+  // CLEAR CANVAS (ALL LAYERS)
   getElement('clear').addEventListener('click', function() {
+    textLayer.scene.clear();
+    frameLayer.scene.clear();
+    fillLayer.scene.clear();
+    bgLayer.scene.clear();
     viewport.scene.clear();
   })
 
