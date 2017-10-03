@@ -104,25 +104,22 @@
 
 /* Styles for font-family Selector */
 
+select[name="font"] .Sans {
+  font-family: 'sans-serif';
+}
 
-/* Default Option */
-
-#font-family {
+select[name="font"] .ChangaOne {
   font-family: 'Changa One';
 }
 
-#font-family .ChangaOne {
-  font-family: 'Changa One';
-}
-
-#font-family .Exo {
+select[name="font"] .Exo {
   font-family: 'Exo';
 }
 
-#font-family .Kanit {
+select[name="font"] .Kanit {
   font-family: 'Kanit';
 }
 
-#font-family .OpenSans {
+select[name="font"] .OpenSans {
   font-family: 'Open Sans';
 }
