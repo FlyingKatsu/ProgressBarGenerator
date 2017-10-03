@@ -2,10 +2,6 @@ input[type="number"] {
   width: 4em;
 }
 
-fieldset {
-  margin: 1em 0;
-}
-
 .previewImg,
 .imgOptions {
   display: inline-block;
@@ -16,18 +12,23 @@ fieldset {
   padding: 1em;
 }
 
-.goals {
-  margin: 1em;
-  padding: 1em;
+.set>*:nth-child(2n+1) {
+  background: rgba(150, 150, 150, 0.1);
 }
 
-#sections:nth-child(2n),
-.goals:nth-child(2n) {
-  background: rgba(0, 0, 0, 0.1);
+.set>*:nth-child(2n) {
+  background: rgba(50, 50, 50, 0.1);
 }
 
-#sections>*,
-.goals>* {
+.set {
   margin: 0.5em;
-  padding: 0.5em;
+  padding: 0.25em;
+}
+
+.set>* {
+  margin: 1em 0.5em;
+}
+
+legend {
+  padding: 0.25em 0.25em;
 }
