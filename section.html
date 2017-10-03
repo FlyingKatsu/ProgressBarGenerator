@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>ProgressBarGenerator v0.2.0 | FlyingKatsu</title>
+  <meta name="description" content="Image generator for progress bars">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+  <link href="css/normalize.css" rel="stylesheet" media="all">
+  <link href="css/styles.css" rel="stylesheet" media="all">
+  <link href="css/fonts.css" rel="stylesheet" media="all">
+  <link href="css/section.css" rel="stylesheet" media="all">
+
+  <!--[if lt IE 9]><script src="js/html5shiv-printshiv.js" media="all"></script><![endif]-->
+  <script src="js/concrete.min.js" media="all"></script>
+  <script src="js/section.js" media="all"></script>
+</head>
+
+<body>
+
+  <header role="banner">
+    <h1>ProgressBarGenerator v0.1.1</h1>
+  </header>
+
+  <div class="wrap">
+    <main role="main">
+
+      <details>
+        <summary>About ProgressBarGenerator</summary>
+        <p>Initial image design by <a href="https://twitter.com/TENTAWFUL">Tenta</a> for <a href="https://twitter.com/HeatPhoenix">HeatPhoenix</a>. Generator script and styles by <a href="https://twitter.com/theflyingkatsu">FlyingKatsu</a>.</p>
+        <p>Check <a href="https://github.com/FlyingKatsu/ProgressBarGenerator">GitHub</a> for a list of known issues</p>
+      </details>
+
+      <div id="canvas"> </div>
+
+      <div id="interface">
+        <h2>Controls and Settings</h2>
+        <div id="canvasUI">
+          <h3>Canvas Controls</h3>
+          <fieldset>
+            <div>
+              <label for="imgFile">Canvas Filename:</label>
+              <input type="text" id="imgFile" name="imgFile" value="canvas.png">
+              <button id="imgDownload">Download As Image</button>
+              <button id="jsonDownload">Download as JSON</button>
+            </div>
+
+            <div>
+              <label for="jsonFile">JSON Data</label>
+              <textarea id="jsonData"></textarea>
+              <button id="restore">Restore from Data</button>
+            </div>
+
+            <div>
+              <button id="clearCanvas">Clear Canvas</button>
+              <button id="clearStorage">Clear Save Data</button>
+            </div>
+
+          </fieldset>
+        </div>
+
+        <div id="styleUI">
+          <h3>Style Controls</h3>
+          <fieldset>
+          </fieldset>
+        </div>
+
+        <div id="sectionUI">
+          <h3>Section Data</h3>
+          <div id="sections">
+
+            <div id="section-0">
+              <h4>Section 1</h4>
+              <div>
+                <button onclick="toggleSection(0)">Toggle</button>
+                <button onclick="deleteSection(0)">Delete</button>
+              </div>
+              <fieldset>
+                <legend>Section 1</legend>
+                <div>
+                  <label for="x">Pos X</label>
+                  <input name="x" type="number" value=0 onchange="updateSection(0,'x')">
+                  <label for="y">Pos Y</label>
+                  <input name="y" type="number" value=0 onchange="updateSection(0,'y')">
+                </div>
+                <label for="title">Title</label>
+                <input name="title" type="text" value="My Section Title" onchange="updateTitle(0,'name')">
+                <div>
+                  <label for="px">Pad Title X</label>
+                  <input name="px" type="number" value=0 onchange="updateTitle(0,'px')">
+                  <label for="py">Pad Title Y</label>
+                  <input name="py" type="number" value=0 onchange="updateTitle(0,'py')">
+                </div>
+              </fieldset>
+
+              <fieldset>
+                <legend>Section 1 Goal Data</legend>
+                <div>
+                  <label for="px">Pad X</label>
+                  <input name="px" type="number" value=0 onchange="updateGoalGroup(0,'px')">
+                  <label for="py">Pad Y</label>
+                  <input name="py" type="number" value=0 onchange="updateGoalGroup(0,'py')">
+                </div>
+                <div>
+                  <label for="sx">Horizontal Spacing</label>
+                  <input name="sx" type="number" value=0 onchange="updateGoalGroup(0,'sx')">
+                  <label for="sy">Vertical Spacing</label>
+                  <input name="sy" type="number" value=0 onchange="updateGoalGroup(0,'sy')">
+                </div>
+
+                <div id="goals-section-0" class="goals">
+                  <fieldset>
+                    <legend>Goal 1</legend>
+                    <label for="name">Name</label>
+                    <input name="name" type="text" value="Goal 1" onchange="updateGoal(0,0,'name')">
+                    <div>
+                      <label for="a">Current Value</label>
+                      <input name="a" type="number" value=50 min=0 onchange="updateGoal(0,0,'a')">
+                      <label for="b">Max Value</label>
+                      <input name="b" type="number" value=100 min=1 onchange="updateGoal(0,0,'b')">
+                    </div>
+
+                    <fieldset class="img-uploads">
+                      <legend>Goal 1 Image</legend>
+                      <div class="previewImg"><img width=128 height=128></div>
+                      <div class="imgOptions">
+                        <label for="img">Image File</label>
+                        <input type="file" name="img" class="uploader" onchange="updateGoalImg(0,0,'src')">
+                        <div>
+                          <label for="w">Src Width</label>
+                          <input type="number" name="w" onchange="updateGoalImg(0,0,'w')">
+                          <label for="h">Src Height</label>
+                          <input type="number" name="h" onchange="updateGoalImg(0,0,'h')">
+                        </div>
+                        <div>
+                          <label for="cx">Crop X</label>
+                          <input type="number" name="cx" onchange="updateGoalImg(0,0,'cx')">
+                          <label for="cy">Crop Y</label>
+                          <input type="number" name="cy" onchange="updateGoalImg(0,0,'cy')">
+                        </div>
+                        <div>
+                          <label for="cw">Crop Width</label>
+                          <input type="number" name="cw" onchange="updateGoalImg(0,0,'cw')">
+                          <label for="ch">Crop Height</label>
+                          <input type="number" name="ch" onchange="updateGoalImg(0,0,'ch')">
+                        </div>
+                        <div>
+                          <button onclick="toggleGoalImg(0,0)">Toggle</button>
+                          <button onclick="resetGoalImg(0,0)">Reset</button>
+                        </div>
+                      </div>
+                    </fieldset>
+                    <button onclick="deleteGoal(0,0)">Delete Goal</button>
+                  </fieldset>
+                </div>
+                <button onclick="addGoal()">Add New Goal</button>
+              </fieldset>
+            </div>
+
+          </div>
+          <button onclick="addSection()">Add New Section</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+</body>
+
+</html>
