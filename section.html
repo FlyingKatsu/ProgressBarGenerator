@@ -38,8 +38,9 @@
         <h2>Controls and Settings</h2>
         <div id="canvasUI">
           <h3>Canvas Controls</h3>
-          <p></p>
-          <div class="set">
+          <p>Download canvas as image, clear/restore data, adjust canvas size and color.</p>
+          <button onclick="toggleNext(event, 0, 'Canvas UI')">Show Canvas UI</button>
+          <div class="set" style="display:none;">
             <fieldset>
               <legend>Download</legend>
               <div>
@@ -119,355 +120,321 @@
           <h3>Section Data</h3>
           <p>A section has a title and a set of goals.</p>
           <p>A goal has a name, progress value, goal value, and optional image.</p>
-          <div class="set">
-
-            <fieldset>
-              <legend>Section 1</legend>
-              <label for="title">Title</label>
-              <input name="title" type="text" value="My Section Title" onchange="updateTitle(0,'name')">
-              <button onclick="toggleSection(0)">Toggle UI</button>
-              <button onclick="deleteSection(0)">Delete Section</button>
-
-              <div class="set">
-                <fieldset>
-                  <legend>Goal 1</legend>
-                  <label for="name">Name</label>
-                  <input name="name" type="text" value="Goal 1" onchange="updateGoal(0,0,'name')">
-                  <button onclick="deleteGoal(0,0)">Delete Goal</button>
-                  <div>
-                    <label for="a">Current Value</label>
-                    <input name="a" type="number" value=50 min=0 onchange="updateGoal(0,0,'a')">
-                    <label for="b">Max Value</label>
-                    <input name="b" type="number" value=100 min=1 onchange="updateGoal(0,0,'b')">
+          <button onclick="toggleNext(event, 0, 'Section UI')">Hide Section UI</button>
+          <fieldset>
+            <div class="set">
+              <fieldset>
+                <legend>Section 1</legend>
+                <label for="title">Title</label>
+                <input name="title" type="text" value="My Section Title" onchange="updateTitle(0,'name')">
+                <button onclick="toggleNext(event, 1, 'Section')">Hide Section</button>
+                <button onclick="deleteSection(0)">Delete Section</button>
+                <div>
+                  <div class="set">
+                    <fieldset>
+                      <legend>Goal 1</legend>
+                      <label for="name">Name</label>
+                      <input name="name" type="text" value="Goal 1" onchange="updateGoal(0,0,'name')">
+                      <button onclick="deleteGoal(0,0)">Delete Goal</button>
+                      <div>
+                        <label for="a">Current Value</label>
+                        <input name="a" type="number" value=50 min=0 onchange="updateGoal(0,0,'a')">
+                        <label for="b">Max Value</label>
+                        <input name="b" type="number" value=100 min=1 onchange="updateGoal(0,0,'b')">
+                      </div>
+                      <button onclick="toggleNext(event, 0, 'Image UI')">Show Image UI</button>
+                      <fieldset class="img-uploads" style="display:none;">
+                        <legend>Goal 1 Image</legend>
+                        <div class="previewImg"><img width=128 height=128></div>
+                        <div class="imgOptions">
+                          <label for="img">Image File</label>
+                          <input type="file" name="img" class="uploader" onchange="updateGoalImg(0,0,'src')">
+                          <div>
+                            <label for="w">Src Width</label>
+                            <input type="number" name="w" onchange="updateGoalImg(0,0,'w')">
+                            <label for="h">Src Height</label>
+                            <input type="number" name="h" onchange="updateGoalImg(0,0,'h')">
+                          </div>
+                          <div>
+                            <label for="cx">Crop X</label>
+                            <input type="number" name="cx" onchange="updateGoalImg(0,0,'cx')">
+                            <label for="cy">Crop Y</label>
+                            <input type="number" name="cy" onchange="updateGoalImg(0,0,'cy')">
+                          </div>
+                          <div>
+                            <label for="cw">Crop Width</label>
+                            <input type="number" name="cw" onchange="updateGoalImg(0,0,'cw')">
+                            <label for="ch">Crop Height</label>
+                            <input type="number" name="ch" onchange="updateGoalImg(0,0,'ch')">
+                          </div>
+                          <button onclick="resetGoalImg(0,0)">Clear Image</button>
+                        </div>
+                      </fieldset>
+                    </fieldset>
                   </div>
+                  <button onclick="addGoal()">Add New Goal</button>
+                </div>
+              </fieldset>
+            </div>
+            <button onclick="addSection()">Add New Section</button>
+          </fieldset>
 
-                  <fieldset class="img-uploads">
-                    <legend>Goal 1 Image</legend>
-                    <div class="previewImg"><img width=128 height=128></div>
-                    <div class="imgOptions">
-                      <label for="img">Image File</label>
-                      <input type="file" name="img" class="uploader" onchange="updateGoalImg(0,0,'src')">
-                      <div>
-                        <label for="w">Src Width</label>
-                        <input type="number" name="w" onchange="updateGoalImg(0,0,'w')">
-                        <label for="h">Src Height</label>
-                        <input type="number" name="h" onchange="updateGoalImg(0,0,'h')">
-                      </div>
-                      <div>
-                        <label for="cx">Crop X</label>
-                        <input type="number" name="cx" onchange="updateGoalImg(0,0,'cx')">
-                        <label for="cy">Crop Y</label>
-                        <input type="number" name="cy" onchange="updateGoalImg(0,0,'cy')">
-                      </div>
-                      <div>
-                        <label for="cw">Crop Width</label>
-                        <input type="number" name="cw" onchange="updateGoalImg(0,0,'cw')">
-                        <label for="ch">Crop Height</label>
-                        <input type="number" name="ch" onchange="updateGoalImg(0,0,'ch')">
-                      </div>
-                      <div>
-                        <button onclick="toggleGoalImg(0,0)">Toggle Image UI</button>
-                        <button onclick="resetGoalImg(0,0)">Clear Image Data</button>
-                      </div>
-                    </div>
-                  </fieldset>
-                </fieldset>
-                <fieldset>
-                  <legend>Goal 1</legend>
-                  <label for="name">Name</label>
-                  <input name="name" type="text" value="Goal 1" onchange="updateGoal(0,0,'name')">
-                  <button onclick="deleteGoal(0,0)">Delete Goal</button>
-                  <div>
-                    <label for="a">Current Value</label>
-                    <input name="a" type="number" value=50 min=0 onchange="updateGoal(0,0,'a')">
-                    <label for="b">Max Value</label>
-                    <input name="b" type="number" value=100 min=1 onchange="updateGoal(0,0,'b')">
-                  </div>
-
-                  <fieldset class="img-uploads">
-                    <legend>Goal 1 Image</legend>
-                    <div class="previewImg"><img width=128 height=128></div>
-                    <div class="imgOptions">
-                      <label for="img">Image File</label>
-                      <input type="file" name="img" class="uploader" onchange="updateGoalImg(0,0,'src')">
-                      <div>
-                        <label for="w">Src Width</label>
-                        <input type="number" name="w" onchange="updateGoalImg(0,0,'w')">
-                        <label for="h">Src Height</label>
-                        <input type="number" name="h" onchange="updateGoalImg(0,0,'h')">
-                      </div>
-                      <div>
-                        <label for="cx">Crop X</label>
-                        <input type="number" name="cx" onchange="updateGoalImg(0,0,'cx')">
-                        <label for="cy">Crop Y</label>
-                        <input type="number" name="cy" onchange="updateGoalImg(0,0,'cy')">
-                      </div>
-                      <div>
-                        <label for="cw">Crop Width</label>
-                        <input type="number" name="cw" onchange="updateGoalImg(0,0,'cw')">
-                        <label for="ch">Crop Height</label>
-                        <input type="number" name="ch" onchange="updateGoalImg(0,0,'ch')">
-                      </div>
-                      <div>
-                        <button onclick="toggleGoalImg(0,0)">Toggle Image UI</button>
-                        <button onclick="resetGoalImg(0,0)">Clear Image Data</button>
-                      </div>
-                    </div>
-                  </fieldset>
-                </fieldset>
-              </div>
-              <button onclick="addGoal()">Add New Goal</button>
-            </fieldset>
-
-          </div>
-          <button onclick="addSection()">Add New Section</button>
         </div>
 
         <div id="styleUI">
           <h3>Styling</h3>
           <p>Format the font, color, and shape for each section.</p>
-          <div class="set">
-            <fieldset>
-              <legend>Section 1</legend>
+          <button onclick="toggleNext(event, 0, 'Style UI')">Show Style UI</button>
+          <div class="set" style="display:none;">
+            <div>
+              <button onclick="toggleNext(event, 0, 'Section')">Hide Section</button>
               <fieldset>
-                <legend>Title Font</legend>
-                <div>
-                  <label for="size">Size</label>
-                  <input name="size" type="number" value=48 onchange="updateTitleStyle(0,'fontsize')">
-                  <select name="font" onchange="updateTitleStyle(0,'fontface')">
-                        <option class="Sans" value="sans-serif">Sans Serif</option>
-                        <option class="ChangaOne" value="Changa One">Changa One Italic</option>
-                        <option class="Exo" value="Exo">Exo BlackItalic</option>
-                        <option class="Kanit" value="Kanit">Kanit BlackItalic</option>
-                        <option class="OpenSans" value="Open Sans">Open Sans ExtraBoldItalic</option>
+                <legend>Section 1</legend>
+                <fieldset>
+                  <legend>Title Font</legend>
+                  <div>
+                    <label for="size">Size</label>
+                    <input name="size" type="number" value=48 onchange="updateTitleStyle(0,'fontsize')">
+                    <select name="font" onchange="updateTitleStyle(0,'fontface')">
+                            <option class="Sans" value="sans-serif">Sans Serif</option>
+                            <option class="ChangaOne" value="Changa One">Changa One Italic</option>
+                            <option class="Exo" value="Exo">Exo BlackItalic</option>
+                            <option class="Kanit" value="Kanit">Kanit BlackItalic</option>
+                            <option class="OpenSans" value="Open Sans">Open Sans ExtraBoldItalic</option>
+                          </select>
+                  </div>
+                  <div>
+                    <label for="align">Alignment</label>
+                    <select name="align" onchange="updateTitleStyle(0,'align')">
+                            <option value="left">Left</option>
+                            <option value="center">Center</option>
+                            <option value="right">Right</option>
+                          </select>
+                    <label for="baseline">Baseline</label>
+                    <select name="baseline" onchange="updateTitleStyle(0,'baseline')">
+                            <option value="hanging">Hanging</option>
+                            <option value="top">Top</option>
+                            <option value="middle">Middle</option>
+                            <option value="bottom">Bottom</option>
+                          </select>
+                  </div>
+                  <div>
+                    <label for="stroke">Stroke Width</label>
+                    <input name="stroke" type="number" value=1 onchange="updateTitleStyle(0,'stroke')">
+                    <label for="line">Stroke Color</label>
+                    <input name="line" type="color" value="#000000" onchange="updateTitleStyle(0,'line')">
+                    <label for="alpha">Alpha</label>
+                    <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'alpha')">
+                  </div>
+                  <div>
+                    <label for="fillA">Fill Color 1</label>
+                    <input name="fillA" type="color" value="#ffffff" onchange="updateTitleStyle(0,'fillA')">
+                    <label for="alphaA">Alpha 1</label>
+                    <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'alphaA')">
+                    <label for="dir">Direction</label>
+                    <select onchange="updateTitleStyle(0,0,'gradientDir')">
+                          <option value="h">Horizontal</option>
+                          <option value="v">Vertical</option>
+                        </select>
+                  </div>
+                  <div>
+                    <label for="fillB">Fill Color 2</label>
+                    <input name="fillB" type="color" value="#888888" onchange="updateTitleStyle(0,'fillB')">
+                    <label for="alphaB">Alpha 2</label>
+                    <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'alphaB')">
+                    <label for="loc">Location</label>
+                    <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'gradientLoc')">
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <legend>Goal Font</legend>
+                  <div>
+                    <label for="size">Size</label>
+                    <input name="size" type="number" value=32 onchange="updateGoalStyle(0,'fontsize')">
+                    <select name="font" onchange="updateGoalStyle(0,'fontface')">
+                          <option class="Sans" value="sans-serif">Sans Serif</option>
+                          <option class="ChangaOne" value="Changa One">Changa One Italic</option>
+                          <option class="Exo" value="Exo">Exo BlackItalic</option>
+                          <option class="Kanit" value="Kanit">Kanit BlackItalic</option>
+                          <option class="OpenSans" value="Open Sans">Open Sans ExtraBoldItalic</option>
+                        </select>
+                  </div>
+                  <div>
+                    <label for="align">Alignment</label>
+                    <select name="align" onchange="updateGoalStyle(0,'align')">
+                          <option style="text-align: 'left';" value="left">Left</option>
+                          <option style="text-align: 'center';" value="center">Center</option>
+                          <option style="text-align: 'right';" value="right">Right</option>
+                        </select>
+                    <label for="baseline">Baseline</label>
+                    <select name="baseline" onchange="updateGoalStyle(0,'baseline')">
+                          <option value="hanging">Hanging</option>
+                          <option value="top">Top</option>
+                          <option value="middle">Middle</option>
+                          <option value="bottom">Bottom</option>
+                        </select>
+                  </div>
+                  <div>
+                    <label for="stroke">Stroke Width</label>
+                    <input name="stroke" type="number" value=1 onchange="updateGoalStyle(0,'stroke')">
+                    <label for="line">Stroke Color</label>
+                    <input name="line" type="color" value="#000000" onchange="updateGoalStyle(0,'line')">
+                    <label for="alpha">Alpha</label>
+                    <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'alpha')">
+                  </div>
+                  <div>
+                    <label for="fillA">Fill Color 1</label>
+                    <input name="fillA" type="color" value="#ffffff" onchange="updateGoalStyle(0,'fillA')">
+                    <label for="alphaA">Alpha 1</label>
+                    <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'alphaA')">
+                    <label for="dir">Direction</label>
+                    <select onchange="updateGoalStyle(0,0,'gradientDir')">
+                          <option value="h">Horizontal</option>
+                          <option value="v">Vertical</option>
+                        </select>
+                  </div>
+                  <div>
+                    <label for="fillB">Fill Color 2</label>
+                    <input name="fillB" type="color" value="#888888" onchange="updateGoalStyle(0,'fillB')">
+                    <label for="alphaB">Alpha 2</label>
+                    <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'alphaB')">
+                    <label for="loc">Location</label>
+                    <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'gradientLoc')">
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <legend>Progress Bar Style</legend>
+                  <div>
+                    <label for="w">Width</label>
+                    <input name="w" type="number" value=1 onchange="updateGoalBarStyle(0,'w')">
+                    <label for="h">Height</label>
+                    <input name="h" type="number" value=1 onchange="updateGoalBarStyle(0,'h')">
+                    <select onchange="updateGoalBarStyle(0,'shape')">
+                          <option value="rect">Rectangular</option>
+                          <option value="circ">Elliptical</option>
+                        </select>
+                  </div>
+                  <div>
+                    <label for="lslant">Left Slant</label>
+                    <input name="lslant" type="number" value=30 onchange="updateGoalBarStyle(0,'ls')">
+                    <label for="rslant">Right Slant</label>
+                    <input name="rslant" type="number" value=30 onchange="updateGoalBarStyle(0,'rs')">
+                  </div>
+                  <div>
+                    <label for="stroke">Stroke Width</label>
+                    <input name="stroke" type="number" value=1 onchange="updateGoalBarStyle(0,'stroke')">
+                    <label for="line">Stroke Color</label>
+                    <input name="line" type="color" value="#000000" onchange="updateGoalBarStyle(0,'line')">
+                    <label for="alpha">Alpha</label>
+                    <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'alpha')">
+                  </div>
+                  <div>
+                    <label for="fillA">Fill Color 1</label>
+                    <input name="fillA" type="color" value="#00ff00" onchange="updateGoalBarStyle(0,'fillA')">
+                    <label for="alphaA">Alpha 1</label>
+                    <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'alphaA')">
+                    <label for="dir">Direction</label>
+                    <select onchange="updateGoalBarStyle(0,0,'gradientDir')">
+                          <option value="h">Horizontal</option>
+                          <option value="v" selected>Vertical</option>
+                        </select>
+                  </div>
+                  <div>
+                    <label for="fillB">Fill Color 2</label>
+                    <input name="fillB" type="color" value="#00aa00" onchange="updateGoalBarStyle(0,'fillB')">
+                    <label for="alphaB">Alpha 2</label>
+                    <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'alphaB')">
+                    <label for="loc">Location</label>
+                    <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'gradientLoc')">
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <legend>Goal Image Style</legend>
+                  <div>
+                    <label for="w">Width</label>
+                    <input name="w" type="number" value=1 onchange="updateGoalImgStyle(0,'w')">
+                    <label for="h">Height</label>
+                    <input name="h" type="number" value=1 onchange="updateGoalImgStyle(0,'h')">
+                    <select onchange="updateGoalImgStyle(0,0,'shape')">
+                        <option value="rect">Rectangular</option>
+                        <option value="circ">Elliptical</option>
                       </select>
-                </div>
-                <div>
-                  <label for="align">Alignment</label>
-                  <select name="align" onchange="updateTitleStyle(0,'align')">
-                        <option value="left">Left</option>
-                        <option value="center">Center</option>
-                        <option value="right">Right</option>
-                      </select>
-                  <label for="baseline">Baseline</label>
-                  <select name="baseline" onchange="updateTitleStyle(0,'baseline')">
-                        <option value="hanging">Hanging</option>
-                        <option value="top">Top</option>
-                        <option value="middle">Middle</option>
-                        <option value="bottom">Bottom</option>
-                      </select>
-                </div>
-                <div>
-                  <label for="stroke">Stroke Width</label>
-                  <input name="stroke" type="number" value=1 onchange="updateTitleStyle(0,'stroke')">
-                  <label for="line">Stroke Color</label>
-                  <input name="line" type="color" value="#000000" onchange="updateTitleStyle(0,'line')">
-                  <label for="alpha">Alpha</label>
-                  <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'alpha')">
-                </div>
-                <div>
-                  <label for="fillA">Fill Color 1</label>
-                  <input name="fillA" type="color" value="#ffffff" onchange="updateTitleStyle(0,'fillA')">
-                  <label for="alphaA">Alpha 1</label>
-                  <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'alphaA')">
-                  <label for="dir">Direction</label>
-                  <select onchange="updateTitleStyle(0,0,'gradientDir')">
-                      <option value="h">Horizontal</option>
-                      <option value="v">Vertical</option>
-                    </select>
-                </div>
-                <div>
-                  <label for="fillB">Fill Color 2</label>
-                  <input name="fillB" type="color" value="#888888" onchange="updateTitleStyle(0,'fillB')">
-                  <label for="alphaB">Alpha 2</label>
-                  <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'alphaB')">
-                  <label for="loc">Location</label>
-                  <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateTitleStyle(0,'gradientLoc')">
-                </div>
+                  </div>
+                  <div>
+                    <label for="stroke">Stroke Width</label>
+                    <input name="stroke" type="number" value=1 onchange="updateGoalImgStyle(0,'stroke')">
+                    <label for="line">Stroke Color</label>
+                    <input name="line" type="color" value="#000000" onchange="updateGoalImgStyle(0,'line')">
+                    <label for="alpha">Alpha</label>
+                    <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'alpha')">
+                  </div>
+                  <div>
+                    <label for="fillA">Fill Color 1</label>
+                    <input name="fillA" type="color" value="#bbbbbb" onchange="updateGoalImgStyle(0,'fillA')">
+                    <label for="alphaA">Alpha 1</label>
+                    <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'alphaA')">
+                    <label for="dir">Direction</label>
+                    <select onchange="updateGoalImgStyle(0,0,'gradientDir')">
+                          <option value="h">Horizontal</option>
+                          <option value="v">Vertical</option>
+                        </select>
+                  </div>
+                  <div>
+                    <label for="fillB">Fill Color 2</label>
+                    <input name="fillB" type="color" value="#888888" onchange="updateGoalImgStyle(0,'fillB')">
+                    <label for="alphaB">Alpha 2</label>
+                    <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'alphaB')">
+                    <label for="loc">Location</label>
+                    <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'gradientLoc')">
+                  </div>
+                </fieldset>
               </fieldset>
-              <fieldset>
-                <legend>Goal Font</legend>
-                <div>
-                  <label for="size">Size</label>
-                  <input name="size" type="number" value=32 onchange="updateGoalStyle(0,'fontsize')">
-                  <select name="font" onchange="updateGoalStyle(0,'fontface')">
-                      <option class="Sans" value="sans-serif">Sans Serif</option>
-                      <option class="ChangaOne" value="Changa One">Changa One Italic</option>
-                      <option class="Exo" value="Exo">Exo BlackItalic</option>
-                      <option class="Kanit" value="Kanit">Kanit BlackItalic</option>
-                      <option class="OpenSans" value="Open Sans">Open Sans ExtraBoldItalic</option>
-                    </select>
-                </div>
-                <div>
-                  <label for="align">Alignment</label>
-                  <select name="align" onchange="updateGoalStyle(0,'align')">
-                      <option style="text-align: 'left';" value="left">Left</option>
-                      <option style="text-align: 'center';" value="center">Center</option>
-                      <option style="text-align: 'right';" value="right">Right</option>
-                    </select>
-                  <label for="baseline">Baseline</label>
-                  <select name="baseline" onchange="updateGoalStyle(0,'baseline')">
-                      <option value="hanging">Hanging</option>
-                      <option value="top">Top</option>
-                      <option value="middle">Middle</option>
-                      <option value="bottom">Bottom</option>
-                    </select>
-                </div>
-                <div>
-                  <label for="stroke">Stroke Width</label>
-                  <input name="stroke" type="number" value=1 onchange="updateGoalStyle(0,'stroke')">
-                  <label for="line">Stroke Color</label>
-                  <input name="line" type="color" value="#000000" onchange="updateGoalStyle(0,'line')">
-                  <label for="alpha">Alpha</label>
-                  <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'alpha')">
-                </div>
-                <div>
-                  <label for="fillA">Fill Color 1</label>
-                  <input name="fillA" type="color" value="#ffffff" onchange="updateGoalStyle(0,'fillA')">
-                  <label for="alphaA">Alpha 1</label>
-                  <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'alphaA')">
-                  <label for="dir">Direction</label>
-                  <select onchange="updateGoalStyle(0,0,'gradientDir')">
-                      <option value="h">Horizontal</option>
-                      <option value="v">Vertical</option>
-                    </select>
-                </div>
-                <div>
-                  <label for="fillB">Fill Color 2</label>
-                  <input name="fillB" type="color" value="#888888" onchange="updateGoalStyle(0,'fillB')">
-                  <label for="alphaB">Alpha 2</label>
-                  <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'alphaB')">
-                  <label for="loc">Location</label>
-                  <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateGoalStyle(0,'gradientLoc')">
-                </div>
-              </fieldset>
-              <fieldset>
-                <legend>Progress Bar Style</legend>
-                <div>
-                  <label for="w">Width</label>
-                  <input name="w" type="number" value=1 onchange="updateGoalBarStyle(0,'w')">
-                  <label for="h">Height</label>
-                  <input name="h" type="number" value=1 onchange="updateGoalBarStyle(0,'h')">
-                  <select onchange="updateGoalBarStyle(0,'shape')">
-                      <option value="rect">Rectangular</option>
-                      <option value="circ">Elliptical</option>
-                    </select>
-                </div>
-                <div>
-                  <label for="lslant">Left Slant</label>
-                  <input name="lslant" type="number" value=30 onchange="updateGoalBarStyle(0,'ls')">
-                  <label for="rslant">Right Slant</label>
-                  <input name="rslant" type="number" value=30 onchange="updateGoalBarStyle(0,'rs')">
-                </div>
-                <div>
-                  <label for="stroke">Stroke Width</label>
-                  <input name="stroke" type="number" value=1 onchange="updateGoalBarStyle(0,'stroke')">
-                  <label for="line">Stroke Color</label>
-                  <input name="line" type="color" value="#000000" onchange="updateGoalBarStyle(0,'line')">
-                  <label for="alpha">Alpha</label>
-                  <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'alpha')">
-                </div>
-                <div>
-                  <label for="fillA">Fill Color 1</label>
-                  <input name="fillA" type="color" value="#00ff00" onchange="updateGoalBarStyle(0,'fillA')">
-                  <label for="alphaA">Alpha 1</label>
-                  <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'alphaA')">
-                  <label for="dir">Direction</label>
-                  <select onchange="updateGoalBarStyle(0,0,'gradientDir')">
-                      <option value="h">Horizontal</option>
-                      <option value="v" selected>Vertical</option>
-                    </select>
-                </div>
-                <div>
-                  <label for="fillB">Fill Color 2</label>
-                  <input name="fillB" type="color" value="#00aa00" onchange="updateGoalBarStyle(0,'fillB')">
-                  <label for="alphaB">Alpha 2</label>
-                  <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'alphaB')">
-                  <label for="loc">Location</label>
-                  <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateGoalBarStyle(0,'gradientLoc')">
-                </div>
-              </fieldset>
-              <fieldset>
-                <legend>Goal Image Style</legend>
-                <div>
-                  <label for="w">Width</label>
-                  <input name="w" type="number" value=1 onchange="updateGoalImgStyle(0,'w')">
-                  <label for="h">Height</label>
-                  <input name="h" type="number" value=1 onchange="updateGoalImgStyle(0,'h')">
-                  <select onchange="updateGoalImgStyle(0,0,'shape')">
-                    <option value="rect">Rectangular</option>
-                    <option value="circ">Elliptical</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="stroke">Stroke Width</label>
-                  <input name="stroke" type="number" value=1 onchange="updateGoalImgStyle(0,'stroke')">
-                  <label for="line">Stroke Color</label>
-                  <input name="line" type="color" value="#000000" onchange="updateGoalImgStyle(0,'line')">
-                  <label for="alpha">Alpha</label>
-                  <input name="alpha" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'alpha')">
-                </div>
-                <div>
-                  <label for="fillA">Fill Color 1</label>
-                  <input name="fillA" type="color" value="#bbbbbb" onchange="updateGoalImgStyle(0,'fillA')">
-                  <label for="alphaA">Alpha 1</label>
-                  <input name="alphaA" type="number" value=1.0 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'alphaA')">
-                  <label for="dir">Direction</label>
-                  <select onchange="updateGoalImgStyle(0,0,'gradientDir')">
-                      <option value="h">Horizontal</option>
-                      <option value="v">Vertical</option>
-                    </select>
-                </div>
-                <div>
-                  <label for="fillB">Fill Color 2</label>
-                  <input name="fillB" type="color" value="#888888" onchange="updateGoalImgStyle(0,'fillB')">
-                  <label for="alphaB">Alpha 2</label>
-                  <input name="alphaB" type="number" value=0.0 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'alphaB')">
-                  <label for="loc">Location</label>
-                  <input name="loc" type="number" value=0.5 min=0.0 max=1 step=0.01 onchange="updateGoalImgStyle(0,'gradientLoc')">
-                </div>
-              </fieldset>
-            </fieldset>
+            </div>
+
           </div>
         </div>
 
         <div id="positionUI">
           <h3>Positioning</h3>
           <p>Adjust the position and spacing of elements for each section.</p>
-          <div class="set">
-            <fieldset>
-              <legend>Section 1</legend>
-              <div>
-                <label for="x">Pos X</label>
-                <input name="x" type="number" value=0 onchange="updateSection(0,'x')">
-                <label for="y">Pos Y</label>
-                <input name="y" type="number" value=0 onchange="updateSection(0,'y')">
-              </div>
+          <button onclick="toggleNext(event, 0, 'Position UI')">Show Position UI</button>
+          <div class="set" style="display:none;">
+            <div>
+              <button onclick="toggleNext(event, 0, 'Section')">Hide Section</button>
               <fieldset>
-                <legend>Title</legend>
+                <legend>Section 1</legend>
                 <div>
-                  <label for="px">Pad Title X</label>
-                  <input name="px" type="number" value=0 onchange="updateTitle(0,'px')">
-                  <label for="py">Pad Title Y</label>
-                  <input name="py" type="number" value=0 onchange="updateTitle(0,'py')">
+                  <label for="x">Pos X</label>
+                  <input name="x" type="number" value=0 onchange="updateSection(0,'x')">
+                  <label for="y">Pos Y</label>
+                  <input name="y" type="number" value=0 onchange="updateSection(0,'y')">
                 </div>
+                <fieldset>
+                  <legend>Title</legend>
+                  <div>
+                    <label for="px">Pad Title X</label>
+                    <input name="px" type="number" value=0 onchange="updateTitle(0,'px')">
+                    <label for="py">Pad Title Y</label>
+                    <input name="py" type="number" value=0 onchange="updateTitle(0,'py')">
+                  </div>
+                </fieldset>
+                <fieldset>
+                  <legend>Goals</legend>
+                  <div>
+                    <label for="px">Pad X</label>
+                    <input name="px" type="number" value=0 onchange="updateGoalGroup(0,'px')">
+                    <label for="py">Pad Y</label>
+                    <input name="py" type="number" value=0 onchange="updateGoalGroup(0,'py')">
+                  </div>
+                  <div>
+                    <label for="sx">Horizontal Spacing</label>
+                    <input name="sx" type="number" value=0 onchange="updateGoalGroup(0,'sx')">
+                    <label for="sy">Vertical Spacing</label>
+                    <input name="sy" type="number" value=0 onchange="updateGoalGroup(0,'sy')">
+                  </div>
+                </fieldset>
               </fieldset>
-              <fieldset>
-                <legend>Goals</legend>
-                <div>
-                  <label for="px">Pad X</label>
-                  <input name="px" type="number" value=0 onchange="updateGoalGroup(0,'px')">
-                  <label for="py">Pad Y</label>
-                  <input name="py" type="number" value=0 onchange="updateGoalGroup(0,'py')">
-                </div>
-                <div>
-                  <label for="sx">Horizontal Spacing</label>
-                  <input name="sx" type="number" value=0 onchange="updateGoalGroup(0,'sx')">
-                  <label for="sy">Vertical Spacing</label>
-                  <input name="sy" type="number" value=0 onchange="updateGoalGroup(0,'sy')">
-                </div>
-              </fieldset>
-            </fieldset>
+            </div>
           </div>
         </div>
 
