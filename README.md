@@ -21,6 +21,7 @@ Currently in rough development on a whim. Uses HTML5 canvas, JavaScript, and [Co
 
 #### Known Issues
 
+- [ ] (WIP) Web fonts do not render on mobile devices
 - [x] (fixed in v0.1.1) Clearing canvas does not clear all layers, so if frameLayer or fillLayer have stuff, they return when the viewport is restored (ie using the font tester), even after clearing the viewport scene with `Clear Canvas`
 - [ ] Data-Driven input object is not updated by the current UI form inputs
 - [ ] `RedrawText()` is only used on page load so it can only be viewed cleanly on page load if the local storage is cleared
