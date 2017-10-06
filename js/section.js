@@ -108,6 +108,7 @@ const FontObj = function(_input) {
   this.baseline = _input.baseline || 'alphabetic';
   this.stroke = _input.stroke || new StrokeObj();
   this.fill = _input.fill || new FillObj();
+  this.miter = _input.miter || 10;
 };
 
 const PolyObj = function(_input) {

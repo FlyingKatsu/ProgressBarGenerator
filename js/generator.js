@@ -447,6 +447,12 @@ document.addEventListener('DOMContentLoaded', function() {
     testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
   });
 
+  getElement('miter').addEventListener('change', function() {
+    textLayer.scene.context.miterLimit = getElement('miter').value;
+    textLayer.scene.clear();
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+  });
+
   getElement('font-sample').addEventListener('change', function() {
     textLayer.scene.clear();
     testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
