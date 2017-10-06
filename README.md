@@ -4,10 +4,11 @@ Currently in rough development on a whim. Uses HTML5 canvas, JavaScript, and [Co
 
 ## Change Log
 
-### Version 0.1.0, 0.1.1
+### Version 0.1.0, 0.1.1, 0.1.2, 0.1.3
 
 #### Changes and Fixes
 
+- Added fonts using generated kit from FontSquirrel (0.1.2,0.1.3)
 - Added INPUT data object for storing the user's settings and text
 - Added a `RedrawText()` helper method for updating all text objects in the canvas, using data from INPUT
 - Added 4 Google Fonts available for use
@@ -21,7 +22,7 @@ Currently in rough development on a whim. Uses HTML5 canvas, JavaScript, and [Co
 
 #### Known Issues
 
-- [ ] (WIP) Web fonts do not render on mobile devices
+- [x] (fixed in v0.1.3) Web fonts do not render on mobile devices
 - [x] (fixed in v0.1.1) Clearing canvas does not clear all layers, so if frameLayer or fillLayer have stuff, they return when the viewport is restored (ie using the font tester), even after clearing the viewport scene with `Clear Canvas`
 - [ ] Data-Driven input object is not updated by the current UI form inputs
 - [ ] `RedrawText()` is only used on page load so it can only be viewed cleanly on page load if the local storage is cleared
