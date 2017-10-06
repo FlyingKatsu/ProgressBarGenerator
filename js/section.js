@@ -41,7 +41,7 @@ var togglePrev = function(evt, n, label) {
 };
 
 // =============================================================
-//   DATA MODEL
+//   DATA MODELS
 // =============================================================
 
 /**
@@ -137,7 +137,27 @@ const MODEL = {
 };
 
 // =============================================================
-//   DRAW METHODS
+//   CONCRETE JS SETUP
+// =============================================================
+
+let viewport = new Concrete.Viewport({
+  width: 280,
+  height: 320,
+  container: getByID('canvas')
+});
+
+let bgLayer = new Concrete.Layer();
+let frameLayer = new Concrete.Layer();
+let fillLayer = new Concrete.Layer();
+let textLayer = new Concrete.Layer();
+
+viewport.add(bgLayer)
+  .add(frameLayer)
+  .add(fillLayer)
+  .add(textLayer);
+
+// =============================================================
+//   ADDITIONAL DRAW METHODS
 // =============================================================
 
 

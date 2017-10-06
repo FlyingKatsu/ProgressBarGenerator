@@ -4,6 +4,21 @@ Currently in rough development on a whim. Uses HTML5 canvas, JavaScript, and [Co
 
 ## Change Log
 
+### Version 0.2.0
+
+[WIP Preview](https://flyingkatsu.github.io/ProgressBarGenerator/section.html)
+
+The main JavaScript file is loaded after the HTML page is finished loading. This should not affect most users, but if you do not see a canvas box, check your browser compatibility for [defer on CanIUse](http://caniuse.com/#feat=script-defer)
+
+#### Changes and Fixes
+
+- LOTS OF STUFF
+
+#### Known Issues
+
+- To Be Continued
+
+
 ### Version 0.1.x
 
 #### Changes and Fixes
