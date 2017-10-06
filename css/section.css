@@ -75,3 +75,15 @@ canvas {
   background-image: url(img/canvas.png);
   border: 1px solid rgba(50, 50, 50, 0.2);
 }
+
+section {
+  padding: 0.5em 0;
+}
+
+header {
+  padding-bottom: 1em;
+}
+
+section:last-of-type {
+  padding-bottom: 2em;
+}
