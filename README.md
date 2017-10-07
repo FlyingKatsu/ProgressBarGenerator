@@ -2,6 +2,8 @@
 
 Currently in rough development on a whim. Uses HTML5 canvas, JavaScript, and [Concrete.js](http://www.concretejs.com/)
 
+https://flyingkatsu.github.io/ProgressBarGenerator/
+
 ## Change Log
 
 ### Version 0.2.0
