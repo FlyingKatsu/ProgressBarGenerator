@@ -88,9 +88,12 @@ const Hex2Rgba = function(hex, alpha) {
 const StrokeObj = function(_input) {
   let input = _input || {};
   this.width = input.width || 1;
+  this.miter = input.miter || 10;
   this.color = input.color || '#000000';
   this.alpha = input.alpha || 1;
   this.gradient = input.gradient || null;
+  this.useGradient = input.useGradient || false;
+  this.rgba = Hex2Rgba(this.color, this.alpha);
 };
 
 const FillObj = function(_input) {
@@ -98,6 +101,8 @@ const FillObj = function(_input) {
   this.color = input.color || '#ffffff';
   this.alpha = input.alpha || 0.5;
   this.gradient = input.gradient || null;
+  this.useGradient = input.useGradient || false;
+  this.rgba = Hex2Rgba(this.color, this.alpha);
 };
 
 const FontObj = function(_input) {
@@ -113,8 +118,8 @@ const FontObj = function(_input) {
 
 const PolyObj = function(_input) {
   let input = _input || {};
-  this.width = input.width || 128;
-  this.height = input.height || 32;
+  this.w = input.w || 128;
+  this.h = input.h || 32;
   this.shape = input.shape || 'rectangular';
   this.stroke = input.stroke || new MODEL.Stroke();
   this.fill = input.fill || new MODEL.Fill();
@@ -123,8 +128,8 @@ const PolyObj = function(_input) {
 const ImgObj = function(_input) {
   let input = _input || {};
   this.data = input.data || null;
-  this.width = input.width || 128;
-  this.height = input.height || 128;
+  this.w = input.w || 128;
+  this.h = input.h || 128;
   this.crop = input.crop || { x: 0, y: 0, w: 128, h: 128 };
 };
 
@@ -272,7 +277,156 @@ viewport.add(bgLayer)
 //   ADDITIONAL DRAW METHODS
 // =============================================================
 
+// Use within other draw calls! Assumes ctx has already been preserved!
+MODEL.Stroke.prototype.Draw = function(ctx) {
+  //ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  ctx.lineWidth = this.width;
+  if (this.useGradient) {
+    ctx.strokeStyle = this.gradient;
+  } else {
+    ctx.strokeStyle = this.rgba;
+  }
+  ctx.miterLimit = this.miter;
+  //ctx.restore(); // return context to original state
+};
 
+// Use within other draw calls! Assumes ctx has already been preserved!
+MODEL.Fill.prototype.Draw = function(ctx) {
+  //ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  if (this.useGradient) {
+    ctx.fillStyle = this.gradient;
+  } else {
+    ctx.fillStyle = this.rgba;
+  }
+  //ctx.restore(); // return context to original state
+};
+
+MODEL.Font.prototype.Draw = function(ctx, data) {
+  ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  ctx.font = this.size + "px " + this.family;
+  ctx.textAlign = this.alignment;
+  ctx.textBaseline = this.baseline;
+  if (this.fill) {
+    this.fill.Draw(ctx);
+    ctx.fillText(data.text, data.x, data.y);
+  }
+  if (this.stroke) {
+    this.stroke.Draw(ctx);
+    ctx.strokeText(data.text, data.x, data.y);
+  }
+  ctx.restore(); // return context to original state
+};
+
+MODEL.Poly.prototype.Draw = function(ctx, data) {
+  ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  if (this.shape == 'rectangular') {
+    if (this.fill) {
+      this.fill.Draw(ctx);
+      ctx.fillRect(data.x, data.y, this.w, this.h);
+    }
+    if (this.stroke) {
+      this.stroke.Draw(ctx);
+      ctx.strokeRect(data.x, data.y, this.w, this.h);
+    }
+  }
+  ctx.restore(); // return context to original state
+};
+
+MODEL.Img.prototype.Draw = function(ctx, data) {
+  ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  if (this.img) {
+    ctx.drawImage(
+      this.data,
+      this.crop.x, this.crop.y,
+      this.crop.w, this.crop.h,
+      data.x, data.y,
+      this.w, this.h);
+  }
+  ctx.restore(); // return context to original state
+};
+
+MODEL.Goal.prototype.Draw = function(ctx, data) {
+  ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  let that = this;
+  this.data.map(function(goal, i) {
+    // Draw Progress Bar
+    that.style.progress.frame.Draw(
+      frameLayer.scene.context, {
+        x: data.x + that.position.x,
+        y: data.y + that.position.y + i * (that.style.progress.frame.h + that.position.vs)
+      }
+    );
+    that.style.progress.fill.Draw(
+      fillLayer.scene.context, {
+        x: data.x + that.position.x,
+        y: data.y + that.position.y + i * (that.style.progress.frame.h + that.position.vs)
+      }
+    );
+    // Draw Text
+    that.style.font.Draw(
+      textLayer.scene.context, {
+        text: goal.name,
+        x: data.x + that.position.x,
+        y: data.y + that.position.y + i * (that.style.progress.frame.h + that.position.vs)
+      }
+    );
+    that.style.font.Draw(
+      textLayer.scene.context, {
+        text: goal.current + "/" + goal.max,
+        x: data.x + that.position.x + that.style.progress.frame.w,
+        y: data.y + that.position.y + i * (that.style.progress.frame.h + that.position.vs)
+      }
+    );
+    // Draw the Image (if it exists)
+    goal.img.Draw(
+      fillLayer.scene.context, {
+        x: data.x + that.position.x + that.position.hs,
+        y: data.y + that.position.y + i * (that.style.progress.frame.h + that.position.vs)
+      }
+    );
+  });
+  ctx.restore(); // return context to original state
+};
+
+MODEL.Title.prototype.Draw = function(ctx, data) {
+  ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  this.style.font.Draw(textLayer.scene.context, {
+    text: this.data.name,
+    x: data.x + this.position.x,
+    y: data.y + this.position.y
+  });
+  ctx.restore(); // return context to original state
+};
+
+MODEL.Section.prototype.Draw = function(ctx) {
+  ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  this.Title.Draw(textLayer.scene.context, this.position);
+  this.Goals.Draw(ctx, this.position);
+  ctx.restore(); // return context to original state
+};
+
+MODEL.Canvas.prototype.Draw = function(ctx) {
+  ctx.save(); // preserve context state from before this call
+  // DO STUFF
+  this.fill.Draw(ctx);
+  ctx.fillRect(0, 0, this.w, this.h);
+  ctx.restore(); // return context to original state
+};
+
+// Test Draws
+testCanvas = new MODEL.Canvas();
+testCanvas.Draw(bgLayer.scene.context);
+testSection = new MODEL.Section();
+testSection.Draw(viewport.scene.context);
+viewport.render();
 
 // =============================================================
 //   UPDATE METHODS
