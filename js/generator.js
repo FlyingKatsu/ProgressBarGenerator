@@ -164,6 +164,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ctx.font = options.font || options.fontsize + "px " + options.fontfamily;
     ctx.textAlign = options.align || "left";
     ctx.textBaseline = options.baseline || "hanging";
+    if (options.miter) ctx.miterLimit = options.miter;
     ctx.fillText(text, options.x, options.y);
     ctx.strokeText(text, options.x, options.y);
     ctx.restore();
@@ -171,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   // Test Fonts
-  function testFonts(txt, font) {
+  function testFonts(txt, font, options) {
     txt.split("\\n").map(
       function(subtxt, i) {
         drawTextOnLayer(textLayer, subtxt, {
@@ -179,6 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
           stroke: "#000",
           fill: "#fff",
           font: font,
+          miter: (options && options.miter) ? options.miter : 10,
           align: "left",
           x: 16,
           y: 32 + 64 * i
@@ -353,7 +355,7 @@ document.addEventListener('DOMContentLoaded', function() {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
-      font: "48px Changa One",
+      font: "48px Open Sans Extra Bold Italic",
       x: 16,
       y: 0
     });
@@ -380,18 +382,20 @@ document.addEventListener('DOMContentLoaded', function() {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
-      font: "32px Changa One",
+      font: "32px Open Sans Extra Bold Italic",
+      miter: getElement('miter').value,
       x: 16,
-      y: PAD_TOP + 12
+      y: PAD_TOP + 8
     });
     drawTextOnLayer(textLayer, `${getElement('goal-1-A').value}/${getElement('goal-1-B').value}`, {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
-      font: "32px Changa One",
+      font: "32px Open Sans Extra Bold Italic",
+      miter: getElement('miter').value,
       align: "right",
       x: 4 * WIDTH / 5,
-      y: PAD_TOP + 40 + 12
+      y: PAD_TOP + 40 + 8
     });
   });
 
@@ -416,18 +420,20 @@ document.addEventListener('DOMContentLoaded', function() {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
-      font: "32px Changa One",
+      font: "32px Open Sans Extra Bold Italic",
+      miter: getElement('miter').value,
       x: 16,
-      y: PAD_TOP + HEADSIZE * 2 + 30 + 6
+      y: PAD_TOP + HEADSIZE * 2 + 30 + 2
     });
     drawTextOnLayer(textLayer, `${getElement('goal-2-A').value}/${getElement('goal-2-B').value}`, {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
-      font: "32px Changa One",
+      font: "32px Open Sans Extra Bold Italic",
+      miter: getElement('miter').value,
       align: "right",
       x: 4 * WIDTH / 5,
-      y: PAD_TOP + HEADSIZE * 2 + 30 + 48
+      y: PAD_TOP + HEADSIZE * 2 + 30 + 44
     });
   });
 
@@ -444,24 +450,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
   getElement('font-size').addEventListener('change', function() {
     textLayer.scene.clear();
-    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
   });
 
   getElement('miter').addEventListener('change', function() {
     textLayer.scene.context.miterLimit = getElement('miter').value;
     textLayer.scene.clear();
-    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
   });
 
   getElement('font-sample').addEventListener('change', function() {
     textLayer.scene.clear();
-    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
   });
 
   getElement('font-family').addEventListener('change', function() {
     getElement('font-family').style = `font-family: '${getElement('font-family').value}';`;
     textLayer.scene.clear();
-    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value);
+    testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
   });
 
   // CLEAR CANVAS (ALL LAYERS)

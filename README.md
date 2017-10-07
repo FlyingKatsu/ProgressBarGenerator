@@ -25,6 +25,8 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 
 #### Changes and Fixes
 
+- Updated the goal and title text updates to use the specified miterLimit (0.1.5)
+- Fixed missing font reference introduced in 0.1.2 (0.1.5)
 - Added miterLimit input for adjusting sharp corner artifacts in rendered font strokes (0.1.4)
 - Added fonts using generated kit from FontSquirrel (0.1.2,0.1.3)
 - Added INPUT data object for storing the user's settings and text
