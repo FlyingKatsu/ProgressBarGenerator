@@ -4,6 +4,8 @@ Currently in rough development on a whim. Uses HTML5 canvas, JavaScript, and [Co
 
 https://flyingkatsu.github.io/ProgressBarGenerator/
 
+![preview](https://cdn.pbrd.co/images/GNLhbDR.png)
+
 ## Change Log
 
 ### Version 0.2.0
