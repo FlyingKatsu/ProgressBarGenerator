@@ -54,10 +54,10 @@ var togglePrev = function(evt, n, label) {
 const CreateGradient = function(_input, ctx) {
   // Set up defaults
   let input = _input || {};
-  data.shape = _input.shape || 'linear'; // radial or linear
-  data.colors = _input.colors || [];
-  data.start = _input.start || { x: 0, y: 0, r: 0 };
-  data.end = _input.end || { x: 100, y: 0, r: 0 };
+  data.shape = input.shape || 'linear'; // radial or linear
+  data.colors = input.colors || [];
+  data.start = input.start || { x: 0, y: 0, r: 0 };
+  data.end = input.end || { x: 100, y: 0, r: 0 };
   // Create the gradient shape as radial or linear
   let gradient = (data.shape == 'radial') ? ctx.createRadialGradient() : ctx.createLinearGradient();
   // Add the color stops
@@ -87,53 +87,165 @@ const Hex2Rgba = function(hex, alpha) {
 
 const StrokeObj = function(_input) {
   let input = _input || {};
-  this.width = _input.width || 1;
-  this.color = _input.color || '#000000';
-  this.alpha = _input.alpha || 1;
-  this.gradient = _input.gradient || null;
+  this.width = input.width || 1;
+  this.color = input.color || '#000000';
+  this.alpha = input.alpha || 1;
+  this.gradient = input.gradient || null;
 };
 
 const FillObj = function(_input) {
   let input = _input || {};
-  this.color = _input.color || '#ffffff';
-  this.alpha = _input.alpha || 0.5;
-  this.gradient = _input.gradient || null;
+  this.color = input.color || '#ffffff';
+  this.alpha = input.alpha || 0.5;
+  this.gradient = input.gradient || null;
 };
 
 const FontObj = function(_input) {
   let input = _input || {};
-  this.size = _input.size || 64;
-  this.family = _input.family || 'sans-serif';
-  this.alignment = _input.alignment || 'center';
-  this.baseline = _input.baseline || 'alphabetic';
-  this.stroke = _input.stroke || new StrokeObj();
-  this.fill = _input.fill || new FillObj();
-  this.miter = _input.miter || 10;
+  this.size = input.size || 64;
+  this.family = input.family || 'sans-serif';
+  this.alignment = input.alignment || 'center';
+  this.baseline = input.baseline || 'alphabetic';
+  this.stroke = input.stroke || MODEL.Stroke();
+  this.fill = input.fill || MODEL.Fill();
+  this.miter = input.miter || 10;
 };
 
 const PolyObj = function(_input) {
   let input = _input || {};
-  this.width = _input.width || 128;
-  this.height = _input.height || 32;
-  this.shape = _input.shape || 'rectangular';
-  this.stroke = _input.stroke || new StrokeObj();
-  this.fill = _input.fill || new FillObj();
+  this.width = input.width || 128;
+  this.height = input.height || 32;
+  this.shape = input.shape || 'rectangular';
+  this.stroke = input.stroke || new MODEL.Stroke();
+  this.fill = input.fill || new MODEL.Fill();
 };
 
 const ImgObj = function(_input) {
   let input = _input || {};
-  this.data = _input.data || null;
-  this.width = _input.width || 128;
-  this.height = _input.height || 128;
-  this.crop = _input.crop || { x: 0, y: 0, w: 128, h: 128 };
+  this.data = input.data || null;
+  this.width = input.width || 128;
+  this.height = input.height || 128;
+  this.crop = input.crop || { x: 0, y: 0, w: 128, h: 128 };
 };
+
+const GoalDataObj = function(_input) {
+  this.name = "Sample Goal";
+  this.current = 75;
+  this.max = 100;
+  this.img = new MODEL.Img();
+  // TODO: Validate _input
+};
+
+const GoalObj = function(_input) {
+  this.position = { x: 0, y: 0, hs: 0, vs: 0 };
+  this.style = {
+    font: new MODEL.Font(),
+    progress: {
+      frame: new MODEL.Poly(),
+      fill: new MODEL.Poly()
+    }
+  };
+  this.data = [new MODEL.GoalData()];
+  // TODO: Validate _input
+};
+
+const TitleObj = function(_input) {
+  this.position = { x: 0, y: 0 };
+  this.style = { font: new MODEL.Font() };
+  this.data = { name: "Sample Title" };
+  // TODO: Validate _input
+};
+
+const SectionObj = function(_input) {
+  this.position = { x: 0, y: 0 };
+  this.Title = new MODEL.Title();
+  this.Goals = new MODEL.Goal();
+  // TODO: Validate _input
+};
+
+const CanvasObj = function(_input) {
+  this.w = 280;
+  this.h = 320;
+  this.fill = new MODEL.Fill();
+  // TODO: Validate _input
+}
 
 const MODEL = {
   Font: FontObj,
   Img: ImgObj,
   Poly: PolyObj,
   Stroke: StrokeObj,
-  Fill: FillObj
+  Fill: FillObj,
+  Canvas: CanvasObj,
+  Section: SectionObj,
+  Title: TitleObj,
+  Goal: GoalObj,
+  GoalData: GoalDataObj
+};
+
+const DATA = {
+  Canvas: {
+    w: 280,
+    h: 320,
+    fill: new MODEL.Fill()
+  },
+  Sections: [{
+      position: { x: 0, y: 0 },
+      Title: {
+        position: { x: 0, y: 0 },
+        style: { font: new MODEL.Font() },
+        data: { name: "My Title" }
+      },
+      Goals: {
+        position: { x: 0, y: 0, hs: 0, vs: 0 },
+        style: {
+          font: new MODEL.Font(),
+          progress: {
+            frame: new MODEL.Poly(),
+            fill: new MODEL.Poly()
+          },
+          img: { frame: new MODEL.Poly() }
+        },
+        data: [{
+            name: "Goal 1",
+            current: 50,
+            max: 100,
+            img: null
+          },
+          {
+            name: "Goal 2",
+            current: 75,
+            max: 100,
+            img: new MODEL.Img()
+          }
+        ]
+      }
+    },
+    {
+      position: { x: 0, y: 0 },
+      Title: {
+        position: { x: 0, y: 0 },
+        style: { font: new MODEL.Font() },
+        data: { name: "Another Title" }
+      },
+      Goals: {
+        position: { x: 0, y: 0, hs: 0, vs: 0 },
+        style: {
+          font: new MODEL.Font(),
+          progress: {
+            frame: new MODEL.Poly(),
+            fill: new MODEL.Poly()
+          },
+          img: { frame: new MODEL.Poly() }
+        },
+        data: [
+          { name: "Item 1" },
+          { name: "Item 2" },
+          { name: "Item 3" }
+        ]
+      }
+    }
+  ]
 };
 
 // =============================================================
