@@ -25,6 +25,7 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 
 #### Changes and Fixes
 
+- Added two more goal text inputs, a separate miter input for title/goal text, and consolidated update functions for title text, goal text, and progress values (0.1.6)
 - Updated the goal and title text updates to use the specified miterLimit (0.1.5)
 - Fixed missing font reference introduced in 0.1.2 (0.1.5)
 - Added miterLimit input for adjusting sharp corner artifacts in rendered font strokes (0.1.4)
@@ -67,7 +68,7 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 
 - [x] (fixed in v0.1.0) Google Font is not loaded until late, so text may not appear as desired at first
 - [x] (fixed in v0.1.0) Changing the title text clears the entire text layer
-- [ ] Goals are not updated unless the goal text changes (there is no listener for progress number changes)
+- [x] (fixed in v0.1.6) Goals are not updated unless the goal text changes (there is no listener for progress number changes)
 - [ ] The six number fields in each Headshot section don't do anything yet (later they will allow for custom cropping)
 - [ ] Layers are not stored separately in local storage, and their data is not stored/preloaded to populate fields
 - [ ] Layer data is not stored internally (so it is never cleared to avoid erasing unrelated pixels), so replacing a headshot won't fully clear the pixels from the old headshot

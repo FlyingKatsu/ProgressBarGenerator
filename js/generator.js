@@ -349,93 +349,72 @@ document.addEventListener('DOMContentLoaded', function() {
     cropH: HEADSIZE
   }), false);
 
-  // Update Title Text
-  getElement('title').addEventListener('change', function() {
+  function updateGoalTextLayers() {
+    textLayer.scene.clear();
+    fillLayer.scene.clear();
+    frameLayer.scene.clear();
     drawTextOnLayer(textLayer, getElement('title').value, {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
       font: "48px Open Sans Extra Bold Italic",
+      miter: getElement('miter2').value,
       x: 16,
       y: 0
     });
-  });
+    for (let i = 0; i < 4; i++) {
+      drawOnLayer(frameLayer, {
+        x: 0,
+        y: PAD_TOP + 6 + 120 * i,
+        w: 4 * WIDTH / 5,
+        h: HEADSIZE - 8,
+        color: "#000",
+        percent: 1
+      });
+      drawOnLayer(fillLayer, {
+        x: 0,
+        y: PAD_TOP + 10 + 120 * i,
+        w: 4 * WIDTH / 5 - 4,
+        h: HEADSIZE - 16,
+        color: "#ff0000",
+        percent: getElement('goal-' + (i + 1) + '-A').value / getElement('goal-' + (i + 1) + '-B').value
+      });
+      drawTextOnLayer(textLayer, getElement('goal-' + (i + 1)).value, {
+        thick: 2,
+        stroke: "#000",
+        fill: "#fff",
+        font: "32px Open Sans Extra Bold Italic",
+        miter: getElement('miter2').value,
+        x: 16,
+        y: PAD_TOP + 8 + 120 * i
+      });
+      drawTextOnLayer(textLayer, `${getElement('goal-' + (i + 1) + '-A').value}/${getElement('goal-' + (i + 1) + '-B').value}`, {
+        thick: 2,
+        stroke: "#000",
+        fill: "#fff",
+        font: "32px Open Sans Extra Bold Italic",
+        miter: getElement('miter2').value,
+        align: "right",
+        x: 4 * WIDTH / 5,
+        y: PAD_TOP + 40 + 8 + 120 * i
+      });
+    }
+  }
 
-  getElement('goal-1').addEventListener('change', function() {
-    drawOnLayer(frameLayer, {
-      x: 0,
-      y: PAD_TOP + 6,
-      w: 4 * WIDTH / 5,
-      h: HEADSIZE - 8,
-      color: "#000",
-      percent: 1
-    });
-    drawOnLayer(fillLayer, {
-      x: 0,
-      y: PAD_TOP + 10,
-      w: 4 * WIDTH / 5 - 4,
-      h: HEADSIZE - 16,
-      color: "#ff0000",
-      percent: getElement('goal-1-A').value / getElement('goal-1-B').value
-    });
-    drawTextOnLayer(textLayer, getElement('goal-1').value, {
-      thick: 2,
-      stroke: "#000",
-      fill: "#fff",
-      font: "32px Open Sans Extra Bold Italic",
-      miter: getElement('miter').value,
-      x: 16,
-      y: PAD_TOP + 8
-    });
-    drawTextOnLayer(textLayer, `${getElement('goal-1-A').value}/${getElement('goal-1-B').value}`, {
-      thick: 2,
-      stroke: "#000",
-      fill: "#fff",
-      font: "32px Open Sans Extra Bold Italic",
-      miter: getElement('miter').value,
-      align: "right",
-      x: 4 * WIDTH / 5,
-      y: PAD_TOP + 40 + 8
-    });
-  });
-
-  getElement('goal-2').addEventListener('change', function() {
-    drawOnLayer(frameLayer, {
-      x: 0,
-      y: PAD_TOP + HEADSIZE * 2 + 30,
-      w: 4 * WIDTH / 5,
-      h: HEADSIZE - 8,
-      color: "#000",
-      percent: 1
-    });
-    drawOnLayer(fillLayer, {
-      x: 0,
-      y: PAD_TOP + HEADSIZE * 2 + 34,
-      w: 4 * WIDTH / 5 - 4,
-      h: HEADSIZE - 16,
-      color: "#ff0000",
-      percent: getElement('goal-2-A').value / getElement('goal-2-B').value
-    });
-    drawTextOnLayer(textLayer, getElement('goal-2').value, {
-      thick: 2,
-      stroke: "#000",
-      fill: "#fff",
-      font: "32px Open Sans Extra Bold Italic",
-      miter: getElement('miter').value,
-      x: 16,
-      y: PAD_TOP + HEADSIZE * 2 + 30 + 2
-    });
-    drawTextOnLayer(textLayer, `${getElement('goal-2-A').value}/${getElement('goal-2-B').value}`, {
-      thick: 2,
-      stroke: "#000",
-      fill: "#fff",
-      font: "32px Open Sans Extra Bold Italic",
-      miter: getElement('miter').value,
-      align: "right",
-      x: 4 * WIDTH / 5,
-      y: PAD_TOP + HEADSIZE * 2 + 30 + 44
-    });
-  });
+  // Update Title anf Goal Text
+  getElement('title').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-1').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-1-A').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-1-B').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-2').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-2-A').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-2-B').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-3').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-3-A').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-3-B').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-4').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-4-A').addEventListener('change', updateGoalTextLayers);
+  getElement('goal-4-B').addEventListener('change', updateGoalTextLayers);
 
   // Download using input filename
   getElement('download').addEventListener('click', function() {
@@ -458,6 +437,8 @@ document.addEventListener('DOMContentLoaded', function() {
     textLayer.scene.clear();
     testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
   });
+
+  getElement('miter2').addEventListener('change', updateGoalTextLayers);
 
   getElement('font-sample').addEventListener('change', function() {
     textLayer.scene.clear();

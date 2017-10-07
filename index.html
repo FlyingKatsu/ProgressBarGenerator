@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <title>ProgressBarGenerator v0.1.5 | FlyingKatsu</title>
+  <title>ProgressBarGenerator v0.1.6 | FlyingKatsu</title>
   <meta name="description" content="Image generator for tip jar progress bars">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
   <link href="css/normalize.css" rel="stylesheet" media="all">
@@ -78,7 +78,7 @@
 
 <body>
   <header role="banner">
-    <h1>ProgressBarGenerator v0.1.5</h1>
+    <h1>ProgressBarGenerator v0.1.6</h1>
   </header>
 
   <div class="wrap">
@@ -124,6 +124,10 @@
         <fieldset class="text-editing">
           <legend>Title</legend>
           <input type="text" id="title" name="title" value="TIP JAR //">
+          <div>
+            <label for="miter2">Miter Limit (adjust threshold for sharp corners)</label>
+            <input type="number" id="miter2" name="miter2" value="10">
+          </div>
         </fieldset>
         <fieldset class="text-editing">
           <legend>Goal 1</legend>
@@ -134,8 +138,20 @@
         <fieldset class="text-editing">
           <legend>Goal 2</legend>
           <input type="text" id="goal-2" name="goal-2" value="Serenade">
-          <input type="number" id="goal-2-A" name="goal-2-A" value="27">
-          <input type="number" id="goal-2-B" name="goal-2-B" value="45">
+          <input type="number" id="goal-2-A" name="goal-2-A" value="21">
+          <input type="number" id="goal-2-B" name="goal-2-B" value="120">
+        </fieldset>
+        <fieldset class="text-editing">
+          <legend>Goal 3</legend>
+          <input type="text" id="goal-3" name="goal-3" value="Cat MegaMan.EXE">
+          <input type="number" id="goal-3-A" name="goal-3-A" value="27">
+          <input type="number" id="goal-3-B" name="goal-3-B" value="45">
+        </fieldset>
+        <fieldset class="text-editing">
+          <legend>Goal 4</legend>
+          <input type="text" id="goal-4" name="goal-4" value="Girouette Model Z">
+          <input type="number" id="goal-4-A" name="goal-4-A" value="21">
+          <input type="number" id="goal-4-B" name="goal-4-B" value="150">
         </fieldset>
 
         <fieldset class="img-uploads">
