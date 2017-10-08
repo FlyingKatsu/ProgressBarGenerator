@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
       Style: {},
       Font: {
         size: 48,
-        font: "sans-serif",
+        font: "Impact, Charcoal, sans-serif",
         x: 0,
         y: 0,
         baseline: "hanging",
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
       Font: {
         Name: {
           size: 32,
-          font: "sans-serif",
+          font: "Impact, Charcoal, sans-serif",
           x: 0,
           y: 0,
           baseline: "hanging",
@@ -63,8 +63,8 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         Progress: {
           size: 24,
-          font: "sans-serif",
-          x: 0,
+          font: "Impact, Charcoal, sans-serif",
+          x: 64,
           y: 0,
           baseline: "hanging",
           align: "right",
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       Font: {
         size: 32,
-        font: "sans-serif",
+        font: "Impact, Charcoal, sans-serif",
         x: 0,
         y: 0,
         baseline: "hanging",
@@ -162,6 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
     ctx.strokeStyle = options.stroke;
     ctx.fillStyle = options.fill;
     ctx.font = options.font || options.fontsize + "px " + options.fontfamily;
+    ctx.font = "italic " + ctx.font;
     ctx.textAlign = options.align || "left";
     ctx.textBaseline = options.baseline || "hanging";
     if (options.miter) ctx.miterLimit = options.miter;
@@ -191,6 +192,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Preload fonts into cache for quicker display
   testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px sans-serif');
+  testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Impact, Charcoal, sans-serif');
   testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Exo Black Italic');
   testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Kanit Black Italic');
   testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Open Sans Extra Bold Italic');
@@ -206,6 +208,9 @@ document.addEventListener('DOMContentLoaded', function() {
     img.onload = function() {
       drawImageOnLayer(bgLayer, img, { x: 0, y: 0, w: WIDTH, h: HEIGHT, cropX: 0, cropY: 0, cropW: WIDTH * 2, cropH: HEIGHT * 2 });
     }
+  } else {
+    updateGoalTextLayers();
+    //RedrawText();
   }
 
   // Layer Redraws
@@ -243,7 +248,7 @@ document.addEventListener('DOMContentLoaded', function() {
         y: INPUT.Goal.Style.Position.y + INPUT.Goal.Font.Name.y + (INPUT.Goal.Font.Name.size + INPUT.Goal.Style.Space.y) * i
       });
       // Goal Progress
-      drawTextOnLayer(textLayer, `${goal.progress.a}/${goal.progress.b}`, {
+      drawTextOnLayer(textLayer, `${goal.progress.a} / ${goal.progress.b}`, {
         thick: INPUT.Goal.Font.Progress.stroke,
         stroke: INPUT.Goal.Font.Progress.line,
         fill: INPUT.Goal.Font.Progress.fill,
@@ -251,7 +256,7 @@ document.addEventListener('DOMContentLoaded', function() {
         fontfamily: INPUT.Goal.Font.Progress.font,
         align: INPUT.Goal.Font.Progress.align,
         baseline: INPUT.Goal.Font.Progress.baseline,
-        x: INPUT.Goal.Style.Position.x + INPUT.Goal.Font.Progress.x,
+        x: WIDTH - INPUT.Goal.Font.Progress.x,
         y: INPUT.Goal.Style.Position.y + INPUT.Goal.Font.Progress.y + (INPUT.Goal.Font.Name.size + INPUT.Goal.Style.Space.y) * i
       });
     });
@@ -271,8 +276,6 @@ document.addEventListener('DOMContentLoaded', function() {
       });
     });
   }
-
-  RedrawText();
 
   // =========================
   // Button Controls
@@ -357,7 +360,7 @@ document.addEventListener('DOMContentLoaded', function() {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
-      font: "48px Open Sans Extra Bold Italic",
+      font: "48px Impact, Charcoal, sans-serif",
       miter: getElement('miter2').value,
       x: 16,
       y: 0
@@ -383,20 +386,20 @@ document.addEventListener('DOMContentLoaded', function() {
         thick: 2,
         stroke: "#000",
         fill: "#fff",
-        font: "32px Open Sans Extra Bold Italic",
+        font: "32px Impact, Charcoal, sans-serif",
         miter: getElement('miter2').value,
         x: 16,
-        y: PAD_TOP + 8 + 120 * i
+        y: PAD_TOP + 13 + 120 * i
       });
-      drawTextOnLayer(textLayer, `${getElement('goal-' + (i + 1) + '-A').value}/${getElement('goal-' + (i + 1) + '-B').value}`, {
+      drawTextOnLayer(textLayer, `${getElement('goal-' + (i + 1) + '-A').value} / ${getElement('goal-' + (i + 1) + '-B').value}`, {
         thick: 2,
         stroke: "#000",
         fill: "#fff",
-        font: "32px Open Sans Extra Bold Italic",
+        font: "32px Impact, Charcoal, sans-serif",
         miter: getElement('miter2').value,
         align: "right",
-        x: 4 * WIDTH / 5,
-        y: PAD_TOP + 40 + 8 + 120 * i
+        x: 4 * WIDTH / 5 - 8,
+        y: PAD_TOP + 40 + 13 + 120 * i
       });
     }
   }
@@ -446,7 +449,7 @@ document.addEventListener('DOMContentLoaded', function() {
   });
 
   getElement('font-family').addEventListener('change', function() {
-    getElement('font-family').style = `font-family: '${getElement('font-family').value}';`;
+    getElement('font-family').style = `font-family: ${getElement('font-family').value}; font-style: italic;`;
     textLayer.scene.clear();
     testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
   });

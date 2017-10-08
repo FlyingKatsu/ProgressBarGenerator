@@ -95,6 +95,12 @@
 
 select[name="font"] {
   font-family: sans-serif;
+  font-style: italic;
+}
+
+select[name="font"] .Impact {
+  font-family: Impact, Charcoal, sans-serif;
+  font-style: italic;
 }
 
 select[name="font"] .Sans {

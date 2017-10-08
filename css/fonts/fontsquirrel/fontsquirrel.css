@@ -47,11 +47,17 @@
 
 select[name="font"] {
   /* Default Font */
-  font-family: sans-serif;
+  font-family: Impact, Charcoal, sans-serif;
+  font-style: italic;
 }
 
 select[name="font"] .Sans {
   font-family: sans-serif;
+}
+
+select[name="font"] .Impact {
+  font-family: Impact, Charcoal, sans-serif;
+  font-style: italic;
 }
 
 select[name="font"] .Exo {

@@ -27,6 +27,8 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 
 #### Changes and Fixes
 
+- Default canvas shows current HTML values instead of sample text (0.1.7)
+- Added Impact Italic as the default font (0.1.7)
 - Added two more goal text inputs, a separate miter input for title/goal text, and consolidated update functions for title text, goal text, and progress values (0.1.6)
 - Updated the goal and title text updates to use the specified miterLimit (0.1.5)
 - Fixed missing font reference introduced in 0.1.2 (0.1.5)
@@ -48,7 +50,7 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 - [x] (fixed in v0.1.3) Web fonts do not render on mobile devices
 - [x] (fixed in v0.1.1) Clearing canvas does not clear all layers, so if frameLayer or fillLayer have stuff, they return when the viewport is restored (ie using the font tester), even after clearing the viewport scene with `Clear Canvas`
 - [ ] Data-Driven input object is not updated by the current UI form inputs
-- [ ] `RedrawText()` is only used on page load so it can only be viewed cleanly on page load if the local storage is cleared
+- [x] (removed in v0.1.7) `RedrawText()` is only used on page load so it can only be viewed cleanly on page load if the local storage is cleared
 - [x] (fixed in v0.1.4) Some fonts have undesirable visual artifacts at small sizes
 - [ ] No support for custom fonts (must use those available to browser or in the dropdown)
 - [ ] Canvas does not resize automatically when text/images are out of bounds
