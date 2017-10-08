@@ -27,6 +27,8 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 
 #### Changes and Fixes
 
+- Headshots are redrawn whenever any headshot changes (0.1.8)
+- Layers are saved and restored separately (0.1.8)
 - Default canvas shows current HTML values instead of sample text (0.1.7)
 - Added Impact Italic as the default font (0.1.7)
 - Added two more goal text inputs, a separate miter input for title/goal text, and consolidated update functions for title text, goal text, and progress values (0.1.6)
@@ -47,6 +49,7 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 
 #### Known Issues
 
+- [ ] Because HTML form values are not yet saved, uploading a headshot will clear the layer of any other headshots restored from local storage (0.1.8)
 - [x] (fixed in v0.1.3) Web fonts do not render on mobile devices
 - [x] (fixed in v0.1.1) Clearing canvas does not clear all layers, so if frameLayer or fillLayer have stuff, they return when the viewport is restored (ie using the font tester), even after clearing the viewport scene with `Clear Canvas`
 - [ ] Data-Driven input object is not updated by the current UI form inputs
@@ -74,5 +77,5 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 - [x] (fixed in v0.1.0) Changing the title text clears the entire text layer
 - [x] (fixed in v0.1.6) Goals are not updated unless the goal text changes (there is no listener for progress number changes)
 - [ ] The six number fields in each Headshot section don't do anything yet (later they will allow for custom cropping)
-- [ ] Layers are not stored separately in local storage, and their data is not stored/preloaded to populate fields
-- [ ] Layer data is not stored internally (so it is never cleared to avoid erasing unrelated pixels), so replacing a headshot won't fully clear the pixels from the old headshot
+- [x] (fixed in v0.1.8) Layers are not stored separately in local storage, and their data is not stored/preloaded to populate fields
+- [x] (fixed in v0.1.8) Layer data is not stored internally (so it is never cleared to avoid erasing unrelated pixels), so replacing a headshot won't fully clear the pixels from the old headshot

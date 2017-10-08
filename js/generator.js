@@ -203,11 +203,21 @@ document.addEventListener('DOMContentLoaded', function() {
   // =========================
   // TODO: storage by layers
   if (localStorage.getItem('imageDataURL')) {
-    var img = new Image();
-    img.src = localStorage.getItem('imageDataURL');
-    img.onload = function() {
-      drawImageOnLayer(bgLayer, img, { x: 0, y: 0, w: WIDTH, h: HEIGHT, cropX: 0, cropY: 0, cropW: WIDTH * 2, cropH: HEIGHT * 2 });
-    }
+    let layers = [
+      { key: 'textLayer', value: textLayer },
+      { key: 'fillLayer', value: fillLayer },
+      { key: 'frameLayer', value: frameLayer },
+      { key: 'bgLayer', value: bgLayer },
+    ];
+    layers.map(function(layer) {
+      if (localStorage.getItem(layer.key)) {
+        let img = new Image();
+        img.src = localStorage.getItem(layer.key);
+        img.onload = function() {
+          drawImageOnLayer(layer.value, img, { x: 0, y: 0, w: WIDTH, h: HEIGHT, cropX: 0, cropY: 0, cropW: WIDTH * 2, cropH: HEIGHT * 2 });
+        }
+      }
+    });
   } else {
     updateGoalTextLayers();
     //RedrawText();
@@ -282,7 +292,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // =========================
 
   function updateImageInput(id, img) {
-    getElement(id + '-preview').innerHTML = `<img src="${img.src}">`;
+    getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${img.src}">`;
     getElement(id + '-W').value = img.naturalWidth;
     getElement(id + '-H').value = img.naturalHeight;
     getElement(id + '-cropX').value = 0;
@@ -291,8 +301,29 @@ document.addEventListener('DOMContentLoaded', function() {
     getElement(id + '-cropH').value = img.naturalHeight;
   }
 
+  function updateHeadshots() {
+    bgLayer.scene.clear();
+    for (let i = 0; i < 4; i++) {
+      let e = getElement('upload-' + (i + 1) + '-img');
+      if (e) {
+        let img = new Image();
+        img.src = e.src;
+        drawImageOnLayer(bgLayer, img, {
+          x: WIDTH - PAD_RIGHT,
+          y: PAD_TOP + 120 * i,
+          w: HEADSIZE,
+          h: HEADSIZE,
+          cropX: 0,
+          cropY: 0,
+          cropW: HEADSIZE,
+          cropH: HEADSIZE
+        });
+      }
+    }
+  }
+
   // Draw uploaded image
-  function drawImageTo(id, options) {
+  function drawImageTo(id) {
     return function() {
       if (this.files && this.files[0]) {
         var FR = new FileReader();
@@ -300,7 +331,7 @@ document.addEventListener('DOMContentLoaded', function() {
           var img = new Image();
           img.addEventListener("load", function() {
             updateImageInput(id, img);
-            drawImageOnLayer(fillLayer, img, options);
+            updateHeadshots();
           });
           img.src = e.target.result;
         };
@@ -308,49 +339,11 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     }
   }
-  getElement('upload-1').addEventListener("change", drawImageTo('upload-1', {
-    x: WIDTH - PAD_RIGHT,
-    y: PAD_TOP,
-    w: HEADSIZE,
-    h: HEADSIZE,
-    cropX: 0,
-    cropY: 0,
-    cropW: HEADSIZE,
-    cropH: HEADSIZE
-  }), false);
 
-  getElement('upload-2').addEventListener("change", drawImageTo('upload-2', {
-    x: WIDTH - PAD_RIGHT,
-    y: PAD_TOP + HEADSIZE * 2 + HEADSIZE / 2,
-    w: HEADSIZE,
-    h: HEADSIZE,
-    cropX: 0,
-    cropY: 0,
-    cropW: HEADSIZE,
-    cropH: HEADSIZE
-  }), false);
-
-  getElement('upload-3').addEventListener("change", drawImageTo('upload-3', {
-    x: WIDTH - PAD_RIGHT,
-    y: PAD_TOP + HEADSIZE * 4 + HEADSIZE / 2 * 2,
-    w: HEADSIZE,
-    h: HEADSIZE,
-    cropX: 0,
-    cropY: 0,
-    cropW: HEADSIZE,
-    cropH: HEADSIZE
-  }), false);
-
-  getElement('upload-4').addEventListener("change", drawImageTo('upload-4', {
-    x: WIDTH - PAD_RIGHT,
-    y: PAD_TOP + HEADSIZE * 6 + HEADSIZE / 2 * 3,
-    w: HEADSIZE,
-    h: HEADSIZE,
-    cropX: 0,
-    cropY: 0,
-    cropW: HEADSIZE,
-    cropH: HEADSIZE
-  }), false);
+  getElement('upload-1').addEventListener("change", drawImageTo('upload-1'), false);
+  getElement('upload-2').addEventListener("change", drawImageTo('upload-2'), false);
+  getElement('upload-3').addEventListener("change", drawImageTo('upload-3'), false);
+  getElement('upload-4').addEventListener("change", drawImageTo('upload-4'), false);
 
   function updateGoalTextLayers() {
     textLayer.scene.clear();
@@ -423,6 +416,10 @@ document.addEventListener('DOMContentLoaded', function() {
   getElement('download').addEventListener('click', function() {
     // Save in storage
     localStorage.setItem('imageDataURL', viewport.scene.canvas.toDataURL());
+    localStorage.setItem('textLayer', textLayer.scene.canvas.toDataURL());
+    localStorage.setItem('fillLayer', fillLayer.scene.canvas.toDataURL());
+    localStorage.setItem('frameLayer', frameLayer.scene.canvas.toDataURL());
+    localStorage.setItem('bgLayer', bgLayer.scene.canvas.toDataURL());
     localStorage.setItem('settings', 'TODO');
     // Download file
     viewport.scene.download({
