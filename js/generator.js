@@ -484,9 +484,6 @@ getElement('donate').addEventListener('click', function() {
 });
 
 function applySpread(goals, target, tarAmt, spreadAmt) {
-  console.log("target + " + tarAmt);
-  console.log("spread + " + spreadAmt);
-  console.log(1 + tarAmt);
   for (let i = 0; i < goals.length; i++) {
     let current = goals[i].elements["goal-" + (i + 1) + "-A"];
     if ((i + 1) == target) {
@@ -494,7 +491,6 @@ function applySpread(goals, target, tarAmt, spreadAmt) {
     } else {
       current.value = parseFloat(current.value) + spreadAmt;
     }
-    console.log(current.value);
   }
 }
 
