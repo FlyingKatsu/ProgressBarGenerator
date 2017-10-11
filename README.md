@@ -27,6 +27,7 @@ The main JavaScript file is loaded after the HTML page is finished loading. This
 
 #### Changes and Fixes
 
+- Current values are now rounded to 2 decimal places in the visualization (0.1.10)
 - Main script is now loaded using `defer` which may not be supported in all browsers. See [CanIUse](http://caniuse.com/#feat=script-defer) (0.1.9)
 - Added functionality for calculating newly added donations, splitting by a given percentage. This will update both the visuals and the HTML form values (0.1.9)
 - Headshots are redrawn whenever any headshot changes (0.1.8)

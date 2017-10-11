@@ -487,9 +487,9 @@ function applySpread(goals, target, tarAmt, spreadAmt) {
   for (let i = 0; i < goals.length; i++) {
     let current = goals[i].elements["goal-" + (i + 1) + "-A"];
     if ((i + 1) == target) {
-      current.value = parseFloat(current.value) + tarAmt;
+      current.value = round(parseFloat(current.value) + tarAmt, 2);
     } else {
-      current.value = parseFloat(current.value) + spreadAmt;
+      current.value = round(parseFloat(current.value) + spreadAmt, 2);
     }
   }
 }
