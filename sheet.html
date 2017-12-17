@@ -7,6 +7,7 @@
   <script src="js/main.js" media="all"></script>
   <script src="js/data.js" media="all"></script>
   <script src="js/gapi.js" media="all"></script>
+  <script src="js/form.js" media="all"></script>
 </head>
 
 <body>
@@ -31,10 +32,12 @@
 
   <div>
     <h3>Configuration</h3>
-    Default sheet loaded for this application:
-    <a href="https://docs.google.com/spreadsheets/d/1aYB9GsxRi7aUoCF8VkP0-gixdVA55pLC1HDmthVzA8I/" target="_blank">ProgressBarData</a>
-    <label for="sheetid">SheetID (found in the url)</label>
-    <input type="text" name="sheetid" value="1aYB9GsxRi7aUoCF8VkP0-gixdVA55pLC1HDmthVzA8I" />
+    <div id="filedetails-container">
+      <h4>File Details</h4>
+      <label for="sheetid">SheetID</label>
+      <input type="text" id="sheetid" name="sheetid" value="1aYB9GsxRi7aUoCF8VkP0-gixdVA55pLC1HDmthVzA8I" /> <button onclick="updateSheetFile()">Load</button> <button onclick="resetSheetFile()">Reset</button>
+      <div id="filedetails"></div>
+    </div>
     <label for="goalrange">Goal Sheet Range (formatted as 'SheetName'!TopLeft:BottomRight)</label>
     <input type="text" name="goalrange" value="'Goals'!A:J" />
     <label for="donrange">Donation Sheet Range (formatted as 'SheetName'!TopLeft:BottomRight)</label>

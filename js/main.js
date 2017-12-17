@@ -7,6 +7,17 @@
  * ================================================
  */
 let SHEET_DATA = {
+  Defaults: {
+    SheetID: '1aYB9GsxRi7aUoCF8VkP0-gixdVA55pLC1HDmthVzA8I',
+    Goals: {
+      range: `'Goals'!A:J`,
+      header: {},
+    },
+    Donations: {
+      range: `'Donations'!A:F`,
+      header: {}
+    }
+  },
   SheetID: '1aYB9GsxRi7aUoCF8VkP0-gixdVA55pLC1HDmthVzA8I',
   Goals: {
     range: `'Goals'!A:J`,
@@ -55,10 +66,59 @@ let USER_DATA = {
  * @author https://stackoverflow.com/a/34796988
  * @param {number} value The value to round
  * @param {number} decimals The number of decimal places to keep
+ * @returns {number} A number rounded from value with the given number of decimal places
  */
 let round = function(value, decimals) {
   return parseFloat(Number(Math.round(value + 'e' + decimals) + 'e-' + decimals).toFixed(decimals));
 }
+
+/**
+ * @author https://stackoverflow.com/a/23259289
+ * @param {string} date A string that can be interpreted as a Date
+ * @returns {string} Description of how much time has passed since date
+ */
+var timeSince = function(date) {
+  if (typeof date !== 'object') {
+    date = new Date(date);
+  }
+
+  var seconds = Math.floor((new Date() - date) / 1000);
+  var intervalType;
+
+  var interval = Math.floor(seconds / 31536000);
+  if (interval >= 1) {
+    intervalType = 'year';
+  } else {
+    interval = Math.floor(seconds / 2592000);
+    if (interval >= 1) {
+      intervalType = 'month';
+    } else {
+      interval = Math.floor(seconds / 86400);
+      if (interval >= 1) {
+        intervalType = 'day';
+      } else {
+        interval = Math.floor(seconds / 3600);
+        if (interval >= 1) {
+          intervalType = "hour";
+        } else {
+          interval = Math.floor(seconds / 60);
+          if (interval >= 1) {
+            intervalType = "minute";
+          } else {
+            interval = seconds;
+            intervalType = "second";
+          }
+        }
+      }
+    }
+  }
+
+  if (interval > 1 || interval === 0) {
+    intervalType += 's';
+  }
+
+  return interval + ' ' + intervalType;
+};
 
 /** Convert a string into an expected data type
  * @param {string} value The value to convert

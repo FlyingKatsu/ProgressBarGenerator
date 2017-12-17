@@ -14,15 +14,15 @@ let CLIENT_ID = '512129943461-2b4pukfo7qp3a2fa3tmtm6s64og6fbu5.apps.googleuserco
 //let CLIENT_ID = '512129943461-3nt2hu7nq6oobtnrl8iba07mrfgjdcpc.apps.googleusercontent.com';
 
 // Allows reading a spreadsheet
-let SCOPE = 'https://www.googleapis.com/auth/spreadsheets.readonly';
+let SCOPES = ['https://www.googleapis.com/auth/drive.file', 'https://www.googleapis.com/auth/spreadsheets'];
 // Specifies which API to use
-let DISCOVERY = ['https://sheets.googleapis.com/$discovery/rest?version=v4'];
+let DISCOVERY = ['https://www.googleapis.com/discovery/v1/apis/drive/v3/rest', 'https://sheets.googleapis.com/$discovery/rest?version=v4'];
 
 var initClient = function() {
   gapi.client.init({
       apiKey: API_KEY,
       clientId: CLIENT_ID,
-      scope: SCOPE,
+      scope: SCOPES,
       discoveryDocs: DISCOVERY
     })
     .then(() => {
@@ -37,7 +37,7 @@ function handleClientLoad() {
 
 var updateSignInStatus = function(isSignedIn) {
   if (isSignedIn) {
-    makeAPICall();
+    makeAPICall().catch(console.error);
   }
 };
 
@@ -49,7 +49,7 @@ function handleSignOutClick(event) {
   gapi.auth2.getAuthInstance().signOut();
 }
 
-// Load data from Goals and Donations sheets
+// RETURNS A PROMISE Load data from Goals and Donations sheets
 var makeAPICall = function() {
   let params = {
     spreadsheetId: SHEET_DATA.SheetID,
@@ -57,7 +57,7 @@ var makeAPICall = function() {
     valueRenderOption: 'UNFORMATTED_VALUE'
   };
   let request = gapi.client.sheets.spreadsheets.values.batchGet(params);
-  request
+  return request
     .then((response) => {
       setHeaders("Goals", response.result.valueRanges[0].values[0]);
       setHeaders("Donations", response.result.valueRanges[1].values[0]);
@@ -65,5 +65,43 @@ var makeAPICall = function() {
     })
     .catch((error) => {
       console.error(error);
+    });
+};
+
+// RETURNS A PROMISE Get details about the file
+var getFileDetails = function(id) {
+  let fileID = id || SHEET_DATA.SheetID;
+  let params = {
+    fileId: fileID,
+    fields: 'name, description, lastModifyingUser, modifiedTime, webViewLink, capabilities'
+  };
+  let request = gapi.client.drive.files.get(params);
+  return request
+    .then((response) => {
+      console.log(response.result);
+      return response.result;
+    })
+    .catch((error) => {
+      console.error(error);
+      return error;
+    });
+};
+
+// RETURNS A PROMISE Check if the user can edit the file
+var userCanEditFile = function(id) {
+  let fileID = id || SHEET_DATA.SheetID;
+  let params = {
+    fileId: fileID,
+    fields: ['capabilities']
+  };
+  let request = gapi.client.drive.files.get(params);
+  return request
+    .then((response) => {
+      console.log(response);
+      if (response.result.capabilities) return response.result.capabilities.canEdit;
+    })
+    .catch((error) => {
+      console.error(error);
+      return false;
     });
 };
