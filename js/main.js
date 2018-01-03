@@ -70,7 +70,36 @@ let USER_DATA = {
  */
 let round = function(value, decimals) {
   return parseFloat(Number(Math.round(value + 'e' + decimals) + 'e-' + decimals).toFixed(decimals));
-}
+};
+
+/** Convert number (or compatible string) to $1.23 format */
+let dollarify = function(value) {
+  let text = value + "";
+  let index = text.indexOf('.');
+  if (index < 0) { // Number has no decimals
+    return `${text}.00`;
+  } else {
+    if (index == 0) text = "0" + text; // Number has no leading 0
+    if (text.substr(index).length < 3) { // Number has too few decimal places
+      return `${text}0`;
+    } else { // Number has too many decimal places
+      return `${text.substring(0,index+3)}`;
+    }
+  }
+};
+
+/** Log Levels */
+let LogLevel = {
+  Verbose: 0,
+  Standard: 1,
+  Top: 2
+};
+
+let loggerFactory = function(level, logger) {
+  return function(lvl, text) {
+    if (lvl >= level) logger(text);
+  };
+};
 
 /**
  * @author https://stackoverflow.com/a/23259289
@@ -245,8 +274,23 @@ let GetValueFromRow = function(row, prop, type, repo) {
 /** For use AFTER the USER_DATA has been populated with goals and donations. 
  * Iterates over Donations to update Goal progress data for canvas drawing.
  */
-let processDonations = function() {
+let processDonations = function(logger) {
+  if (logger == null) {
+    logger = loggerFactory(LogLevel.Standard, console.log);
+  };
   USER_DATA.Donations.map((donation, i, arr) => {
-    if (donation) donation.Apply();
+    if (donation) donation.Apply(logger);
   });
+  logger(LogLevel.Top, `Processed ${USER_DATA.Donations.length} donations.`);
+};
+
+/**
+ * Prints the current progress of the current goals in the slots
+ */
+let currentProgress = function() {
+  for (let i = 0; i < USER_DATA.Goals.numSlots; i++) {
+    let c = USER_DATA.Goals.current[i];
+    let goal = USER_DATA.Goals.slots[i][c];
+    console.log(`Goal ${i+1}: ${goal.displayName} ${goal.progress} / ${goal.cost}`);
+  }
 };

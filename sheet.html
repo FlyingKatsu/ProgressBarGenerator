@@ -31,6 +31,18 @@
   <button id="signout-button" onclick="handleSignOutClick()">Sign out</button>
 
   <div>
+    <h3>Data</h3>
+    <div id="data-container">
+      <button onclick="logProcessDonations()">Process Donations</button>
+      <div id="log-donations"></div>
+
+      <button onclick="logCurrentProgress()">Check Goal Progress</button>
+      <div id="log-progress"></div>
+
+    </div>
+  </div>
+
+  <div>
     <h3>Configuration</h3>
     <div id="filedetails-container">
       <h4>File Details</h4>
@@ -48,6 +60,16 @@
 
   <div>
     <h3>Sandbox</h3>
+    <div id="testFP">
+      <h4>How will my donation be applied?</h4>
+      <p>Preview for round-off errors. Check if your donation will fall short (-0.01) or go beyond (+0.01). NOTE: This does not take currency conversions into account.</p>
+      <label for="amount">Donation Amount</label>
+      <input type="number" name="amount" value=10.00 min=1.00 step=1.00 />
+      <label for="split" title="What fraction of the donation should go to the intended goal. The remaining amount will be split evenly across all other goals.">Donation Split</label>
+      <input type="number" name="split" value=0.8 min=0.0 max=1.0 step=0.05 />
+      <button onclick="testFPError()">Check Error</button>
+      <div id="log-testFP"></div>
+    </div>
   </div>
 
   <div>

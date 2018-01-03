@@ -86,7 +86,7 @@ GoalFactory.prototype.AddToUserData = function() {
  * @param {string} userName Donation.user name of whoever gave this donation amount
  * @param {string} method How this amount should be treated. Values: 'target', 'spread', 'leftover'
  */
-GoalFactory.prototype.ApplySplitDonation = function(amt, userID, userName, method) {
+GoalFactory.prototype.ApplySplitDonation = function(amt, userID, userName, method, logFunc) {
   // Apply amount
   this.progress = round(parseFloat(this.progress) + amt, 2);
   // Remember the donor, but only if the goal was the target
@@ -106,15 +106,23 @@ GoalFactory.prototype.ApplySplitDonation = function(amt, userID, userName, metho
     } else {
       // Add the leftovers to the new current goal in this slot
       USER_DATA.Goals.slots[this.slot][USER_DATA.Goals.current[this.slot]]
-        .ApplySplitDonation(leftover, userID, userName, "leftover");
+        .ApplySplitDonation(leftover, userID, userName, "leftover", logFunc);
     }
     // Report awesomeness
     if (method == "spread") {
-      console.log(`BONUS!! ${userName}'s donation spread filled up ${this.displayName}!`);
+      logFunc(LogLevel.Top, `BONUS!! ${userName}'s donation spread filled up ${this.displayName}! (+${dollarify(amt)})`);
     } else if (method == "target") {
-      console.log(`${userName}'s donation filled up ${this.displayName}!`);
+      logFunc(LogLevel.Top, `${userName}'s donation filled up ${this.displayName}! (+${dollarify(amt)})`);
     } else {
-      console.log(`SUPER BONUS!! ${userName}'s donation leftovers filled up ${this.displayName}!`);
+      logFunc(LogLevel.Top, `SUPER BONUS!! ${userName}'s donation leftovers filled up ${this.displayName}! (+${dollarify(amt)})`);
+    }
+  } else {
+    if (method == "target") {
+      logFunc(LogLevel.Standard, `${userName} raised ${this.displayName} to ${dollarify(this.progress)} (+${dollarify(amt)})`);
+    } else if (method == "spread") {
+      logFunc(LogLevel.Verbose, `Spread from ${userName}'s donation boosted ${this.displayName} to ${dollarify(this.progress)} (+${dollarify(amt)})`);
+    } else {
+      logFunc(LogLevel.Top, `${userName}'s donation spilled over into ${this.displayName} ${dollarify(this.progress)} (+${dollarify(amt)})`);
     }
   }
 };
@@ -159,7 +167,7 @@ DonationFactory.prototype.AddToUserData = function() {
 };
 
 /** Apply a donation and update its target goal */
-DonationFactory.prototype.Apply = function() {
+DonationFactory.prototype.Apply = function(logFunc) {
   // Ignore null targets
   if (!this.target) return;
   // Split amount and give to each of the current goals
@@ -168,9 +176,9 @@ DonationFactory.prototype.Apply = function() {
   for (let i = 0; i < USER_DATA.Goals.numSlots; i++) {
     let goal = USER_DATA.Goals.slots[i][USER_DATA.Goals.current[i]];
     if (goal == this.target) {
-      goal.ApplySplitDonation(targetAmt, this.id, this.user, "target");
+      goal.ApplySplitDonation(targetAmt, this.id, this.user, "target", logFunc);
     } else {
-      goal.ApplySplitDonation(spreadAmt, this.id, this.user, "spread");
+      goal.ApplySplitDonation(spreadAmt, this.id, this.user, "spread", logFunc);
     }
   }
 };
