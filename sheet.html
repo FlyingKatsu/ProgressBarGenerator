@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+
+<head>
+  <meta charset="utf-8">
+  <title>ProgressBarGenerator SheetReader | FlyingKatsu</title>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="js/main.js" media="all"></script>
+  <script src="js/data.js" media="all"></script>
+  <script src="js/gapi.js" media="all"></script>
+  <script src="js/form.js" media="all"></script>
+</head>
+
+<body>
+  <h2>Instructions</h2>
+  <h3>Load Data</h3>
+  <p>Goal and donation data is loaded from a Google Sheet document identified by SheetID, via the Google Sheets API v4. This application will read the sheet data and convert the data into Goal and Donation object data that can be used for calculations and
+    drawing to the canvas.</p>
+  <p>Click on the LoadData button to reload the sheet data, recalculate progress, and redraw the canvas. You may be prompted to sign in to Google and allow this app to read your spreadsheet data.</p>
+  <h3>Calculate and Visualize Goal Progress</h3>
+  <p>You may use this application as a sandbox seeded with data loaded from a Google Sheet. Any values you change here will only exist in this context. The changes will never be written to the Google Sheet.</p>
+  <p>Change any of the input values in the Sandbox section to add your temporary data to the calculations and canvas.</p>
+  <p>Click on the Calculate button to recalculate progress and redraw the canvas.</p>
+  <h3>Customize Appearance</h3>
+  <p>You may customize the design of the progress bar graphic. Your design changes will be stored in your browser's local storage.</p>
+  <p>Change any of the input values in the Design section to make your design changes.</p>
+  <p>Click on the Draw button to redraw the canvas.</p>
+  <p>Click on the Download button to save the image as a PNG file.</p>
+  <script async defer src="https://apis.google.com/js/api.js" onload="this.onload=function(){};handleClientLoad()" onreadystatechange="if (this.readyState === 'complete') this.onload()">
+  </script>
+  <button id="signin-button" onclick="handleSignInClick()">Sign in</button>
+  <button id="signout-button" onclick="handleSignOutClick()">Sign out</button>
+
+  <div>
+    <h3>Data</h3>
+    <div id="data-container">
+      <button onclick="logProcessDonations()">Process Donations</button>
+      <div id="log-donations"></div>
+
+      <button onclick="logCurrentProgress()">Check Goal Progress</button>
+      <div id="log-progress"></div>
+
+    </div>
+  </div>
+
+  <div>
+    <h3>Configuration</h3>
+    <div id="filedetails-container">
+      <h4>File Details</h4>
+      <label for="sheetid">SheetID</label>
+      <input type="text" id="sheetid" name="sheetid" value="1aYB9GsxRi7aUoCF8VkP0-gixdVA55pLC1HDmthVzA8I" /> <button onclick="updateSheetFile()">Load</button> <button onclick="resetSheetFile()">Reset</button>
+      <div id="filedetails"></div>
+    </div>
+    <label for="goalrange">Goal Sheet Range (formatted as 'SheetName'!TopLeft:BottomRight)</label>
+    <input type="text" name="goalrange" value="'Goals'!A:J" />
+    <label for="donrange">Donation Sheet Range (formatted as 'SheetName'!TopLeft:BottomRight)</label>
+    <input type="text" name="donrange" value="'Donations'!A:F" />
+    <label for="numslots">Number of Slots</label>
+    <input type="number" name="numslots" value=4 min=0 max=10 step=1 />
+  </div>
+
+  <div>
+    <h3>Sandbox</h3>
+    <div id="testFP">
+      <h4>How will my donation be applied?</h4>
+      <p>Preview for round-off errors. Check if your donation will fall short (-0.01) or go beyond (+0.01). NOTE: This does not take currency conversions into account.</p>
+      <label for="amount">Donation Amount</label>
+      <input type="number" name="amount" value=10.00 min=1.00 step=1.00 />
+      <label for="split" title="What fraction of the donation should go to the intended goal. The remaining amount will be split evenly across all other goals.">Donation Split</label>
+      <input type="number" name="split" value=0.8 min=0.0 max=1.0 step=0.05 />
+      <button onclick="testFPError()">Check Error</button>
+      <div id="log-testFP"></div>
+    </div>
+  </div>
+
+  <div>
+    <h3>Design</h3>
+  </div>
+</body>
