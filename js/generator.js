@@ -6,6 +6,17 @@ function round(value, decimals) {
   return parseFloat(Number(Math.round(value + 'e' + decimals) + 'e-' + decimals).toFixed(decimals));
 }
 
+// VERSIONING
+const VERSION = "v0.3.1";
+// Check if version mismatch
+const verMismatch = localStorage.getItem('version') ? (localStorage.getItem('version') != VERSION) : true;
+// Update version
+if (verMismatch) {
+  localStorage.setItem('version', VERSION);
+  getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
+  getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
+}
+
 // NOTE: output image is double these dimensions
 WIDTH = 480;
 HEIGHT = 560;
@@ -125,11 +136,13 @@ var bgLayer = new Concrete.Layer();
 var frameLayer = new Concrete.Layer();
 var fillLayer = new Concrete.Layer();
 var textLayer = new Concrete.Layer();
+var headLayer = new Concrete.Layer();
 
 viewport.add(bgLayer)
   .add(frameLayer)
   .add(fillLayer)
-  .add(textLayer);
+  .add(textLayer)
+  .add(headLayer);
 
 let drawOnLayer = function(layer, options) {
   let scene = layer.scene;
@@ -205,7 +218,7 @@ textLayer.scene.clear();
 // Restore Canvas
 // =========================
 // TODO: storage by layers
-if (localStorage.getItem('imageDataURL')) {
+if (!verMismatch && localStorage.getItem('imageDataURL')) {
   let layers = [
     { key: 'textLayer', value: textLayer },
     { key: 'fillLayer', value: fillLayer },
@@ -223,6 +236,11 @@ if (localStorage.getItem('imageDataURL')) {
   });
 } else {
   updateGoalTextLayers();
+  //getElement('upload-1').files[0] = "img/Unknown.png";
+  //getElement('upload-2').files[0] = "img/Unknown.png";
+  //getElement('upload-3').files[0] = "img/Unknown.png";
+  //getElement('upload-4').files[0] = "img/Unknown.png";
+  updateHeadshots();
   //RedrawText();
 }
 
@@ -306,20 +324,21 @@ function updateImageInput(id, img) {
 
 function updateHeadshots() {
   bgLayer.scene.clear();
+  headLayer.scene.clear();
   for (let i = 0; i < 4; i++) {
     let e = getElement('upload-' + (i + 1) + '-img');
     if (e) {
       let img = new Image();
       img.src = e.src;
-      drawImageOnLayer(bgLayer, img, {
-        x: WIDTH - PAD_RIGHT,
-        y: PAD_TOP + 120 * i,
-        w: HEADSIZE,
-        h: HEADSIZE,
+      drawImageOnLayer(headLayer, img, {
+        x: 2 / 3 * WIDTH,
+        y: 40 + 120 * i,
+        w: 96,
+        h: 96,
         cropX: 0,
         cropY: 0,
-        cropW: HEADSIZE,
-        cropH: HEADSIZE
+        cropW: 128,
+        cropH: 128
       });
     }
   }
@@ -358,22 +377,22 @@ function updateGoalTextLayers() {
     fill: "#fff",
     font: "48px Impact, Charcoal, sans-serif",
     miter: getElement('miter2').value,
-    x: 16,
-    y: 0
+    x: 4,
+    y: 4
   });
   for (let i = 0; i < 4; i++) {
     drawOnLayer(frameLayer, {
-      x: 0,
+      x: 4,
       y: PAD_TOP + 6 + 120 * i,
-      w: 4 * WIDTH / 5,
+      w: 4 * WIDTH / 6 + 1,
       h: HEADSIZE - 8,
       color: "#000",
       percent: 1
     });
     drawOnLayer(fillLayer, {
-      x: 0,
+      x: 8,
       y: PAD_TOP + 10 + 120 * i,
-      w: 4 * WIDTH / 5 - 4,
+      w: 4 * WIDTH / 6 - 4 + 1,
       h: HEADSIZE - 16,
       color: "#ff0000",
       percent: getElement('goal-' + (i + 1) + '-A').value / getElement('goal-' + (i + 1) + '-B').value
@@ -394,7 +413,7 @@ function updateGoalTextLayers() {
       font: "32px Impact, Charcoal, sans-serif",
       miter: getElement('miter2').value,
       align: "right",
-      x: 4 * WIDTH / 5 - 8,
+      x: 4 * WIDTH / 6 - 8,
       y: PAD_TOP + 40 + 13 + 120 * i
     });
   }
