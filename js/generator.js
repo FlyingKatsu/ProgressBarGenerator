@@ -6,6 +6,20 @@ function round(value, decimals) {
   return parseFloat(Number(Math.round(value + 'e' + decimals) + 'e-' + decimals).toFixed(decimals));
 }
 
+// check for empty object https://stackoverflow.com/a/32108184
+/*function isEmpty(obj) {
+  return Object.keys(obj).length === 0 && obj.constructor === Object;
+}*/
+
+function isNullOrEmpty(obj) {
+  if (obj === null) return true;
+  for (var prop in obj) {
+    if (obj.hasOwnProperty(prop))
+      return false;
+  }
+  return JSON.stringify(obj) === JSON.stringify({});
+}
+
 // VERSIONING
 const VERSION = "v0.3.3";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
@@ -21,7 +35,13 @@ PAD_LEFT = 64;
 PAD_TOP = 72;
 PAD_BOTTOM = 64;
 // https://i.imgur.com/wTSae6Z.png
-PLACEHOLDER = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsMAAA7DAcdvqGQAAAAZdEVYdFNvZnR3YXJlAHBhaW50Lm5ldCA0LjAuMjHxIGmVAAAOa0lEQVR4Xu2dbYhV1RrHRx1oRP2SlqMYhY2WL6SppKaURB+sCIyGsDKy7MWkl0tKTPiha0L28uFSEVQWVhBWUlbXkKCyuFKUlSTEFYTuLQ2jayilWWitu36Pa03L43M8c87ZZ++19+w//Dk6M2e9/fdeL8961rPaSpQoIoZazrBcaLnGcqPlFsddlv+x3GtpHPk3P+N3/u82WPJd0phqSZolIkSH5TzLv1tutkRIL2zSJO1/WpIXeZJ3iQzgBedNPWx5nFADBw40Q4cONaeddpo588wzzcSJE83UqVOFF1xwgZk1a5a58MILzbx584T8m5/xO/93fIfvkgZpkWZlPpbkTRn8A9FuWaJFONdyteVuy+OEQKAxY8aYyZMni5Be2KRJ2uRBXuRZWQ5LyvaY5WTLEglghOXfLLdZ9jb0KaecYkaPHi1v6dy5c1Wx0iB5+wdi8ODB4YMAKTNlpw4l6kSn5T8se7v3QYMGmc7OTumeNTFi4Pnnn29GjRolZfXldnWgLmMsS9RAl+XaAQMG/GY/pQFPPfVUM2HCBHPRRRepjR4jKSu9E2X39bA8YrnOkjqWqABvB41DIxn7AJjTTz/dzJgxQ23gPJE6jBw5UupE3VwdywfBgVlzj22cg/ZTGolufubMmWpj5pnUieEhWE0wNDCp7bdLyUst/20pDcJbUkThK8mSkwfB19sS28ICy34Duvv1ltIAQ4YMkcmT1lhF5rRp0yqXkhixzrIsNOZb/s9SZspjx441F198sdpA/YHUvaurK1w17LcsZG/AWI9dXSrK7Hj27Nlqo/RH0hYVKwaWjYWxKtLl/8tSJnm89VojlJwnbROsFjAk5X5ImGspXT7Wu/441tdL2oi2os0sGRJow1yie+CAtkP20wwfPtzMmTNHrXDJE0lb+SFhQFsbRrFuGjRPWGgLftR+ip1cq2TJ2qTtaEPXlrfQsHkAGyBS8HK8b55nn322Hw7gCsuoIeIzkTnnnHPUCpWsn+yFBJNDVghRolf8SZMmqRUp2TjPO++80F7QQ4PHBPzmSvFbzClTpoQ9wVIaPgZ0+wlf2e23nmwz09auzTNfHcz1S71ywpceMR/T5pZsLWdmJ8DCJ0aecqmXPv0S0WmQurcRdmox72Lk0QpYsvWk7dHAaZHq3oFs7GCyLC182RGn1I6ODv8QoEkqYEtXZqOlbT97Tp8+PVwZoE1L0Tvul5O+eDhu3Dj/ALR8PiCePGxUaAXJEy+//HJz4403mrvuususXLnSPProo+aZZ54x69atM0899ZT8f9WqVea+++4z11xzjZpGTMSJFm2cRi0BPnxijcqjM8fixYvNI488Yt5++22za9cuUy9++ukn88knn5gXX3zR3HzzzWoeWZK5WHt7u38I0CpRMMMUB848df333HOPefPNN82BAwecjMlh+/bt0ktccsklat5ZcPz48fIA2DnBTqdZYsD2LA6csfvw8Xa+9NJLZvfu3U6q1mLPnj3mgQceUMuSNtFm2LBhvhdIbL9gjH2ixG8/5lk/Y/nWrVudLOnj/fffN1dffbVatjSJRmjlNEtkQsgpFvHb1zLMmkuXLs1U+BDffPONWbRokVrONIlWaOa0awocXzrCOjO2Qxu33Xab+eyzz1zTx4MffvjB3HrrrWqZ0yJaOdsAewVNHUFbaynHtbSMsiRLuFjBvCDrySGaoZ3TsCF02qfotxjffs+vv/7aNXl8ePXVV9Uyp0XfC6AhWh6TtD7geiQGBi2DGMjsO2bcfffdarnTYmAcqtuNjKgWEpwh9iPav/76q2vu+LBx40a1zGkR7dDQaVlXpBLx78uDyRfTbazYt2+fWuY0GRw5Q9M+Q2Ly4I2qJRoTL7vsMtfcceLee+9Vy50W0RAtnaZ9AtG4xOafl7AsH374oWvu+PDkk0+qZU6LaBh4E6NtTRC1IsqlXzXecccdrrnjwyuvvKKWOU0GS0K0rQmJwxdzNC6N3333nWvy2ti7d6/ZtGmTefDBB8Wg5E24bBEvWbJEREsKH3zwwQllTZtoiaZO25OCaJfi6qUlFDPZmTsZ9u/fb15++WXZFta+X8nHH3/cfbM5fPHFF2r6aTM4cXxSL2JCnkoQRi2R2Klhx44dZs2aNerfn4xXXHGFS6E5sEmkpZ820RRtncZVQdxbOXygJRI7N2zY4Jr9WDf/0EMPqX/XVx45csSl1jjeeOMNNe206Q+UOI1VEK5MjD9Zhl9thozlANcu7ff18Pbbb5e0mgV2Ci39tImmaOs0VkPfy/hP5Cotgf7GzZs3OwmbQ7O9UJIMopKp3sMy/penfObJ2j0pXHXVVWoeWTA4TaSeISBOnUS/1r7cX1hrNVEP2K3U8siKaIvGlpwkOgFy00Yr4+3HTpaJSSKW8d8TbdHYkvMDx4FJgcSx1b5YdC5cuNBs27bNyZYMDh48KEtJLb8sGcQqPm53kAuW+uUEkLMCv/zyi5MtOaxdu1bNL2sGE8FZCO8hET64H0f7UhHZ3d0tRppWAL/AmM4LhERjtLZcjPAectqXS5K0LxWNrXrrPTiQouUbA9EYrZ3mveBevdxaAOshXjqtBKsILd9YGFgEuRexF2ICztsOYD287rrrzFdffeVkag2ef/55Ne+YGOwMHmcSLvQDgFdOK84HhuBEsZZ3bKz2AHBlqlycqH0pz1yxYoX5888/nUzJg1PDHCHX8o6RaIzWTvNeFNIIxEz/xx9/dFIlj48++iiK84D1MDAGoXkv5CLl8DrVIvDzzz93UiULtomz9vVrlGiM1k7zXsgPtS/klU888YSTK1nggHrttdeqeeaFXm+E9yjUA4CreNKTPs77rV69Ws0vb/R6I7xHoYYAAkQkCdLT8skjqw0BhZoEfv/990665vDtt9+a5cuXq3nkldUmgYVZBrIkSwJbtmyRoUTLI8+stgwsjCHonXfecRI2jtj28ZNk4S2BTNaaQZHFh9UegEJsBuHY0QzeeustNd0isdpmUCG2gzkA0ij++OMPs2DBAjXdIrHadnAhHEJef/11J2f9eO2119Q0i8ZqDiGFcAkjTFujyDqcS1qs5hJWCKdQDXTtR48eFfv977//Ljx8+LCEljl06JB4Bv38889qekVkNadQ0O/dwovOwAh0gls4KA+GFJy1DoaUR8MKzlpHw8rDoQVnMAFUD4fm/nh4yeoMjocTP1g9Hg7EJFzOA4rHWuO/RzkPKCiD8f+kIWJkHjB48GA1kTyxp6fHrF+/XvwCd+7cKT4CxAt69913ZcPn/vvvV79XVKIp2jqNq4J7ZiRMXF7vBHz66af77An88ccfm2XLlqnpFIn+FhGnbc27hB6zNKNGjVITi5WEf2s0fPzDDz+splkUoiWaOm1rYrJlrkLF3nDDDU0f9rzpppvUtPPOilCxaNsnSLDovPgHJHFxxHvvvaemnXcG+/99DhYNchMuPqmATkQS1dLPOxsNF5+bCyM4m5cUrrzySjWPvLKZCyOAXBkT63Vx8M4773TSJYPrr79ezSevDK6Pq/vKGMClg1FeGef53HPPOemSwfz589V88siKq+MavkBSLo2MdUlIyPekQFQvLY+8Mlj6NXV5pFwciRdJjMfGuM07KXAJpZZHHolWzvOn6YsjQbS9QJI3hz777LNqHnlkUm+/R5e7fNBMmzZNzTArJhXQGRBDSMsjb0QjtHKaNf32e8g9QjgUxHR9POHekgBzCS39vLHi+vg+3Q/UV+AsIk6jXV1dauZZkFk7QRmbATuEsQZ1rJfjx4/3b/9/nWaJYoGl2JVnz56tFiALrly50klZP7Zv3x5VOPdmOGfOHNPe3u7ffrRqCcRzODYTMZE72POvB0U7BxjcE4xGLcNZtns5YD/N2LFj1YJkSS6T/vLLL+W+oEqwW/jpp5+aF154QaKHad/PK8eNG+e7frQ5C6FaCRkKbGZRO40wri9atEi2irkPUPubInD69One4tfSrr8Ssk/AXXSMPVrBSraeePp2dHR48Ruy9zcK3IrEZ2D48OFq4Uq2nrQ9Gjgtarp6JY3e+UDpRZw+zzjjDBE/rXG/GriGFHtzVPaBopO2ps1d25/0Ktg00D2gre2o/cx9iJk8cNKkSTLpc23eLQpEgKWWUrApU6aoBS/ZPFl1Bef763LxSgM9lmIpLB+C5In4gXevero3BsjykJ6gHA6SI91+8OanutxrBNITwHJi2DxpQ14o16bRvvmVWOonhuUSsXH2LvWOtWV0Y34tMEOVJeKIESPKmAN1kLYKjDy0YTSz/Xox13Zf++ynmCyxW2sVLvkXaSNv3rVth5En83V+s8AlmaAEMpbhtKBVvOSxXb1gvMe8m5mFL2lgp5ZwtJC963IT6S/SFsF+PmSmn7ptPw3M90MC3iv0BjH5GKZN6k4beE8e1+WntqWbFRgS1ltKpXFizGswimaI927gwAnx5ClMl98XXGqf+J32UxqAc2yxHkFLkhzaCPz2eetx4Cz8W18NjHM9thEO2k+ZAHV2dhbyQaBOCO8terau+O3jup24924ewbDAKRaxG/AgMCmK/Wh6X0gd6N2oE3VzdaSuiR3aKBJolLXu7ZAGwwN5woQJuQlXAykreyFBcIZS+DrRaclSSIJUQHbCGB5ivteIySzdfLBrB6kDdWn4iHZ/BlEtsIGL/6EnzqijR4+WtyxLEzN5E4GT/Y4gDp8nZabsdUfmKKHjXEsmTRLHMCRnFhEBMVp53wFpe8GDwMshKRuh2PocjatEYyDaJSFPt4TzBU9m2gjE/ThckkRPwdABuTgRIcN4B/ybn/E7/3d8h++SBmkF+/EhGdcxc1MWylRI613sIPI14c8xNSPGfktNrCTITRvkQV7kWTXqdolswbjLpUi3WCIW9yISCR1yZSonneXCbEf+zc/4nf877tXju9yuRVrlWF6iaGhr+z8P3RsIVtvG5gAAAABJRU5ErkJggg==";
+PLACEHOLDER = {
+  src: "https://i.imgur.com/wTSae6Z.png",
+  x: 0,
+  y: 0,
+  w: 128,
+  h: 128
+};
 APPNAME = "ProgressBarGenerator-FK";
 
 getElement('upload-W').value = HEADSIZE;
@@ -31,94 +51,6 @@ getElement('upload-Y').value = PAD_TOP - HEADSIZE / 4;
 getElement('upload-Space').value = 120;
 
 // User Defined Values
-let INPUT = {
-  Title: {
-    Data: [
-      { name: "TITLE TEXT", x: 0, y: 0 },
-      { name: "ANOTHER TITLE", x: 0, y: HEIGHT / 2 + 32 }
-    ],
-    Style: {},
-    Font: {
-      size: 48,
-      font: "Impact, Charcoal, sans-serif",
-      x: 0,
-      y: 0,
-      baseline: "hanging",
-      align: "left",
-      stroke: 2,
-      line: "#000",
-      fill: "#FFF",
-      gradientA: "#FF0000",
-      gradientB: "#FFFF00"
-    }
-  },
-  Goal: {
-    Data: [
-      { name: "Sample 1", progress: { a: 21, b: 120 }, icon: "" },
-      { name: "Sample 2", progress: { a: 21, b: 120 }, icon: "" },
-      { name: "Sample 3", progress: { a: 27, b: 45 }, icon: "" },
-      { name: "Sample 4", progress: { a: 21, b: 150 }, icon: "" }
-    ],
-    Style: {
-      Position: { x: 0, y: 64 },
-      Space: { x: 0, y: 24 }
-    },
-    Font: {
-      Name: {
-        size: 32,
-        font: "Impact, Charcoal, sans-serif",
-        x: 0,
-        y: 0,
-        baseline: "hanging",
-        align: "left",
-        stroke: 1,
-        line: "#000",
-        fill: "#FFF",
-        gradientA: null,
-        gradientB: null
-      },
-      Progress: {
-        size: 24,
-        font: "Impact, Charcoal, sans-serif",
-        x: 64,
-        y: 0,
-        baseline: "hanging",
-        align: "right",
-        stroke: 1,
-        line: "#000",
-        fill: "#FFF",
-        gradientA: null,
-        gradientB: null
-      }
-    }
-  },
-  Item: {
-    Data: [
-      "Person: $10",
-      "Someone: $20",
-      "Another: $15"
-    ],
-    Style: {
-      Position: { x: 0, y: HEIGHT / 2 + 64 + 32 },
-      Space: { x: 0, y: 16 }
-    },
-    Font: {
-      size: 32,
-      font: "Impact, Charcoal, sans-serif",
-      x: 0,
-      y: 0,
-      baseline: "hanging",
-      align: "left",
-      stroke: 1,
-      line: "#000",
-      fill: "#FFF",
-      gradientA: null,
-      gradientB: null
-    }
-  }
-
-}
-
 let DONORDATA = [];
 
 
@@ -134,7 +66,107 @@ APPDATA = {
     head: ""
   },
   canvas: "",
-  settings: {}
+  INPUT: {
+    Title: {
+      Data: [
+        { name: "TIP JAR  //", x: 4, y: 4 },
+        { name: "RECENT TIPS  //", x: 4, y: HEIGHT * 3 / 4 }
+      ],
+      Style: {},
+      Font: {
+        size: 48,
+        font: "Impact, Charcoal, sans-serif",
+        x: 0,
+        y: 0,
+        baseline: "hanging",
+        align: "left",
+        stroke: 2,
+        line: "#000",
+        fill: "#FFF",
+        gradientA: "#FF0000",
+        gradientB: "#FFFF00"
+      }
+    },
+    Headshot: {
+      Data: [
+        {},
+        {},
+        {},
+        {}
+      ],
+      Style: {
+        Size: { w: HEADSIZE, h: HEADSIZE },
+        Position: { x: WIDTH * 2 / 3 - 4, y: PAD_TOP - HEADSIZE / 4 },
+        Space: { x: 0, y: 120 }
+      },
+    },
+    Goal: {
+      Data: [
+        { name: "Sample 1", progress: { a: 0, b: 100 } },
+        { name: "Sample 2", progress: { a: 499, b: 500 } },
+        { name: "Sample 3", progress: { a: 30, b: 50 } },
+        { name: "Sample 4", progress: { a: 10, b: 150 } }
+      ],
+      Style: {
+        Size: { w: HEADSIZE, h: HEADSIZE },
+        Position: { x: 4, y: PAD_TOP },
+        Space: { x: 0, y: 120 }
+      },
+      Font: {
+        Name: {
+          size: 32,
+          font: "Impact, Charcoal, sans-serif",
+          x: 12,
+          y: 0,
+          baseline: "hanging",
+          align: "left",
+          stroke: 1,
+          line: "#000",
+          fill: "#FFF",
+          gradientA: null,
+          gradientB: null
+        },
+        Progress: {
+          size: 24,
+          font: "Impact, Charcoal, sans-serif",
+          x: 0,
+          y: 0,
+          baseline: "hanging",
+          align: "right",
+          stroke: 1,
+          line: "#000",
+          fill: "#FFF",
+          gradientA: null,
+          gradientB: null
+        }
+      }
+    },
+    Item: {
+      Data: [
+        { name: "Person", amt: 10, target: 0 },
+        { name: "Someone", amt: 20, target: 0 },
+        { name: "Another", amt: 15, target: 0 }
+      ],
+      Style: {
+        Position: { x: 16, y: HEIGHT * 3 / 4 + 64 },
+        Space: { x: 0, y: 16 }
+      },
+      Font: {
+        size: 32,
+        font: "Impact, Charcoal, sans-serif",
+        x: 0,
+        y: 0,
+        baseline: "hanging",
+        align: "left",
+        stroke: 1,
+        line: "#000",
+        fill: "#FFF",
+        gradientA: null,
+        gradientB: null
+      }
+    }
+
+  }
 };
 
 
@@ -167,12 +199,12 @@ viewport.add(LAYERS.bg)
   .add(LAYERS.head);
 
 let SaveData = function() {
-  APPDATA.canvas = viewport.scene.canvas.toDataURL();
-  APPDATA.layers.bg = LAYERS.bg.scene.canvas.toDataURL();
-  APPDATA.layers.frame = LAYERS.frame.scene.canvas.toDataURL();
-  APPDATA.layers.fill = LAYERS.fill.scene.canvas.toDataURL();
-  APPDATA.layers.text = LAYERS.text.scene.canvas.toDataURL();
-  APPDATA.layers.head = LAYERS.head.scene.canvas.toDataURL();
+  APPDATA.canvas = viewport.scene.canvas.toDataURL('image/png');
+  APPDATA.layers.bg = LAYERS.bg.scene.canvas.toDataURL('image/png');
+  APPDATA.layers.frame = LAYERS.frame.scene.canvas.toDataURL('image/png');
+  APPDATA.layers.fill = LAYERS.fill.scene.canvas.toDataURL('image/png');
+  APPDATA.layers.text = LAYERS.text.scene.canvas.toDataURL('image/png');
+  APPDATA.layers.head = LAYERS.head.scene.canvas.toDataURL('image/png');
   localStorage.setItem(APPNAME, JSON.stringify(APPDATA));
 }
 
@@ -245,62 +277,87 @@ function RedrawText() {
   LAYERS.text.scene.clear();
 
   // Draw the titles
-  INPUT.Title.Data.map(function(title, i) {
+  APPDATA.INPUT.Title.Data.map(function(title, i) {
     drawTextOnLayer(LAYERS.text, title.name, {
-      thick: INPUT.Title.Font.stroke,
-      stroke: INPUT.Title.Font.line,
-      fill: INPUT.Title.Font.fill,
-      fontsize: INPUT.Title.Font.size,
-      fontfamily: INPUT.Title.Font.font,
-      align: INPUT.Title.Font.align,
-      baseline: INPUT.Title.Font.baseline,
-      x: title.x + INPUT.Title.Font.x,
-      y: title.y + INPUT.Title.Font.y
+      thick: APPDATA.INPUT.Title.Font.stroke,
+      stroke: APPDATA.INPUT.Title.Font.line,
+      fill: APPDATA.INPUT.Title.Font.fill,
+      fontsize: APPDATA.INPUT.Title.Font.size,
+      fontfamily: APPDATA.INPUT.Title.Font.font,
+      align: APPDATA.INPUT.Title.Font.align,
+      baseline: APPDATA.INPUT.Title.Font.baseline,
+      x: title.x + APPDATA.INPUT.Title.Font.x,
+      y: title.y + APPDATA.INPUT.Title.Font.y
     });
   });
 
   // Draw the goals
-  INPUT.Goal.Data.map(function(goal, i) {
+  APPDATA.INPUT.Goal.Data.map(function(goal, i) {
     // Goal Name
     drawTextOnLayer(LAYERS.text, goal.name, {
-      thick: INPUT.Goal.Font.Name.stroke,
-      stroke: INPUT.Goal.Font.Name.line,
-      fill: INPUT.Goal.Font.Name.fill,
-      fontsize: INPUT.Goal.Font.Name.size,
-      fontfamily: INPUT.Goal.Font.Name.font,
-      align: INPUT.Goal.Font.Name.align,
-      baseline: INPUT.Goal.Font.Name.baseline,
-      x: INPUT.Goal.Style.Position.x + INPUT.Goal.Font.Name.x,
-      y: INPUT.Goal.Style.Position.y + INPUT.Goal.Font.Name.y + (INPUT.Goal.Font.Name.size + INPUT.Goal.Style.Space.y) * i
+      thick: APPDATA.INPUT.Goal.Font.Name.stroke,
+      stroke: APPDATA.INPUT.Goal.Font.Name.line,
+      fill: APPDATA.INPUT.Goal.Font.Name.fill,
+      fontsize: APPDATA.INPUT.Goal.Font.Name.size,
+      fontfamily: APPDATA.INPUT.Goal.Font.Name.font,
+      align: APPDATA.INPUT.Goal.Font.Name.align,
+      baseline: APPDATA.INPUT.Goal.Font.Name.baseline,
+      x: APPDATA.INPUT.Goal.Style.Position.x + APPDATA.INPUT.Goal.Font.Name.x,
+      y: APPDATA.INPUT.Goal.Style.Position.y + APPDATA.INPUT.Goal.Font.Name.y + (APPDATA.INPUT.Goal.Font.Name.size + APPDATA.INPUT.Goal.Style.Space.y) * i
     });
     // Goal Progress
     drawTextOnLayer(LAYERS.text, `${goal.progress.a} / ${goal.progress.b}`, {
-      thick: INPUT.Goal.Font.Progress.stroke,
-      stroke: INPUT.Goal.Font.Progress.line,
-      fill: INPUT.Goal.Font.Progress.fill,
-      fontsize: INPUT.Goal.Font.Progress.size,
-      fontfamily: INPUT.Goal.Font.Progress.font,
-      align: INPUT.Goal.Font.Progress.align,
-      baseline: INPUT.Goal.Font.Progress.baseline,
-      x: WIDTH - INPUT.Goal.Font.Progress.x,
-      y: INPUT.Goal.Style.Position.y + INPUT.Goal.Font.Progress.y + (INPUT.Goal.Font.Name.size + INPUT.Goal.Style.Space.y) * i
+      thick: APPDATA.INPUT.Goal.Font.Progress.stroke,
+      stroke: APPDATA.INPUT.Goal.Font.Progress.line,
+      fill: APPDATA.INPUT.Goal.Font.Progress.fill,
+      fontsize: APPDATA.INPUT.Goal.Font.Progress.size,
+      fontfamily: APPDATA.INPUT.Goal.Font.Progress.font,
+      align: APPDATA.INPUT.Goal.Font.Progress.align,
+      baseline: APPDATA.INPUT.Goal.Font.Progress.baseline,
+      x: WIDTH - APPDATA.INPUT.Goal.Font.Progress.x,
+      y: APPDATA.INPUT.Goal.Style.Position.y + APPDATA.INPUT.Goal.Font.Progress.y + (APPDATA.INPUT.Goal.Font.Name.size + APPDATA.INPUT.Goal.Style.Space.y) * i
     });
   });
 
   // Draw the list items
-  INPUT.Item.Data.map(function(item, i) {
-    drawTextOnLayer(LAYERS.text, item, {
-      thick: INPUT.Item.Font.stroke,
-      stroke: INPUT.Item.Font.line,
-      fill: INPUT.Item.Font.fill,
-      fontsize: INPUT.Item.Font.size,
-      fontfamily: INPUT.Item.Font.font,
-      align: INPUT.Item.Font.align,
-      baseline: INPUT.Item.Font.baseline,
-      x: INPUT.Item.Style.Position.x + INPUT.Item.Font.x,
-      y: INPUT.Item.Style.Position.y + INPUT.Item.Font.y + (INPUT.Item.Font.size + INPUT.Item.Style.Space.y) * i
+  APPDATA.INPUT.Item.Data.map(function(item, i) {
+    drawTextOnLayer(LAYERS.text, `${item.name}: $${item.amt}`, {
+      thick: APPDATA.INPUT.Item.Font.stroke,
+      stroke: APPDATA.INPUT.Item.Font.line,
+      fill: APPDATA.INPUT.Item.Font.fill,
+      fontsize: APPDATA.INPUT.Item.Font.size,
+      fontfamily: APPDATA.INPUT.Item.Font.font,
+      align: APPDATA.INPUT.Item.Font.align,
+      baseline: APPDATA.INPUT.Item.Font.baseline,
+      x: APPDATA.INPUT.Item.Style.Position.x + APPDATA.INPUT.Item.Font.x,
+      y: APPDATA.INPUT.Item.Style.Position.y + APPDATA.INPUT.Item.Font.y + (APPDATA.INPUT.Item.Font.size + APPDATA.INPUT.Item.Style.Space.y) * i
     });
   });
+}
+
+function RedrawHeadshot() {
+  LAYERS.head.scene.clear();
+  // Draw the headshots
+  APPDATA.INPUT.Headshot.Data.map(function(headshot, i) {
+    if (isNullOrEmpty(headshot)) headshot = PLACEHOLDER;
+    let id = `upload-${(i + 1)}`;
+    let img = new Image();
+    img.crossOrigin = "Anonymous";
+    img.onload = function() {
+      drawImageOnLayer(LAYERS.head, img, {
+        x: APPDATA.INPUT.Headshot.Style.Position.x,
+        y: APPDATA.INPUT.Headshot.Style.Position.y + i * APPDATA.INPUT.Headshot.Style.Space.y,
+        w: APPDATA.INPUT.Headshot.Style.Size.w,
+        h: APPDATA.INPUT.Headshot.Style.Size.h,
+        cropX: headshot.x,
+        cropY: headshot.y,
+        cropW: headshot.w,
+        cropH: headshot.h
+      });
+    };
+    img.src = headshot.src;
+  });
+  SaveData();
 }
 
 // =========================
@@ -309,6 +366,7 @@ function RedrawText() {
 
 function drawHeadshot(src, i) {
   let img = new Image();
+  img.crossOrigin = "Anonymous";
   img.src = src;
   let id = `upload-${(i + 1)}`;
   img.onload = function() {
@@ -327,22 +385,19 @@ function drawHeadshot(src, i) {
 }
 
 function updateHeadshots() {
-  console.log("update headshot");
   LAYERS.head.scene.clear();
   for (let i = 0; i < 4; i++) {
     let id = `upload-${(i + 1)}`;
     let e = getElement(id + '-img');
     if (e) {
-      console.log("found element");
       drawHeadshot(e.src, i);
     } else {
-      console.log("PLACEHOLDER");
-      getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${PLACEHOLDER}">`;
+      getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${PLACEHOLDER.src}">`;
       getElement(id + '-cropX').value = 0;
       getElement(id + '-cropY').value = 0;
       getElement(id + '-cropW').value = 128;
       getElement(id + '-cropH').value = 128;
-      drawHeadshot(PLACEHOLDER, i);
+      drawHeadshot(PLACEHOLDER.src, i);
     }
   }
   // Save to Local
@@ -350,19 +405,26 @@ function updateHeadshots() {
 }
 
 // Draw uploaded image
-function drawImageTo(id) {
+function drawImageTo(i) {
+  let id = `upload-${(i + 1)}`;
   return function() {
     if (this.files && this.files[0]) {
       var FR = new FileReader();
       FR.onload = function(e) {
         var img = new Image();
+        img.crossOrigin = "Anonymous";
         img.addEventListener("load", function() {
           getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${img.src}">`;
           getElement(id + '-cropX').value = 0;
           getElement(id + '-cropY').value = 0;
           getElement(id + '-cropW').value = img.naturalWidth;
           getElement(id + '-cropH').value = img.naturalHeight;
-          updateHeadshots();
+          APPDATA.INPUT.Headshot.Data[i].src = img.src;
+          APPDATA.INPUT.Headshot.Data[i].x = 0;
+          APPDATA.INPUT.Headshot.Data[i].y = 0;
+          APPDATA.INPUT.Headshot.Data[i].w = img.naturalWidth;
+          APPDATA.INPUT.Headshot.Data[i].h = img.naturalHeight;
+          RedrawHeadshot();
         });
         img.src = e.target.result;
       };
@@ -371,31 +433,49 @@ function drawImageTo(id) {
   }
 }
 
-getElement('upload-W').addEventListener("change", updateHeadshots);
-getElement('upload-H').addEventListener("change", updateHeadshots);
-getElement('upload-X').addEventListener("change", updateHeadshots);
-getElement('upload-Y').addEventListener("change", updateHeadshots);
-getElement('upload-Space').addEventListener("change", updateHeadshots);
-getElement('upload-1').addEventListener("change", drawImageTo('upload-1'), false);
-getElement('upload-2').addEventListener("change", drawImageTo('upload-2'), false);
-getElement('upload-3').addEventListener("change", drawImageTo('upload-3'), false);
-getElement('upload-4').addEventListener("change", drawImageTo('upload-4'), false);
-getElement('upload-1-cropX').addEventListener("change", updateHeadshots);
-getElement('upload-1-cropY').addEventListener("change", updateHeadshots);
-getElement('upload-1-cropW').addEventListener("change", updateHeadshots);
-getElement('upload-1-cropH').addEventListener("change", updateHeadshots);
-getElement('upload-2-cropX').addEventListener("change", updateHeadshots);
-getElement('upload-2-cropY').addEventListener("change", updateHeadshots);
-getElement('upload-2-cropW').addEventListener("change", updateHeadshots);
-getElement('upload-2-cropH').addEventListener("change", updateHeadshots);
-getElement('upload-3-cropX').addEventListener("change", updateHeadshots);
-getElement('upload-3-cropY').addEventListener("change", updateHeadshots);
-getElement('upload-3-cropW').addEventListener("change", updateHeadshots);
-getElement('upload-3-cropH').addEventListener("change", updateHeadshots);
-getElement('upload-4-cropX').addEventListener("change", updateHeadshots);
-getElement('upload-4-cropY').addEventListener("change", updateHeadshots);
-getElement('upload-4-cropW').addEventListener("change", updateHeadshots);
-getElement('upload-4-cropH').addEventListener("change", updateHeadshots);
+function UpdateProperty(obj, key, type) {
+  return function() {
+    if (type == "int") {
+      obj[key] = parseInt(this.value);
+    } else if (type == "num") {
+      obj[key] = Number(this.value);
+    } else {
+      obj[key] = this.value;
+    }
+    RedrawHeadshot();
+  }
+}
+
+getElement('upload-1').addEventListener("change", drawImageTo(0), false);
+getElement('upload-2').addEventListener("change", drawImageTo(1), false);
+getElement('upload-3').addEventListener("change", drawImageTo(2), false);
+getElement('upload-4').addEventListener("change", drawImageTo(3), false);
+
+getElement('upload-W').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Size, "w", "int"), false);
+getElement('upload-H').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Size, "h", "int"), false);
+getElement('upload-X').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Position, "x", "int"), false);
+getElement('upload-Y').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Position, "y", "int"), false);
+getElement('upload-Space').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Space, "y", "int"), false);
+
+getElement('upload-1-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "x", "int"), false);
+getElement('upload-1-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "y", "int"), false);
+getElement('upload-1-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "w", "int"), false);
+getElement('upload-1-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "h", "int"), false);
+
+getElement('upload-2-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "x", "int"), false);
+getElement('upload-2-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "y", "int"), false);
+getElement('upload-2-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "w", "int"), false);
+getElement('upload-2-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "h", "int"), false);
+
+getElement('upload-3-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "x", "int"), false);
+getElement('upload-3-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "y", "int"), false);
+getElement('upload-3-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "w", "int"), false);
+getElement('upload-3-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "h", "int"), false);
+
+getElement('upload-4-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "x", "int"), false);
+getElement('upload-4-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "y", "int"), false);
+getElement('upload-4-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "w", "int"), false);
+getElement('upload-4-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "h", "int"), false);
 
 function updateGoalTextLayers() {
   LAYERS.text.scene.clear();
@@ -466,7 +546,7 @@ getElement('goal-4').addEventListener('change', updateGoalTextLayers);
 getElement('goal-4-A').addEventListener('change', updateGoalTextLayers);
 getElement('goal-4-B').addEventListener('change', updateGoalTextLayers);
 
-// Download using input filename
+// Download using APPDATA.INPUT filename
 getElement('download').addEventListener('click', function() {
   // Save in Local Storage
   SaveData();
@@ -500,23 +580,25 @@ getElement('font-family').addEventListener('change', function() {
   testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
 });
 
-// CLEAR CANVAS (ALL LAYERS)
-getElement('clear').addEventListener('click', function() {
+function ResetCanvas() {
   LAYERS.head.scene.clear();
   LAYERS.text.scene.clear();
   LAYERS.frame.scene.clear();
   LAYERS.fill.scene.clear();
   LAYERS.bg.scene.clear();
   viewport.scene.clear();
-});
+  RedrawText();
+  RedrawHeadshot();
+}
+getElement('reset').addEventListener('click', ResetCanvas);
 
 // Add Donations
 getElement('donate').addEventListener('click', function() {
   let index = getElement('donations').children.length;
   let html = `<label for="donor">Donor Name</label>
-    <input type="text" name="donor" value="Somebody" onchange="updateDonor(${index})">
+    <APPDATA.INPUT type="text" name="donor" value="Somebody" onchange="updateDonor(${index})">
     <label for="amt">Amount</label>
-    <input type="number" name="amt" min=0.00 step=0.05 value="5.00" onchange="applyDonation(${index})">
+    <APPDATA.INPUT type="number" name="amt" min=0.00 step=0.05 value="5.00" onchange="applyDonation(${index})">
     <label for="target">Target</label>
     <select name="target" onchange="applyDonation(${index})">
           <option disabled selected value> -- select a goal -- </option>
@@ -607,30 +689,39 @@ testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Kanit Black Itali
 testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Open Sans Extra Bold Italic');
 LAYERS.text.scene.clear();
 
+function RestoreFieldData() {
+  getElement('upload-W').value = APPDATA.INPUT.Headshot.Style.Size.w;
+  getElement('upload-H').value = APPDATA.INPUT.Headshot.Style.Size.h;
+  getElement('upload-X').value = APPDATA.INPUT.Headshot.Style.Position.x;
+  getElement('upload-Y').value = APPDATA.INPUT.Headshot.Style.Position.y;
+  getElement('upload-Space').value = APPDATA.INPUT.Headshot.Style.Space.y;
+
+  APPDATA.INPUT.Headshot.Data.map(function(headshot, i) {
+    let id = `upload-${(i + 1)}`;
+    getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${headshot.src}">`;
+    getElement(id + '-cropX').value = headshot.x;
+    getElement(id + '-cropY').value = headshot.y;
+    getElement(id + '-cropW').value = headshot.w;
+    getElement(id + '-cropH').value = headshot.h;
+  });
+}
+
 // =========================
 // Restore Canvas
 // =========================
-if (localStorage.getItem(APPNAME)) {
+if (!isNullOrEmpty(localStorage.getItem(APPNAME))) {
   // TODO RestoreData from LocalStorage with validity checks
   APPDATA = JSON.parse(localStorage.getItem(APPNAME));
   if (APPDATA.version == VERSION) {
-    console.log("restore");
-    Object.keys(LAYERS).map(function(key) {
-      let img = new Image();
-      img.src = APPDATA.layers[key];
-      img.onload = function() {
-        drawImageOnLayer(LAYERS[key], img, { x: 0, y: 0, w: WIDTH, h: HEIGHT, cropX: 0, cropY: 0, cropW: WIDTH * 2, cropH: HEIGHT * 2 });
-      }
-    });
+    console.log("Restoring saved data...");
+    RedrawText();
+    RedrawHeadshot();
+    RestoreFieldData();
   } else {
-    console.log("version diff");
-    updateGoalTextLayers();
-    updateHeadshots();
+    console.log("Updating version... previous data may be lost");
+    ResetCanvas();
   }
-
 } else {
-  console.log("no data; create new");
-  updateGoalTextLayers();
-  updateHeadshots();
-  //RedrawText();
+  console.log("No existing data found. Populating with placeholders...");
+  ResetCanvas();
 }
