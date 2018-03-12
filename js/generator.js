@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.4.1";
+const VERSION = "v0.3.4.2";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -348,13 +348,13 @@ function RedrawHeadshot() {
         y: APPDATA.INPUT.Headshot.Style.Position.y + i * APPDATA.INPUT.Headshot.Style.Space.y,
         w: APPDATA.INPUT.Headshot.Style.Size.w,
         h: APPDATA.INPUT.Headshot.Style.Size.h,
-        cropX: headshot.x,
-        cropY: headshot.y,
-        cropW: headshot.w,
-        cropH: headshot.h
+        cropX: headshot.x || PLACEHOLDER.x,
+        cropY: headshot.y || PLACEHOLDER.y,
+        cropW: headshot.w || PLACEHOLDER.w,
+        cropH: headshot.h || PLACEHOLDER.h
       });
     };
-    img.src = headshot.src;
+    img.src = headshot.src || PLACEHOLDER.src;
   });
   SaveData();
 }
@@ -432,49 +432,49 @@ function drawImageTo(i) {
   }
 }
 
-function UpdateProperty(obj, key, type) {
+function ConvertType(v, type) {
+  if (type == "int") { return parseInt(v); } else if (type == "num") { return Number(v); } else { return v; }
+}
+
+function UpdateProperty(path, type) {
   return function() {
-    if (type == "int") {
-      obj[key] = parseInt(this.value);
-    } else if (type == "num") {
-      obj[key] = Number(this.value);
-    } else {
-      obj[key] = this.value;
+    // Dynamically find the property to update https://stackoverflow.com/a/18937118
+    let schema = APPDATA.INPUT;
+    const pathsplit = path.split('.');
+    const len = pathsplit.length;
+    for (let i = 0; i < len - 1; i++) {
+      const key = pathsplit[i];
+      if (!schema[key]) schema[key] = {}
+      schema = schema[key];
     }
+    // Update the value
+    schema[pathsplit[len - 1]] = ConvertType(this.value, type);
     RedrawHeadshot();
   }
 }
 
-getElement('upload-1').addEventListener("change", drawImageTo(0), false);
-getElement('upload-2').addEventListener("change", drawImageTo(1), false);
-getElement('upload-3').addEventListener("change", drawImageTo(2), false);
-getElement('upload-4').addEventListener("change", drawImageTo(3), false);
+function UpdateHeadshotData(i, key, type) {
+  return function() {
+    // Update the value
+    APPDATA.INPUT.Headshot.Data[i][key] = ConvertType(this.value, type);
+    RedrawHeadshot();
+  }
+}
 
-getElement('upload-W').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Size, "w", "int"), false);
-getElement('upload-H').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Size, "h", "int"), false);
-getElement('upload-X').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Position, "x", "int"), false);
-getElement('upload-Y').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Position, "y", "int"), false);
-getElement('upload-Space').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Style.Space, "y", "int"), false);
+getElement('upload-W').addEventListener("change", UpdateProperty("Headshot.Style.Size.w", "int"), false);
+getElement('upload-H').addEventListener("change", UpdateProperty("Headshot.Style.Size.h", "int"), false);
+getElement('upload-X').addEventListener("change", UpdateProperty("Headshot.Style.Position.x", "int"), false);
+getElement('upload-Y').addEventListener("change", UpdateProperty("Headshot.Style.Position.y", "int"), false);
+getElement('upload-Space').addEventListener("change", UpdateProperty("Headshot.Style.Space.y", "int"), false);
 
-getElement('upload-1-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "x", "int"), false);
-getElement('upload-1-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "y", "int"), false);
-getElement('upload-1-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "w", "int"), false);
-getElement('upload-1-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[0], "h", "int"), false);
-
-getElement('upload-2-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "x", "int"), false);
-getElement('upload-2-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "y", "int"), false);
-getElement('upload-2-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "w", "int"), false);
-getElement('upload-2-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[1], "h", "int"), false);
-
-getElement('upload-3-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "x", "int"), false);
-getElement('upload-3-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "y", "int"), false);
-getElement('upload-3-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "w", "int"), false);
-getElement('upload-3-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[2], "h", "int"), false);
-
-getElement('upload-4-cropX').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "x", "int"), false);
-getElement('upload-4-cropY').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "y", "int"), false);
-getElement('upload-4-cropW').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "w", "int"), false);
-getElement('upload-4-cropH').addEventListener("change", UpdateProperty(APPDATA.INPUT.Headshot.Data[3], "h", "int"), false);
+for (let i = 0; i < 4; i++) {
+  let id = `upload-${(i + 1)}`;
+  getElement(id).addEventListener("change", drawImageTo(i), false);
+  getElement(`${id}-cropX`).addEventListener("change", UpdateHeadshotData(i, "x", "int"), false);
+  getElement(`${id}-cropY`).addEventListener("change", UpdateHeadshotData(i, "y", "int"), false);
+  getElement(`${id}-cropW`).addEventListener("change", UpdateHeadshotData(i, "w", "int"), false);
+  getElement(`${id}-cropH`).addEventListener("change", UpdateHeadshotData(i, "h", "int"), false);
+}
 
 function updateGoalTextLayers() {
   LAYERS.text.scene.clear();
@@ -547,8 +547,6 @@ getElement('goal-4-B').addEventListener('change', updateGoalTextLayers);
 
 // Download using APPDATA.INPUT filename
 getElement('download').addEventListener('click', function() {
-  // Save in Local Storage
-  SaveData();
   // Download file
   viewport.scene.download({
     fileName: getElement('filename').value || 'genTipJarProgress.png'
@@ -698,11 +696,11 @@ function RestoreFieldData() {
   APPDATA.INPUT.Headshot.Data.map(function(headshot, i) {
     if (isNullOrEmpty(headshot)) headshot = PLACEHOLDER;
     let id = `upload-${(i + 1)}`;
-    getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${headshot.src}">`;
-    getElement(id + '-cropX').value = headshot.x;
-    getElement(id + '-cropY').value = headshot.y;
-    getElement(id + '-cropW').value = headshot.w;
-    getElement(id + '-cropH').value = headshot.h;
+    getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${headshot.src || PLACEHOLDER.src}">`;
+    getElement(id + '-cropX').value = headshot.x || PLACEHOLDER.x;
+    getElement(id + '-cropY').value = headshot.y || PLACEHOLDER.y;
+    getElement(id + '-cropW').value = headshot.w || PLACEHOLDER.w;
+    getElement(id + '-cropH').value = headshot.h || PLACEHOLDER.h;
   });
 }
 
