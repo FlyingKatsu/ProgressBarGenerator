@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.3";
+const VERSION = "v0.3.4";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -34,7 +34,6 @@ PAD_RIGHT = 84;
 PAD_LEFT = 64;
 PAD_TOP = 72;
 PAD_BOTTOM = 64;
-// https://i.imgur.com/wTSae6Z.png
 PLACEHOLDER = {
   src: "https://i.imgur.com/wTSae6Z.png",
   x: 0,
@@ -720,6 +719,7 @@ if (!isNullOrEmpty(localStorage.getItem(APPNAME))) {
   } else {
     console.log("Updating version... previous data may be lost");
     ResetCanvas();
+    // TODO: Backwards compatible support
   }
 } else {
   console.log("No existing data found. Populating with placeholders...");
