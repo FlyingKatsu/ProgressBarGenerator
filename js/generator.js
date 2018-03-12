@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.4";
+const VERSION = "v0.3.4.1";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -696,6 +696,7 @@ function RestoreFieldData() {
   getElement('upload-Space').value = APPDATA.INPUT.Headshot.Style.Space.y;
 
   APPDATA.INPUT.Headshot.Data.map(function(headshot, i) {
+    if (isNullOrEmpty(headshot)) headshot = PLACEHOLDER;
     let id = `upload-${(i + 1)}`;
     getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${headshot.src}">`;
     getElement(id + '-cropX').value = headshot.x;
@@ -718,10 +719,14 @@ if (!isNullOrEmpty(localStorage.getItem(APPNAME))) {
     RestoreFieldData();
   } else {
     console.log("Updating version... previous data may be lost");
-    ResetCanvas();
     // TODO: Backwards compatible support
+    APPDATA.version = VERSION;
+    ResetCanvas();
+    RestoreFieldData();
   }
 } else {
   console.log("No existing data found. Populating with placeholders...");
-  ResetCanvas();
+  RedrawText();
+  RedrawHeadshot();
+  RestoreFieldData();
 }

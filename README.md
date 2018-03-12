@@ -4,9 +4,15 @@ Currently in rough development on a whim. Uses HTML5 canvas, JavaScript, and [Co
 
 https://flyingkatsu.github.io/ProgressBarGenerator/
 
-![preview](https://cdn.pbrd.co/images/GNLhbDR.png)
+![preview](https://i.imgur.com/eClFggK.png)
 
 ## Change Log
+
+### Version 0.3.x
+
+- (0.3.4) Headshot data and settings are now saved locally and restored on page load. Yay!
+- (0.3.3) Consolidated local storage for this app
+- (0.3.2) Adjusted appearance of headshots
 
 ### Version 0.2.0
 
