@@ -7,15 +7,9 @@ function round(value, decimals) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.1";
-// Check if version mismatch
-const verMismatch = localStorage.getItem('version') ? (localStorage.getItem('version') != VERSION) : true;
-// Update version
-if (verMismatch) {
-  localStorage.setItem('version', VERSION);
-  getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
-  getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
-}
+const VERSION = "v0.3.3";
+getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
+getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
 // NOTE: output image is double these dimensions
 WIDTH = 480;
@@ -25,6 +19,9 @@ PAD_RIGHT = 84;
 PAD_LEFT = 64;
 PAD_TOP = 64;
 PAD_BOTTOM = 64;
+// https://i.imgur.com/wTSae6Z.png
+PLACEHOLDER = "data:image/png;base64,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";
+APPNAME = "ProgressBarGenerator-FK";
 
 // User Defined Values
 let INPUT = {
@@ -117,6 +114,23 @@ let INPUT = {
 
 let DONORDATA = [];
 
+
+// DATA STORAGE
+
+APPDATA = {
+  version: VERSION,
+  layers: {
+    bg: "",
+    frame: "",
+    fill: "",
+    text: "",
+    head: ""
+  },
+  canvas: "",
+  settings: {}
+};
+
+
 // =========================
 // Concrete Setup
 // =========================
@@ -131,18 +145,30 @@ var viewport = new Concrete.Viewport({
 
 viewport.setSize(WIDTH, HEIGHT);
 
-// Layers: bg, progress frame, progress fill, text
-var bgLayer = new Concrete.Layer();
-var frameLayer = new Concrete.Layer();
-var fillLayer = new Concrete.Layer();
-var textLayer = new Concrete.Layer();
-var headLayer = new Concrete.Layer();
+const LAYERS = {
+  bg: new Concrete.Layer(),
+  frame: new Concrete.Layer(),
+  fill: new Concrete.Layer(),
+  text: new Concrete.Layer(),
+  head: new Concrete.Layer()
+}
 
-viewport.add(bgLayer)
-  .add(frameLayer)
-  .add(fillLayer)
-  .add(textLayer)
-  .add(headLayer);
+viewport.add(LAYERS.bg)
+  .add(LAYERS.frame)
+  .add(LAYERS.fill)
+  .add(LAYERS.text)
+  .add(LAYERS.head);
+
+let SaveData = function() {
+  APPDATA.canvas = viewport.scene.canvas.toDataURL();
+  APPDATA.layers.bg = LAYERS.bg.scene.canvas.toDataURL();
+  APPDATA.layers.frame = LAYERS.frame.scene.canvas.toDataURL();
+  APPDATA.layers.fill = LAYERS.fill.scene.canvas.toDataURL();
+  APPDATA.layers.text = LAYERS.text.scene.canvas.toDataURL();
+  APPDATA.layers.head = LAYERS.head.scene.canvas.toDataURL();
+  localStorage.setItem(APPNAME, JSON.stringify(APPDATA));
+}
+
 
 let drawOnLayer = function(layer, options) {
   let scene = layer.scene;
@@ -192,7 +218,7 @@ let drawTextOnLayer = function(layer, text, options) {
 function testFonts(txt, font, options) {
   txt.split("\\n").map(
     function(subtxt, i) {
-      drawTextOnLayer(textLayer, subtxt, {
+      drawTextOnLayer(LAYERS.text, subtxt, {
         thick: 2,
         stroke: "#000",
         fill: "#fff",
@@ -206,52 +232,14 @@ function testFonts(txt, font, options) {
   );
 }
 
-// Preload fonts into cache for quicker display
-testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px sans-serif');
-testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Impact, Charcoal, sans-serif');
-testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Exo Black Italic');
-testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Kanit Black Italic');
-testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Open Sans Extra Bold Italic');
-textLayer.scene.clear();
-
-// =========================
-// Restore Canvas
-// =========================
-// TODO: storage by layers
-if (!verMismatch && localStorage.getItem('imageDataURL')) {
-  let layers = [
-    { key: 'textLayer', value: textLayer },
-    { key: 'fillLayer', value: fillLayer },
-    { key: 'frameLayer', value: frameLayer },
-    { key: 'bgLayer', value: bgLayer },
-  ];
-  layers.map(function(layer) {
-    if (localStorage.getItem(layer.key)) {
-      let img = new Image();
-      img.src = localStorage.getItem(layer.key);
-      img.onload = function() {
-        drawImageOnLayer(layer.value, img, { x: 0, y: 0, w: WIDTH, h: HEIGHT, cropX: 0, cropY: 0, cropW: WIDTH * 2, cropH: HEIGHT * 2 });
-      }
-    }
-  });
-} else {
-  updateGoalTextLayers();
-  //getElement('upload-1').files[0] = "img/Unknown.png";
-  //getElement('upload-2').files[0] = "img/Unknown.png";
-  //getElement('upload-3').files[0] = "img/Unknown.png";
-  //getElement('upload-4').files[0] = "img/Unknown.png";
-  updateHeadshots();
-  //RedrawText();
-}
-
 // Layer Redraws
 
 function RedrawText() {
-  textLayer.scene.clear();
+  LAYERS.text.scene.clear();
 
   // Draw the titles
   INPUT.Title.Data.map(function(title, i) {
-    drawTextOnLayer(textLayer, title.name, {
+    drawTextOnLayer(LAYERS.text, title.name, {
       thick: INPUT.Title.Font.stroke,
       stroke: INPUT.Title.Font.line,
       fill: INPUT.Title.Font.fill,
@@ -267,7 +255,7 @@ function RedrawText() {
   // Draw the goals
   INPUT.Goal.Data.map(function(goal, i) {
     // Goal Name
-    drawTextOnLayer(textLayer, goal.name, {
+    drawTextOnLayer(LAYERS.text, goal.name, {
       thick: INPUT.Goal.Font.Name.stroke,
       stroke: INPUT.Goal.Font.Name.line,
       fill: INPUT.Goal.Font.Name.fill,
@@ -279,7 +267,7 @@ function RedrawText() {
       y: INPUT.Goal.Style.Position.y + INPUT.Goal.Font.Name.y + (INPUT.Goal.Font.Name.size + INPUT.Goal.Style.Space.y) * i
     });
     // Goal Progress
-    drawTextOnLayer(textLayer, `${goal.progress.a} / ${goal.progress.b}`, {
+    drawTextOnLayer(LAYERS.text, `${goal.progress.a} / ${goal.progress.b}`, {
       thick: INPUT.Goal.Font.Progress.stroke,
       stroke: INPUT.Goal.Font.Progress.line,
       fill: INPUT.Goal.Font.Progress.fill,
@@ -294,7 +282,7 @@ function RedrawText() {
 
   // Draw the list items
   INPUT.Item.Data.map(function(item, i) {
-    drawTextOnLayer(textLayer, item, {
+    drawTextOnLayer(LAYERS.text, item, {
       thick: INPUT.Item.Font.stroke,
       stroke: INPUT.Item.Font.line,
       fill: INPUT.Item.Font.fill,
@@ -322,26 +310,40 @@ function updateImageInput(id, img) {
   getElement(id + '-cropH').value = img.naturalHeight;
 }
 
+function drawHeadshot(src, i) {
+  let img = new Image();
+  img.src = src;
+  img.onload = function() {
+    drawImageOnLayer(LAYERS.head, img, {
+      x: 2 / 3 * WIDTH,
+      y: 40 + 120 * i,
+      w: 96,
+      h: 96,
+      cropX: 0,
+      cropY: 0,
+      cropW: 128,
+      cropH: 128
+    });
+  };
+}
+
 function updateHeadshots() {
-  bgLayer.scene.clear();
-  headLayer.scene.clear();
+  console.log("update headshot");
+  LAYERS.head.scene.clear();
   for (let i = 0; i < 4; i++) {
-    let e = getElement('upload-' + (i + 1) + '-img');
+    let id = `upload-${(i + 1)}`;
+    let e = getElement(id + '-img');
     if (e) {
-      let img = new Image();
-      img.src = e.src;
-      drawImageOnLayer(headLayer, img, {
-        x: 2 / 3 * WIDTH,
-        y: 40 + 120 * i,
-        w: 96,
-        h: 96,
-        cropX: 0,
-        cropY: 0,
-        cropW: 128,
-        cropH: 128
-      });
+      console.log("found element");
+      drawHeadshot(e.src, i);
+    } else {
+      console.log("PLACEHOLDER");
+      getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${PLACEHOLDER}">`;
+      drawHeadshot(PLACEHOLDER, i);
     }
   }
+  // Save to Local
+  SaveData();
 }
 
 // Draw uploaded image
@@ -368,10 +370,10 @@ getElement('upload-3').addEventListener("change", drawImageTo('upload-3'), false
 getElement('upload-4').addEventListener("change", drawImageTo('upload-4'), false);
 
 function updateGoalTextLayers() {
-  textLayer.scene.clear();
-  fillLayer.scene.clear();
-  frameLayer.scene.clear();
-  drawTextOnLayer(textLayer, getElement('title').value, {
+  LAYERS.text.scene.clear();
+  LAYERS.fill.scene.clear();
+  LAYERS.frame.scene.clear();
+  drawTextOnLayer(LAYERS.text, getElement('title').value, {
     thick: 2,
     stroke: "#000",
     fill: "#fff",
@@ -381,7 +383,7 @@ function updateGoalTextLayers() {
     y: 4
   });
   for (let i = 0; i < 4; i++) {
-    drawOnLayer(frameLayer, {
+    drawOnLayer(LAYERS.frame, {
       x: 4,
       y: PAD_TOP + 6 + 120 * i,
       w: 4 * WIDTH / 6 + 1,
@@ -389,7 +391,7 @@ function updateGoalTextLayers() {
       color: "#000",
       percent: 1
     });
-    drawOnLayer(fillLayer, {
+    drawOnLayer(LAYERS.fill, {
       x: 8,
       y: PAD_TOP + 10 + 120 * i,
       w: 4 * WIDTH / 6 - 4 + 1,
@@ -397,7 +399,7 @@ function updateGoalTextLayers() {
       color: "#ff0000",
       percent: getElement('goal-' + (i + 1) + '-A').value / getElement('goal-' + (i + 1) + '-B').value
     });
-    drawTextOnLayer(textLayer, getElement('goal-' + (i + 1)).value, {
+    drawTextOnLayer(LAYERS.text, getElement('goal-' + (i + 1)).value, {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
@@ -406,7 +408,7 @@ function updateGoalTextLayers() {
       x: 16,
       y: PAD_TOP + 13 + 120 * i
     });
-    drawTextOnLayer(textLayer, `${getElement('goal-' + (i + 1) + '-A').value} / ${getElement('goal-' + (i + 1) + '-B').value}`, {
+    drawTextOnLayer(LAYERS.text, `${getElement('goal-' + (i + 1) + '-A').value} / ${getElement('goal-' + (i + 1) + '-B').value}`, {
       thick: 2,
       stroke: "#000",
       fill: "#fff",
@@ -417,9 +419,11 @@ function updateGoalTextLayers() {
       y: PAD_TOP + 40 + 13 + 120 * i
     });
   }
+  // Save in local
+  SaveData();
 }
 
-// Update Title anf Goal Text
+// update Title anf Goal Text
 getElement('title').addEventListener('change', updateGoalTextLayers);
 getElement('goal-1').addEventListener('change', updateGoalTextLayers);
 getElement('goal-1-A').addEventListener('change', updateGoalTextLayers);
@@ -436,13 +440,8 @@ getElement('goal-4-B').addEventListener('change', updateGoalTextLayers);
 
 // Download using input filename
 getElement('download').addEventListener('click', function() {
-  // Save in storage
-  localStorage.setItem('imageDataURL', viewport.scene.canvas.toDataURL());
-  localStorage.setItem('textLayer', textLayer.scene.canvas.toDataURL());
-  localStorage.setItem('fillLayer', fillLayer.scene.canvas.toDataURL());
-  localStorage.setItem('frameLayer', frameLayer.scene.canvas.toDataURL());
-  localStorage.setItem('bgLayer', bgLayer.scene.canvas.toDataURL());
-  localStorage.setItem('settings', 'TODO');
+  // Save in Local Storage
+  SaveData();
   // Download file
   viewport.scene.download({
     fileName: getElement('filename').value || 'genTipJarProgress.png'
@@ -450,35 +449,36 @@ getElement('download').addEventListener('click', function() {
 });
 
 getElement('font-size').addEventListener('change', function() {
-  textLayer.scene.clear();
+  LAYERS.text.scene.clear();
   testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
 });
 
 getElement('miter').addEventListener('change', function() {
-  textLayer.scene.context.miterLimit = getElement('miter').value;
-  textLayer.scene.clear();
+  LAYERS.text.scene.context.miterLimit = getElement('miter').value;
+  LAYERS.text.scene.clear();
   testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
 });
 
 getElement('miter2').addEventListener('change', updateGoalTextLayers);
 
 getElement('font-sample').addEventListener('change', function() {
-  textLayer.scene.clear();
+  LAYERS.text.scene.clear();
   testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
 });
 
 getElement('font-family').addEventListener('change', function() {
   getElement('font-family').style = `font-family: ${getElement('font-family').value}; font-style: italic;`;
-  textLayer.scene.clear();
+  LAYERS.text.scene.clear();
   testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
 });
 
 // CLEAR CANVAS (ALL LAYERS)
 getElement('clear').addEventListener('click', function() {
-  textLayer.scene.clear();
-  frameLayer.scene.clear();
-  fillLayer.scene.clear();
-  bgLayer.scene.clear();
+  LAYERS.head.scene.clear();
+  LAYERS.text.scene.clear();
+  LAYERS.frame.scene.clear();
+  LAYERS.fill.scene.clear();
+  LAYERS.bg.scene.clear();
   viewport.scene.clear();
 });
 
@@ -546,7 +546,7 @@ let applyDonation = function(index) {
   if (!DONORDATA[index]) {
     // Save the new data
     DONORDATA.push(data);
-    // Update Goals
+    // update Goals
     applySpread(goals, data.target, data.tarAmt, data.spreadAmt);
 
   } else {
@@ -561,12 +561,48 @@ let applyDonation = function(index) {
       // Get Diff
       let diffTarget = data.tarAmt - DONORDATA[index].tarAmt;
       let diffSpread = data.spreadAmt - DONORDATA[index].spreadAmt;
-      // Update Goals
+      // update Goals
       applySpread(goals, data.target, diffTarget, diffSpread);
-      // Update data
+      // update data
       DONORDATA[index] = data;
     }
   }
   // Redraw goals
   updateGoalTextLayers();
 };
+
+// Preload fonts into cache for quicker display
+testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px sans-serif');
+testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Impact, Charcoal, sans-serif');
+testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Exo Black Italic');
+testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Kanit Black Italic');
+testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Open Sans Extra Bold Italic');
+LAYERS.text.scene.clear();
+
+// =========================
+// Restore Canvas
+// =========================
+if (localStorage.getItem(APPNAME)) {
+  // TODO RestoreData from LocalStorage with validity checks
+  APPDATA = JSON.parse(localStorage.getItem(APPNAME));
+  if (APPDATA.version == VERSION) {
+    console.log("restore");
+    Object.keys(LAYERS).map(function(key) {
+      let img = new Image();
+      img.src = APPDATA.layers[key];
+      img.onload = function() {
+        drawImageOnLayer(LAYERS[key], img, { x: 0, y: 0, w: WIDTH, h: HEIGHT, cropX: 0, cropY: 0, cropW: WIDTH * 2, cropH: HEIGHT * 2 });
+      }
+    });
+  } else {
+    console.log("version diff");
+    updateGoalTextLayers();
+    updateHeadshots();
+  }
+
+} else {
+  console.log("no data; create new");
+  updateGoalTextLayers();
+  updateHeadshots();
+  //RedrawText();
+}
