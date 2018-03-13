@@ -198,12 +198,12 @@ viewport.add(LAYERS.bg)
   .add(LAYERS.head);
 
 let SaveData = function() {
-  APPDATA.canvas = viewport.scene.canvas.toDataURL('image/png');
-  APPDATA.layers.bg = LAYERS.bg.scene.canvas.toDataURL('image/png');
-  APPDATA.layers.frame = LAYERS.frame.scene.canvas.toDataURL('image/png');
-  APPDATA.layers.fill = LAYERS.fill.scene.canvas.toDataURL('image/png');
-  APPDATA.layers.text = LAYERS.text.scene.canvas.toDataURL('image/png');
-  APPDATA.layers.head = LAYERS.head.scene.canvas.toDataURL('image/png');
+  //APPDATA.canvas = viewport.scene.canvas.toDataURL('image/png');
+  //APPDATA.layers.bg = LAYERS.bg.scene.canvas.toDataURL('image/png');
+  //APPDATA.layers.frame = LAYERS.frame.scene.canvas.toDataURL('image/png');
+  //APPDATA.layers.fill = LAYERS.fill.scene.canvas.toDataURL('image/png');
+  //APPDATA.layers.text = LAYERS.text.scene.canvas.toDataURL('image/png');
+  //APPDATA.layers.head = LAYERS.head.scene.canvas.toDataURL('image/png');
   localStorage.setItem(APPNAME, JSON.stringify(APPDATA));
 }
 
@@ -423,6 +423,7 @@ function drawImageTo(i) {
           APPDATA.INPUT.Headshot.Data[i].y = 0;
           APPDATA.INPUT.Headshot.Data[i].w = img.naturalWidth;
           APPDATA.INPUT.Headshot.Data[i].h = img.naturalHeight;
+          getElement(`${id}-url`).value = null;
           RedrawHeadshot();
         });
         img.src = e.target.result;
@@ -430,6 +431,39 @@ function drawImageTo(i) {
       FR.readAsDataURL(this.files[0]);
     }
   }
+}
+
+function drawImageURLTo(i) {
+  return function() {
+    let id = `upload-${(i + 1)}`;
+    let e = getElement(`${id}-url`);
+    let url = e.value || "";
+    if (url) url = url.replace(/\s/g, '');
+    if (url.length > 0) {
+      var img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.addEventListener("load", function() {
+        getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${img.src}">`;
+        getElement(id + '-cropX').value = 0;
+        getElement(id + '-cropY').value = 0;
+        getElement(id + '-cropW').value = img.naturalWidth;
+        getElement(id + '-cropH').value = img.naturalHeight;
+        APPDATA.INPUT.Headshot.Data[i].src = img.src;
+        APPDATA.INPUT.Headshot.Data[i].x = 0;
+        APPDATA.INPUT.Headshot.Data[i].y = 0;
+        APPDATA.INPUT.Headshot.Data[i].w = img.naturalWidth;
+        APPDATA.INPUT.Headshot.Data[i].h = img.naturalHeight;
+        getElement(`error-${i+1}`).value = "";
+        getElement(id).value = null;
+        RedrawHeadshot();
+      });
+      img.addEventListener("error", function(e, err) {
+        console.log(err);
+        getElement(`error-${i+1}`).value = "Unable to load image from URL.";
+      });
+      img.src = url;
+    } else { console.log("no img url found"); }
+  };
 }
 
 function ConvertType(v, type) {
@@ -470,6 +504,7 @@ getElement('upload-Space').addEventListener("change", UpdateProperty("Headshot.S
 for (let i = 0; i < 4; i++) {
   let id = `upload-${(i + 1)}`;
   getElement(id).addEventListener("change", drawImageTo(i), false);
+  getElement(`${id}-url`).addEventListener("change", drawImageURLTo(i));
   getElement(`${id}-cropX`).addEventListener("change", UpdateHeadshotData(i, "x", "int"), false);
   getElement(`${id}-cropY`).addEventListener("change", UpdateHeadshotData(i, "y", "int"), false);
   getElement(`${id}-cropW`).addEventListener("change", UpdateHeadshotData(i, "w", "int"), false);
@@ -697,6 +732,7 @@ function RestoreFieldData() {
     if (isNullOrEmpty(headshot)) headshot = PLACEHOLDER;
     let id = `upload-${(i + 1)}`;
     getElement(id + '-preview').innerHTML = `<img id="${id}-img" src="${headshot.src || PLACEHOLDER.src}">`;
+    // getElement(`${id}-url`).value = headshot.src || PLACEHOLDER.src; // laggy if stored a 'data:' url
     getElement(id + '-cropX').value = headshot.x || PLACEHOLDER.x;
     getElement(id + '-cropY').value = headshot.y || PLACEHOLDER.y;
     getElement(id + '-cropW').value = headshot.w || PLACEHOLDER.w;
