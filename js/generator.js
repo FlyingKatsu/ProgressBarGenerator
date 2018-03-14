@@ -27,8 +27,8 @@ getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKat
 
 // NOTE: output image is double these dimensions
 WIDTH = 480;
-HEIGHT = 560;
-HEADSIZE = 96;
+HEIGHT = 680;
+HEADSIZE = 72;
 FRAMEHEIGHT = 48;
 PAD_RIGHT = 84;
 PAD_LEFT = 64;
@@ -47,7 +47,7 @@ getElement('upload-W').value = HEADSIZE;
 getElement('upload-H').value = HEADSIZE;
 getElement('upload-X').value = WIDTH * 2 / 3 - 4;
 getElement('upload-Y').value = PAD_TOP - HEADSIZE / 4;
-getElement('upload-Space').value = 120;
+getElement('spacing').value = 120;
 
 // User Defined Values
 let DONORDATA = [];
@@ -95,8 +95,7 @@ APPDATA = {
       ],
       Style: {
         Size: { w: HEADSIZE, h: HEADSIZE },
-        Position: { x: WIDTH * 2 / 3 - 4, y: PAD_TOP - HEADSIZE / 4 },
-        Space: { x: 0, y: 120 }
+        Position: { x: WIDTH * 2 / 3 - 6, y: 0 }
       },
     },
     Goal: {
@@ -107,9 +106,13 @@ APPDATA = {
         { name: "Sample 4", progress: { a: 10, b: 150 } }
       ],
       Style: {
-        Size: { w: HEADSIZE, h: HEADSIZE },
+        Size: { w: 2 / 3 * WIDTH, h: FRAMEHEIGHT },
         Position: { x: 4, y: PAD_TOP },
-        Space: { x: 0, y: 120 }
+        Padding: { x: 0, y: 4 }, // Space between progress text and bottom border
+        Space: { x: 0, y: 24 },
+        Normal: { border: "#000", fill: "#FF0000", size: 4 },
+        Filled: { border: "#FFF", fill: "#00FF00", size: 4 },
+        Overflow: { border: "#FFF", fill: "#00FF00", size: 6 }
       },
       Font: {
         Name: {
@@ -117,7 +120,7 @@ APPDATA = {
           font: "Impact, Charcoal, sans-serif",
           x: 12,
           y: 0,
-          baseline: "hanging",
+          baseline: "middle",
           align: "left",
           stroke: 1,
           line: "#000",
@@ -130,8 +133,21 @@ APPDATA = {
           font: "Impact, Charcoal, sans-serif",
           x: 0,
           y: 0,
-          baseline: "hanging",
+          baseline: "top",
           align: "right",
+          stroke: 1,
+          line: "#000",
+          fill: "#FFF",
+          gradientA: null,
+          gradientB: null
+        },
+        Overflow: {
+          size: 24,
+          font: "Impact, Charcoal, sans-serif",
+          x: 0,
+          y: 0,
+          baseline: "top",
+          align: "left",
           stroke: 1,
           line: "#000",
           fill: "#FFF",
@@ -147,11 +163,11 @@ APPDATA = {
         { name: "Another", amt: 15, target: 0 }
       ],
       Style: {
-        Position: { x: 16, y: HEIGHT * 3 / 4 + 64 },
-        Space: { x: 0, y: 16 }
+        Position: { x: 0, y: 16 },
+        Space: { x: 0, y: 12 }
       },
       Font: {
-        size: 32,
+        size: 28,
         font: "Impact, Charcoal, sans-serif",
         x: 0,
         y: 0,
@@ -272,6 +288,12 @@ function testFonts(txt, font, options) {
 
 // Layer Redraws
 
+function CalcSpacing() {
+  return APPDATA.INPUT.Goal.Style.Space.y +
+    APPDATA.INPUT.Goal.Style.Size.h + APPDATA.INPUT.Goal.Style.Padding.y +
+    APPDATA.INPUT.Goal.Font.Progress.size;
+}
+
 function RedrawText() {
   LAYERS.text.scene.clear();
 
@@ -291,7 +313,23 @@ function RedrawText() {
   });
 
   // Draw the goals
+  // Precalculate spacing
+  let spacing = CalcSpacing();
   APPDATA.INPUT.Goal.Data.map(function(goal, i) {
+    let progress = goal.progress.a / goal.progress.b;
+    let remainder = goal.progress.b - goal.progress.a;
+    let progressTxt = "";
+    let font = APPDATA.INPUT.Goal.Font.Progress;
+    if (progress > 1) {
+      font = APPDATA.INPUT.Goal.Font.Overflow;
+      progressTxt = `MAXED OUT by Someone +${-remainder}`;
+    } else if (progress == 1) {
+      font = APPDATA.INPUT.Goal.Font.Overflow;
+      progressTxt = `Someone filled 100%`;
+    } else {
+      font = APPDATA.INPUT.Goal.Font.Progress;
+      progressTxt = `${goal.progress.a} / ${goal.progress.b}`;
+    }
     // Goal Name
     drawTextOnLayer(LAYERS.text, goal.name, {
       thick: APPDATA.INPUT.Goal.Font.Name.stroke,
@@ -302,19 +340,19 @@ function RedrawText() {
       align: APPDATA.INPUT.Goal.Font.Name.align,
       baseline: APPDATA.INPUT.Goal.Font.Name.baseline,
       x: APPDATA.INPUT.Goal.Style.Position.x + APPDATA.INPUT.Goal.Font.Name.x,
-      y: APPDATA.INPUT.Goal.Style.Position.y + APPDATA.INPUT.Goal.Font.Name.y + (APPDATA.INPUT.Goal.Font.Name.size + APPDATA.INPUT.Goal.Style.Space.y) * i
+      y: APPDATA.INPUT.Goal.Style.Position.y + APPDATA.INPUT.Goal.Font.Name.y + APPDATA.INPUT.Goal.Style.Size.h / 2 + spacing * i
     });
     // Goal Progress
-    drawTextOnLayer(LAYERS.text, `${goal.progress.a} / ${goal.progress.b}`, {
-      thick: APPDATA.INPUT.Goal.Font.Progress.stroke,
-      stroke: APPDATA.INPUT.Goal.Font.Progress.line,
-      fill: APPDATA.INPUT.Goal.Font.Progress.fill,
-      fontsize: APPDATA.INPUT.Goal.Font.Progress.size,
-      fontfamily: APPDATA.INPUT.Goal.Font.Progress.font,
+    drawTextOnLayer(LAYERS.text, progressTxt, {
+      thick: font.stroke,
+      stroke: font.line,
+      fill: font.fill,
+      fontsize: font.size,
+      fontfamily: font.font,
       align: APPDATA.INPUT.Goal.Font.Progress.align,
       baseline: APPDATA.INPUT.Goal.Font.Progress.baseline,
-      x: WIDTH - APPDATA.INPUT.Goal.Font.Progress.x,
-      y: APPDATA.INPUT.Goal.Style.Position.y + APPDATA.INPUT.Goal.Font.Progress.y + (APPDATA.INPUT.Goal.Font.Name.size + APPDATA.INPUT.Goal.Style.Space.y) * i
+      x: APPDATA.INPUT.Goal.Font.Progress.x + APPDATA.INPUT.Goal.Style.Size.w,
+      y: APPDATA.INPUT.Goal.Style.Position.y + APPDATA.INPUT.Goal.Font.Progress.y + APPDATA.INPUT.Goal.Style.Size.h + APPDATA.INPUT.Goal.Style.Padding.y + spacing * i
     });
   });
 
@@ -328,14 +366,70 @@ function RedrawText() {
       fontfamily: APPDATA.INPUT.Item.Font.font,
       align: APPDATA.INPUT.Item.Font.align,
       baseline: APPDATA.INPUT.Item.Font.baseline,
-      x: APPDATA.INPUT.Item.Style.Position.x + APPDATA.INPUT.Item.Font.x,
-      y: APPDATA.INPUT.Item.Style.Position.y + APPDATA.INPUT.Item.Font.y + (APPDATA.INPUT.Item.Font.size + APPDATA.INPUT.Item.Style.Space.y) * i
+      x: APPDATA.INPUT.Title.Data[1].x + APPDATA.INPUT.Item.Style.Position.x + APPDATA.INPUT.Item.Font.x,
+      y: APPDATA.INPUT.Title.Data[1].y + APPDATA.INPUT.Title.Font.size + APPDATA.INPUT.Item.Style.Position.y + APPDATA.INPUT.Item.Font.y + (APPDATA.INPUT.Item.Font.size + APPDATA.INPUT.Item.Style.Space.y) * i
+    });
+  });
+}
+
+function RedrawProgressBar() {
+  LAYERS.frame.scene.clear();
+  LAYERS.fill.scene.clear();
+
+  // Precalculate spacing
+  let spacing = CalcSpacing();
+
+  APPDATA.INPUT.Goal.Data.map(function(goal, i) {
+    let progress = goal.progress.a / goal.progress.b;
+    let percent = 1;
+    let remainder = goal.progress.b - goal.progress.a;
+    let style = APPDATA.INPUT.Goal.Style.Normal;
+    if (progress > 1) {
+      style = APPDATA.INPUT.Goal.Style.Overflow;
+      percent = -remainder / goal.progress.b;
+    } else if (progress == 1) {
+      style = APPDATA.INPUT.Goal.Style.Filled;
+    } else {
+      style = APPDATA.INPUT.Goal.Style.Normal;
+      percent = progress;
+    }
+    // Goal Frame
+    drawOnLayer(LAYERS.frame, {
+      x: APPDATA.INPUT.Goal.Style.Position.x,
+      y: APPDATA.INPUT.Goal.Style.Position.y + spacing * i,
+      w: APPDATA.INPUT.Goal.Style.Size.w,
+      h: APPDATA.INPUT.Goal.Style.Size.h,
+      color: APPDATA.INPUT.Goal.Style.Normal.border,
+      percent: 1
+    });
+    // Extra Goal Fill
+    if (progress > 1) {
+      drawOnLayer(LAYERS.fill, {
+        x: APPDATA.INPUT.Goal.Style.Position.x + APPDATA.INPUT.Goal.Style.Filled.size,
+        y: APPDATA.INPUT.Goal.Style.Position.y + APPDATA.INPUT.Goal.Style.Filled.size + spacing * i,
+        w: APPDATA.INPUT.Goal.Style.Size.w - APPDATA.INPUT.Goal.Style.Filled.size * 2,
+        h: APPDATA.INPUT.Goal.Style.Size.h - APPDATA.INPUT.Goal.Style.Filled.size * 2,
+        color: APPDATA.INPUT.Goal.Style.Filled.border,
+        percent: 1
+      });
+    }
+    // Goal Fill
+    drawOnLayer(LAYERS.fill, {
+      x: APPDATA.INPUT.Goal.Style.Position.x + style.size,
+      y: APPDATA.INPUT.Goal.Style.Position.y + style.size + spacing * i,
+      w: APPDATA.INPUT.Goal.Style.Size.w - style.size * 2,
+      h: APPDATA.INPUT.Goal.Style.Size.h - style.size * 2,
+      color: APPDATA.INPUT.Goal.Style.Normal.fill,
+      percent: percent
     });
   });
 }
 
 function RedrawHeadshot() {
   LAYERS.head.scene.clear();
+  // Precalculate spacing
+  let spacing = CalcSpacing();
+  let centering = (APPDATA.INPUT.Goal.Style.Size.h - APPDATA.INPUT.Headshot.Style.Size.h) / 2;
   // Draw the headshots
   APPDATA.INPUT.Headshot.Data.map(function(headshot, i) {
     if (isNullOrEmpty(headshot)) headshot = PLACEHOLDER;
@@ -345,7 +439,7 @@ function RedrawHeadshot() {
     img.onload = function() {
       drawImageOnLayer(LAYERS.head, img, {
         x: APPDATA.INPUT.Headshot.Style.Position.x,
-        y: APPDATA.INPUT.Headshot.Style.Position.y + i * APPDATA.INPUT.Headshot.Style.Space.y,
+        y: APPDATA.INPUT.Headshot.Style.Position.y + APPDATA.INPUT.Goal.Style.Position.y + centering + spacing * i,
         w: APPDATA.INPUT.Headshot.Style.Size.w,
         h: APPDATA.INPUT.Headshot.Style.Size.h,
         cropX: headshot.x || PLACEHOLDER.x,
@@ -371,8 +465,8 @@ function drawHeadshot(src, i) {
   img.onload = function() {
     drawImageOnLayer(LAYERS.head, img, {
       x: getElement(`upload-X`).value,
-      // y: getElement('upload-Y').value + i * getElement(`upload-Space`).value,
-      y: PAD_TOP - HEADSIZE / 4 + i * getElement(`upload-Space`).value,
+      // y: getElement('upload-Y').value + i * getElement(`spacing`).value,
+      y: PAD_TOP - HEADSIZE / 4 + i * getElement(`spacing`).value,
       w: getElement(`upload-W`).value,
       h: getElement(`upload-H`).value,
       cropX: getElement(`${id}-cropX`).value,
@@ -483,6 +577,8 @@ function UpdateProperty(path, type) {
     }
     // Update the value
     schema[pathsplit[len - 1]] = ConvertType(this.value, type);
+    RedrawProgressBar();
+    RedrawText();
     RedrawHeadshot();
   }
 }
@@ -495,11 +591,62 @@ function UpdateHeadshotData(i, key, type) {
   }
 }
 
+function UpdateGoalData(i, path, type) {
+  return function() {
+    let schema = APPDATA.INPUT.Goal.Data[i];
+    const pathsplit = path.split('.');
+    const len = pathsplit.length;
+    for (let i = 0; i < len - 1; i++) {
+      const key = pathsplit[i];
+      if (!schema[key]) schema[key] = {}
+      schema = schema[key];
+    }
+    // Update the value
+    schema[pathsplit[len - 1]] = ConvertType(this.value, type);
+    RedrawProgressBar();
+    RedrawText();
+  }
+}
+
+function UpdateTitleData(i, path, type) {
+  return function() {
+    let schema = APPDATA.INPUT.Title.Data[i];
+    const pathsplit = path.split('.');
+    const len = pathsplit.length;
+    for (let i = 0; i < len - 1; i++) {
+      const key = pathsplit[i];
+      if (!schema[key]) schema[key] = {}
+      schema = schema[key];
+    }
+    // Update the value
+    schema[pathsplit[len - 1]] = ConvertType(this.value, type);
+    RedrawText();
+  }
+}
+
+// Add Event Listeners
+
+getElement('ShowSettings').addEventListener("click", () => {
+  getElement('data').style.display = 'none';
+  getElement('settings').style.display = 'block';
+  getElement('gapi').style.display = 'none';
+});
+getElement('ShowData').addEventListener("click", () => {
+  getElement('data').style.display = 'block';
+  getElement('settings').style.display = 'none';
+  getElement('gapi').style.display = 'none';
+});
+getElement('ShowGAPI').addEventListener("click", () => {
+  getElement('data').style.display = 'none';
+  getElement('settings').style.display = 'none';
+  getElement('gapi').style.display = 'block';
+});
+
 getElement('upload-W').addEventListener("change", UpdateProperty("Headshot.Style.Size.w", "int"), false);
 getElement('upload-H').addEventListener("change", UpdateProperty("Headshot.Style.Size.h", "int"), false);
 getElement('upload-X').addEventListener("change", UpdateProperty("Headshot.Style.Position.x", "int"), false);
 getElement('upload-Y').addEventListener("change", UpdateProperty("Headshot.Style.Position.y", "int"), false);
-getElement('upload-Space').addEventListener("change", UpdateProperty("Headshot.Style.Space.y", "int"), false);
+getElement('spacing').addEventListener("change", UpdateProperty("Goal.Style.Space.y", "int"), false);
 
 for (let i = 0; i < 4; i++) {
   let id = `upload-${(i + 1)}`;
@@ -511,74 +658,17 @@ for (let i = 0; i < 4; i++) {
   getElement(`${id}-cropH`).addEventListener("change", UpdateHeadshotData(i, "h", "int"), false);
 }
 
-function updateGoalTextLayers() {
-  LAYERS.text.scene.clear();
-  LAYERS.fill.scene.clear();
-  LAYERS.frame.scene.clear();
-  drawTextOnLayer(LAYERS.text, getElement('title').value, {
-    thick: 2,
-    stroke: "#000",
-    fill: "#fff",
-    font: "48px Impact, Charcoal, sans-serif",
-    miter: getElement('miter2').value,
-    x: 4,
-    y: 4
-  });
-  for (let i = 0; i < 4; i++) {
-    drawOnLayer(LAYERS.frame, {
-      x: 4,
-      y: PAD_TOP + 6 + 120 * i,
-      w: 4 * WIDTH / 6,
-      h: FRAMEHEIGHT - 8,
-      color: "#000",
-      percent: 1
-    });
-    drawOnLayer(LAYERS.fill, {
-      x: 8,
-      y: PAD_TOP + 10 + 120 * i,
-      w: 4 * WIDTH / 6 - 8,
-      h: FRAMEHEIGHT - 16,
-      color: "#ff0000",
-      percent: getElement('goal-' + (i + 1) + '-A').value / getElement('goal-' + (i + 1) + '-B').value
-    });
-    drawTextOnLayer(LAYERS.text, getElement('goal-' + (i + 1)).value, {
-      thick: 2,
-      stroke: "#000",
-      fill: "#fff",
-      font: "32px Impact, Charcoal, sans-serif",
-      miter: getElement('miter2').value,
-      x: 16,
-      y: PAD_TOP + 13 + 120 * i
-    });
-    drawTextOnLayer(LAYERS.text, `${getElement('goal-' + (i + 1) + '-A').value} / ${getElement('goal-' + (i + 1) + '-B').value}`, {
-      thick: 2,
-      stroke: "#000",
-      fill: "#fff",
-      font: "32px Impact, Charcoal, sans-serif",
-      miter: getElement('miter2').value,
-      align: "right",
-      x: 4 * WIDTH / 6 - 8,
-      y: PAD_TOP + 40 + 13 + 120 * i
-    });
-  }
-  // Save in local
-  SaveData();
+for (let i = 0; i < 4; i++) {
+  let id = `goal-${(i + 1)}`;
+  getElement(id).addEventListener("change", UpdateGoalData(i, "name", "string"), false);
+  getElement(`${id}-A`).addEventListener("change", UpdateGoalData(i, "progress.a", "string"), false);
+  getElement(`${id}-B`).addEventListener("change", UpdateGoalData(i, "progress.b", "string"), false);
 }
 
-// update Title anf Goal Text
-getElement('title').addEventListener('change', updateGoalTextLayers);
-getElement('goal-1').addEventListener('change', updateGoalTextLayers);
-getElement('goal-1-A').addEventListener('change', updateGoalTextLayers);
-getElement('goal-1-B').addEventListener('change', updateGoalTextLayers);
-getElement('goal-2').addEventListener('change', updateGoalTextLayers);
-getElement('goal-2-A').addEventListener('change', updateGoalTextLayers);
-getElement('goal-2-B').addEventListener('change', updateGoalTextLayers);
-getElement('goal-3').addEventListener('change', updateGoalTextLayers);
-getElement('goal-3-A').addEventListener('change', updateGoalTextLayers);
-getElement('goal-3-B').addEventListener('change', updateGoalTextLayers);
-getElement('goal-4').addEventListener('change', updateGoalTextLayers);
-getElement('goal-4-A').addEventListener('change', updateGoalTextLayers);
-getElement('goal-4-B').addEventListener('change', updateGoalTextLayers);
+for (let i = 0; i < 2; i++) {
+  let id = `title-${(i + 1)}`;
+  getElement(id).addEventListener("change", UpdateTitleData(i, "name", "string"), false);
+}
 
 // Download using APPDATA.INPUT filename
 getElement('download').addEventListener('click', function() {
@@ -599,7 +689,7 @@ getElement('miter').addEventListener('change', function() {
   testFonts(getElement('font-sample').value, getElement('font-size').value + 'px ' + getElement('font-family').value, { miter: getElement('miter').value });
 });
 
-getElement('miter2').addEventListener('change', updateGoalTextLayers);
+getElement('miter2').addEventListener('change', RedrawText);
 
 getElement('font-sample').addEventListener('change', function() {
   LAYERS.text.scene.clear();
@@ -619,6 +709,7 @@ function ResetCanvas() {
   LAYERS.fill.scene.clear();
   LAYERS.bg.scene.clear();
   viewport.scene.clear();
+  RedrawProgressBar();
   RedrawText();
   RedrawHeadshot();
 }
@@ -721,13 +812,29 @@ testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Kanit Black Itali
 testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Open Sans Extra Bold Italic');
 LAYERS.text.scene.clear();
 
-function RestoreFieldData() {
+function RestoreFieldData() { // TODO: Create the HTML elements needed
+  // Text Settings TODO
+
+  // Text Data
+  APPDATA.INPUT.Title.Data.map(function(title, i) {
+    let id = `title-${(i + 1)}`;
+    getElement(id).value = title.name;
+    getElement(`${id}-X`).value = title.x;
+    getElement(`${id}-Y`).value = title.y;
+  });
+  APPDATA.INPUT.Goal.Data.map(function(goal, i) {
+    let id = `goal-${(i + 1)}`;
+    getElement(id).value = goal.name;
+    getElement(`${id}-A`).value = goal.progress.a;
+    getElement(`${id}-B`).value = goal.progress.b;
+  });
+  // Image Settings
   getElement('upload-W').value = APPDATA.INPUT.Headshot.Style.Size.w;
   getElement('upload-H').value = APPDATA.INPUT.Headshot.Style.Size.h;
   getElement('upload-X').value = APPDATA.INPUT.Headshot.Style.Position.x;
   getElement('upload-Y').value = APPDATA.INPUT.Headshot.Style.Position.y;
-  getElement('upload-Space').value = APPDATA.INPUT.Headshot.Style.Space.y;
-
+  getElement('spacing').value = APPDATA.INPUT.Goal.Style.Space.y;
+  // Image Data
   APPDATA.INPUT.Headshot.Data.map(function(headshot, i) {
     if (isNullOrEmpty(headshot)) headshot = PLACEHOLDER;
     let id = `upload-${(i + 1)}`;
@@ -748,6 +855,7 @@ if (!isNullOrEmpty(localStorage.getItem(APPNAME))) {
   APPDATA = JSON.parse(localStorage.getItem(APPNAME));
   if (APPDATA.version == VERSION) {
     console.log("Restoring saved data...");
+    RedrawProgressBar();
     RedrawText();
     RedrawHeadshot();
     RestoreFieldData();
@@ -760,6 +868,7 @@ if (!isNullOrEmpty(localStorage.getItem(APPNAME))) {
   }
 } else {
   console.log("No existing data found. Populating with placeholders...");
+  RedrawProgressBar();
   RedrawText();
   RedrawHeadshot();
   RestoreFieldData();

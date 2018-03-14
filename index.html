@@ -22,8 +22,8 @@
       text-align: center;
     }
     
-    #left,
-    #right {
+    .left,
+    .right {
       background: rgba(0, 0, 0, 0.1);
       margin: 0 auto;
       padding: 10px 20px;
@@ -33,7 +33,7 @@
       overflow-y: scroll;
     }
     
-    #right {
+    .right {
       width: 40%;
     }
     
@@ -43,6 +43,11 @@
     
     #canvasWrapper {
       margin-bottom: 32px;
+    }
+    
+    #settings,
+    #gapi {
+      display: none;
     }
     
     .previewImg img {
@@ -86,191 +91,217 @@
       <p>Initial image design by <a href="https://twitter.com/TENTAWFUL">Tenta</a> for <a href="https://twitter.com/HeatPhoenix">HeatPhoenix</a>. Generator script and styles by <a href="https://twitter.com/theflyingkatsu">FlyingKatsu</a>.</p>
       <p>Check <a href="https://github.com/FlyingKatsu/ProgressBarGenerator">GitHub</a> for a list of known issues</p>
 
-      <div id="left">
-        <h2>Canvas</h2>
-
-        <fieldset>
-          <legend>Download and Save to Local Storage</legend>
-          <label for="filename">File Name:</label>
-          <input type="text" id="filename" name="filename" value="genTipJarProgress.png">
+      <div class="left">
+        <div>
+          <button id="reset">Reset Canvas</button>
           <button id="download">Download Image</button>
-        </fieldset>
+        </div>
 
-        <fieldset>
-          <legend>Font Tester</legend>
-          <div>
-            <input type="number" id="font-size" name="font-size" value="32">
-            <select name="font" id="font-family">
-              <option class="Impact" value="Impact, Charcoal, sans-serif">Impact Italic</option>
-              <option class="Exo" value="'Exo Black Italic'">Exo Black Italic</option>
-              <option class="Kanit" value="'Kanit Black Italic'">Kanit Black Italic</option>
-              <option class="OpenSans" value="'Open Sans Extra Bold Italic'">Open Sans Extra Bold Italic</option>
-              <option class="Sans" value="sans-serif">Sans Serif</option>
-            </select>
-            <input type="text" id="font-sample" name="font-sample" value="//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]">
-          </div>
-          <label for="miter">Miter Limit (adjust threshold for sharp corners)</label>
-          <input type="number" id="miter" name="miter" value="10">
-        </fieldset>
-
-        <button id="reset">Reset Canvas</button>
+        <h2>Canvas</h2>
 
         <div id="canvasWrapper">
         </div>
       </div>
 
-      <aside id="right">
-        <h2>Settings</h2>
+      <div id="side-wrapper" class="right">
+        <div>
+          <button id="ShowData">Edit Data</button>
+          <button id="ShowSettings">Edit Settings</button>
+          <button id="ShowGAPI">Edit GAPI</button>
+        </div>
+        <aside id="settings">
+          <h2>Settings</h2>
 
-        <fieldset class="text-editing">
-          <legend>Title</legend>
-          <input type="text" id="title" name="title" value="TIP JAR //">
-          <div>
-            <label for="miter2">Miter Limit (adjust threshold for sharp corners)</label>
-            <input type="number" id="miter2" name="miter2" value="10">
-          </div>
-        </fieldset>
-
-        <fieldset class="text-editing">
-          <legend>Recent Donations</legend>
-          <div>
-            <label for="split">Split Percentage</label>
-            <input type="number" id="split" name="split" min=0.0 max=1.0 step=0.05 value="0.80">
-          </div>
-          <div id="donations">
-          </div>
-          <button id="donate">Add Donation Data</button>
-        </fieldset>
-
-        <fieldset class="text-editing">
-          <legend>Goal Progress</legend>
-          <div id="goals">
-            <fieldset class="text-editing">
-              <legend>Goal 1</legend>
-              <input type="text" id="goal-1" name="goal-1" value="Goal A">
-              <input type="number" id="goal-1-A" name="goal-1-A" value="0">
-              <input type="number" id="goal-1-B" name="goal-1-B" value="100">
-            </fieldset>
-            <fieldset class="text-editing">
-              <legend>Goal 2</legend>
-              <input type="text" id="goal-2" name="goal-2" value="Goal B">
-              <input type="number" id="goal-2-A" name="goal-2-A" value="499">
-              <input type="number" id="goal-2-B" name="goal-2-B" value="500">
-            </fieldset>
-            <fieldset class="text-editing">
-              <legend>Goal 3</legend>
-              <input type="text" id="goal-3" name="goal-3" value="Goal C">
-              <input type="number" id="goal-3-A" name="goal-3-A" value="30">
-              <input type="number" id="goal-3-B" name="goal-3-B" value="50">
-            </fieldset>
-            <fieldset class="text-editing">
-              <legend>Goal 4</legend>
-              <input type="text" id="goal-4" name="goal-4" value="Goal D">
-              <input type="number" id="goal-4-A" name="goal-4-A" value="10">
-              <input type="number" id="goal-4-B" name="goal-4-B" value="150">
-            </fieldset>
-          </div>
-        </fieldset>
-
-
-        <fieldset>
-          <legend>Headshot Size (W, H)</legend>
-          <input type="number" id="upload-W" name="upload-W">
-          <input type="number" id="upload-H" name="upload-H">
-        </fieldset>
-        <fieldset>
-          <legend>Headshot Position (X, Y, Spacing)</legend>
-          <input type="number" id="upload-X" name="upload-X">
-          <input type="number" id="upload-Y" name="upload-Y">
-          <input type="number" id="upload-Space" name="upload-Space">
-        </fieldset>
-
-
-        <fieldset class="img-uploads">
-          <legend>Headshot 1</legend>
-          <div class="uploader">
-            <input type="file" id="upload-1" name="upload-1">
-            <p>or paste an image URL:<input type="text" id="upload-1-url" name="upload-1-url"><span id="error-1"></span></p>
-          </div>
-          <div id="upload-1-preview" class="previewImg"><img width=128 height=128></div>
-          <div class="imgOptions">
+          <fieldset>
+            <legend>Title Settings</legend>
+            <div>
+              <label for="miter2">Miter Limit (adjust threshold for sharp corners)</label>
+              <input type="number" id="miter2" name="miter2" value="10">
+            </div>
             <fieldset>
-              <legend>Source Top-Left Position</legend>
-              <input type="number" id="upload-1-cropX" name="upload-1-cropX">
-              <input type="number" id="upload-1-cropY" name="upload-1-cropY">
+              <legend>Font Tester</legend>
+              <div>
+                <input type="number" id="font-size" name="font-size" value="32">
+                <select name="font" id="font-family">
+						<option class="Impact" value="Impact, Charcoal, sans-serif">Impact Italic</option>
+						<option class="Exo" value="'Exo Black Italic'">Exo Black Italic</option>
+						<option class="Kanit" value="'Kanit Black Italic'">Kanit Black Italic</option>
+						<option class="OpenSans" value="'Open Sans Extra Bold Italic'">Open Sans Extra Bold Italic</option>
+						<option class="Sans" value="sans-serif">Sans Serif</option>
+					  </select>
+                <input type="text" id="font-sample" name="font-sample" value="//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]">
+              </div>
+              <label for="miter">Miter Limit (adjust threshold for sharp corners)</label>
+              <input type="number" id="miter" name="miter" value="10">
             </fieldset>
-            <fieldset>
-              <legend>Source Width/Height</legend>
-              <input type="number" id="upload-1-cropW" name="upload-1-cropW">
-              <input type="number" id="upload-1-cropH" name="upload-1-cropH">
-            </fieldset>
-          </div>
-        </fieldset>
+          </fieldset>
 
-        <fieldset class="img-uploads">
-          <legend>Headshot 2</legend>
-          <div class="uploader">
-            <input type="file" id="upload-2" name="upload-2">
-            <p>or paste an image URL:<input type="text" id="upload-2-url" name="upload-2-url"><span id="error-2"></span></p>
-          </div>
-          <div id="upload-2-preview" class="previewImg"><img width=128 height=128></div>
-          <div class="imgOptions">
-            <fieldset>
-              <legend>Source Top-Left Position</legend>
-              <input type="number" id="upload-2-cropX" name="upload-2-cropX">
-              <input type="number" id="upload-2-cropY" name="upload-2-cropY">
-            </fieldset>
-            <fieldset>
-              <legend>Source Width/Height</legend>
-              <input type="number" id="upload-2-cropW" name="upload-2-cropW">
-              <input type="number" id="upload-2-cropH" name="upload-2-cropH">
-            </fieldset>
-          </div>
-        </fieldset>
+          <fieldset>
+            <legend>Goal Settings</legend>
+            <div><label for="spacing">Spacing:</label><input type="number" id="spacing" name="spacing"></div>
+            <label for="goal-W">Width:</label><input type="number" id="goal-W" name="goal-W">
+            <label for="goal-H">Height:</label><input type="number" id="goal-H" name="goal-H">
+            <label for="goal-X">X:</label><input type="number" id="goal-X" name="goal-X">
+            <label for="goal-Y">Y:</label><input type="number" id="goal-Y" name="goal-Y">
+          </fieldset>
 
-        <fieldset class="img-uploads">
-          <legend>Headshot 3</legend>
-          <div class="uploader">
-            <input type="file" id="upload-3" name="upload-3">
-            <p>or paste an image URL:<input type="text" id="upload-3-url" name="upload-3-url"><span id="error-3"></span></p>
-          </div>
-          <div id="upload-3-preview" class="previewImg"><img width=128 height=128></div>
-          <div class="imgOptions">
-            <fieldset>
-              <legend>Source Top-Left Position</legend>
-              <input type="number" id="upload-3-cropX" name="upload-3-cropX">
-              <input type="number" id="upload-3-cropY" name="upload-3-cropY">
-            </fieldset>
-            <fieldset>
-              <legend>Source Width/Height</legend>
-              <input type="number" id="upload-3-cropW" name="upload-3-cropW">
-              <input type="number" id="upload-3-cropH" name="upload-3-cropH">
-            </fieldset>
-          </div>
-        </fieldset>
+          <fieldset>
+            <legend>Headshot Settings</legend>
+            <label for="upload-W">Width:</label><input type="number" id="upload-W" name="upload-W">
+            <label for="upload-H">Height:</label><input type="number" id="upload-H" name="upload-H">
+            <label for="upload-X">X:</label><input type="number" id="upload-X" name="upload-X">
+            <label for="upload-Y">Y:</label><input type="number" id="upload-Y" name="upload-Y">
+          </fieldset>
+        </aside>
 
-        <fieldset class="img-uploads">
-          <legend>Headshot 4</legend>
-          <div class="uploader">
-            <input type="file" id="upload-4" name="upload-4">
-            <p>or paste an image URL:<input type="text" id="upload-4-url" name="upload-4-url"><span id="error-4"></span></p>
-          </div>
-          <div id="upload-4-preview" class="previewImg"><img width=128 height=128></div>
-          <div class="imgOptions">
-            <fieldset>
-              <legend>Source Top-Left Position</legend>
-              <input type="number" id="upload-4-cropX" name="upload-4-cropX">
-              <input type="number" id="upload-4-cropY" name="upload-4-cropY">
-            </fieldset>
-            <fieldset>
-              <legend>Source Width/Height</legend>
-              <input type="number" id="upload-4-cropW" name="upload-4-cropW">
-              <input type="number" id="upload-4-cropH" name="upload-4-cropH">
-            </fieldset>
-          </div>
-        </fieldset>
+        <aside id="data">
+          <h2>Data</h2>
 
-      </aside>
+          <fieldset class="text-editing">
+            <legend>Title</legend>
+            <input type="text" id="title-1" name="title-1" value="">
+            <input type="number" id="title-1-X" name="title-1-X">
+            <input type="number" id="title-1-Y" name="title-1-Y">
+          </fieldset>
+
+          <fieldset class="text-editing">
+            <legend>Goal Progress</legend>
+            <div id="goals">
+              <fieldset class="text-editing">
+                <legend>Goal 1</legend>
+                <input type="text" id="goal-1" name="goal-1" value="Goal A">
+                <input type="number" id="goal-1-A" name="goal-1-A" value="0">
+                <input type="number" id="goal-1-B" name="goal-1-B" value="100">
+              </fieldset>
+              <fieldset class="text-editing">
+                <legend>Goal 2</legend>
+                <input type="text" id="goal-2" name="goal-2" value="Goal B">
+                <input type="number" id="goal-2-A" name="goal-2-A" value="499">
+                <input type="number" id="goal-2-B" name="goal-2-B" value="500">
+              </fieldset>
+              <fieldset class="text-editing">
+                <legend>Goal 3</legend>
+                <input type="text" id="goal-3" name="goal-3" value="Goal C">
+                <input type="number" id="goal-3-A" name="goal-3-A" value="30">
+                <input type="number" id="goal-3-B" name="goal-3-B" value="50">
+              </fieldset>
+              <fieldset class="text-editing">
+                <legend>Goal 4</legend>
+                <input type="text" id="goal-4" name="goal-4" value="Goal D">
+                <input type="number" id="goal-4-A" name="goal-4-A" value="10">
+                <input type="number" id="goal-4-B" name="goal-4-B" value="150">
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="img-uploads">
+            <legend>Headshot 1</legend>
+            <div class="uploader">
+              <input type="file" id="upload-1" name="upload-1">
+              <p>or paste an image URL:<input type="text" id="upload-1-url" name="upload-1-url"><span id="error-1"></span></p>
+            </div>
+            <div id="upload-1-preview" class="previewImg"><img width=128 height=128></div>
+            <div class="imgOptions">
+              <fieldset>
+                <legend>Source Top-Left Position</legend>
+                <input type="number" id="upload-1-cropX" name="upload-1-cropX">
+                <input type="number" id="upload-1-cropY" name="upload-1-cropY">
+              </fieldset>
+              <fieldset>
+                <legend>Source Width/Height</legend>
+                <input type="number" id="upload-1-cropW" name="upload-1-cropW">
+                <input type="number" id="upload-1-cropH" name="upload-1-cropH">
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="img-uploads">
+            <legend>Headshot 2</legend>
+            <div class="uploader">
+              <input type="file" id="upload-2" name="upload-2">
+              <p>or paste an image URL:<input type="text" id="upload-2-url" name="upload-2-url"><span id="error-2"></span></p>
+            </div>
+            <div id="upload-2-preview" class="previewImg"><img width=128 height=128></div>
+            <div class="imgOptions">
+              <fieldset>
+                <legend>Source Top-Left Position</legend>
+                <input type="number" id="upload-2-cropX" name="upload-2-cropX">
+                <input type="number" id="upload-2-cropY" name="upload-2-cropY">
+              </fieldset>
+              <fieldset>
+                <legend>Source Width/Height</legend>
+                <input type="number" id="upload-2-cropW" name="upload-2-cropW">
+                <input type="number" id="upload-2-cropH" name="upload-2-cropH">
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="img-uploads">
+            <legend>Headshot 3</legend>
+            <div class="uploader">
+              <input type="file" id="upload-3" name="upload-3">
+              <p>or paste an image URL:<input type="text" id="upload-3-url" name="upload-3-url"><span id="error-3"></span></p>
+            </div>
+            <div id="upload-3-preview" class="previewImg"><img width=128 height=128></div>
+            <div class="imgOptions">
+              <fieldset>
+                <legend>Source Top-Left Position</legend>
+                <input type="number" id="upload-3-cropX" name="upload-3-cropX">
+                <input type="number" id="upload-3-cropY" name="upload-3-cropY">
+              </fieldset>
+              <fieldset>
+                <legend>Source Width/Height</legend>
+                <input type="number" id="upload-3-cropW" name="upload-3-cropW">
+                <input type="number" id="upload-3-cropH" name="upload-3-cropH">
+              </fieldset>
+            </div>
+          </fieldset>
+
+          <fieldset class="img-uploads">
+            <legend>Headshot 4</legend>
+            <div class="uploader">
+              <input type="file" id="upload-4" name="upload-4">
+              <p>or paste an image URL:<input type="text" id="upload-4-url" name="upload-4-url"><span id="error-4"></span></p>
+            </div>
+            <div id="upload-4-preview" class="previewImg"><img width=128 height=128></div>
+            <div class="imgOptions">
+              <fieldset>
+                <legend>Source Top-Left Position</legend>
+                <input type="number" id="upload-4-cropX" name="upload-4-cropX">
+                <input type="number" id="upload-4-cropY" name="upload-4-cropY">
+              </fieldset>
+              <fieldset>
+                <legend>Source Width/Height</legend>
+                <input type="number" id="upload-4-cropW" name="upload-4-cropW">
+                <input type="number" id="upload-4-cropH" name="upload-4-cropH">
+              </fieldset>
+            </div>
+          </fieldset>
+        </aside>
+
+        <aside id="gapi">
+          <h2>GAPI</h2>
+
+          <fieldset class="text-editing">
+            <legend>Recent Donations</legend>
+            <fieldset>
+              <legend>Title Two</legend>
+              <input type="text" id="title-2" name="title-2" value="">
+              <input type="number" id="title-2-X" name="title-2-X">
+              <input type="number" id="title-2-Y" name="title-2-Y">
+            </fieldset>
+            <div>
+              <label for="split">Split Percentage</label>
+              <input type="number" id="split" name="split" min=0.0 max=1.0 step=0.05 value="0.80">
+            </div>
+            <div id="donations">
+            </div>
+            <button id="donate">Add Donation Data</button>
+          </fieldset>
+
+        </aside>
+      </div>
+
     </main>
   </div>
 
