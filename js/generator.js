@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.5";
+const VERSION = "v0.3.6";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -50,9 +50,6 @@ getElement('upload-Y').value = PAD_TOP - HEADSIZE / 4;
 getElement('spacing').value = 120;
 
 // User Defined Values
-let DONORDATA = [];
-
-
 // DATA STORAGE
 
 APPDATA = {
@@ -100,10 +97,10 @@ APPDATA = {
     },
     Goal: {
       Data: [
-        { name: "Sample 1", progress: { a: 0, b: 100 } },
-        { name: "Sample 2", progress: { a: 499, b: 500 } },
-        { name: "Sample 3", progress: { a: 30, b: 50 } },
-        { name: "Sample 4", progress: { a: 10, b: 150 } }
+        { name: "Sample 1", progress: { a: 0, b: 100 }, donation: { last: -1, total: 0 } },
+        { name: "Sample 2", progress: { a: 499, b: 500 }, donation: { last: -1, total: 0 } },
+        { name: "Sample 3", progress: { a: 30, b: 50 }, donation: { last: -1, total: 0 } },
+        { name: "Sample 4", progress: { a: 10, b: 150 }, donation: { last: -1, total: 0 } }
       ],
       Style: {
         Size: { w: 2 / 3 * WIDTH, h: FRAMEHEIGHT },
@@ -316,19 +313,21 @@ function RedrawText() {
   // Precalculate spacing
   let spacing = CalcSpacing();
   APPDATA.INPUT.Goal.Data.map(function(goal, i) {
-    let progress = goal.progress.a / goal.progress.b;
-    let remainder = goal.progress.b - goal.progress.a;
+    let sum = round(goal.progress.a + goal.donation.total, 2);
+    let lastname = (goal.donation.last > -1 && APPDATA.INPUT.Item.Data[goal.donation.last]) ? APPDATA.INPUT.Item.Data[goal.donation.last].name : "";
+    let progress = sum / goal.progress.b;
+    let remainder = goal.progress.b - sum;
     let progressTxt = "";
     let font = APPDATA.INPUT.Goal.Font.Progress;
     if (progress > 1) {
       font = APPDATA.INPUT.Goal.Font.Overflow;
-      progressTxt = `MAXED OUT by Someone +${-remainder}`;
+      progressTxt = `MAXED OUT by ${lastname} +${-round(remainder,2)}`;
     } else if (progress == 1) {
       font = APPDATA.INPUT.Goal.Font.Overflow;
-      progressTxt = `Someone filled 100%`;
+      progressTxt = `${lastname} filled 100%`;
     } else {
       font = APPDATA.INPUT.Goal.Font.Progress;
-      progressTxt = `${goal.progress.a} / ${goal.progress.b}`;
+      progressTxt = `${sum} / ${goal.progress.b}`;
     }
     // Goal Name
     drawTextOnLayer(LAYERS.text, goal.name, {
@@ -357,6 +356,7 @@ function RedrawText() {
   });
 
   // Draw the list items
+  let numItem = APPDATA.INPUT.Item.Data.length;
   APPDATA.INPUT.Item.Data.map(function(item, i) {
     drawTextOnLayer(LAYERS.text, `${item.name}: $${item.amt}`, {
       thick: APPDATA.INPUT.Item.Font.stroke,
@@ -367,7 +367,7 @@ function RedrawText() {
       align: APPDATA.INPUT.Item.Font.align,
       baseline: APPDATA.INPUT.Item.Font.baseline,
       x: APPDATA.INPUT.Title.Data[1].x + APPDATA.INPUT.Item.Style.Position.x + APPDATA.INPUT.Item.Font.x,
-      y: APPDATA.INPUT.Title.Data[1].y + APPDATA.INPUT.Title.Font.size + APPDATA.INPUT.Item.Style.Position.y + APPDATA.INPUT.Item.Font.y + (APPDATA.INPUT.Item.Font.size + APPDATA.INPUT.Item.Style.Space.y) * i
+      y: APPDATA.INPUT.Title.Data[1].y + APPDATA.INPUT.Title.Font.size + APPDATA.INPUT.Item.Style.Position.y + APPDATA.INPUT.Item.Font.y + (APPDATA.INPUT.Item.Font.size + APPDATA.INPUT.Item.Style.Space.y) * (numItem - i - 1)
     });
   });
   SaveData();
@@ -381,9 +381,10 @@ function RedrawProgressBar() {
   let spacing = CalcSpacing();
 
   APPDATA.INPUT.Goal.Data.map(function(goal, i) {
-    let progress = goal.progress.a / goal.progress.b;
+    let sum = round(goal.progress.a + goal.donation.total, 2);
+    let progress = sum / goal.progress.b;
+    let remainder = goal.progress.b - sum;
     let percent = 1;
-    let remainder = goal.progress.b - goal.progress.a;
     let style = APPDATA.INPUT.Goal.Style.Normal;
     if (progress > 1) {
       style = APPDATA.INPUT.Goal.Style.Overflow;
@@ -722,13 +723,23 @@ function ResetCanvas() {
 }
 getElement('reset').addEventListener('click', ResetCanvas);
 
+function ClearDonations() {
+  APPDATA.INPUT.Item.Data = [];
+  const donationElement = getElement("donations"); // https://stackoverflow.com/a/3955238
+  while (donationElement.firstChild) {
+    donationElement.removeChild(donationElement.firstChild);
+  }
+  updateDonations();
+}
+getElement('resetDonations').addEventListener('click', ClearDonations);
+
 // Add Donations
 getElement('donate').addEventListener('click', function() {
   let index = getElement('donations').children.length;
   let html = `<label for="donor">Donor Name</label>
-    <APPDATA.INPUT type="text" name="donor" value="Somebody" onchange="updateDonor(${index})">
+    <input type="text" name="donor" value="Somebody" onchange="updateDonor(${index})">
     <label for="amt">Amount</label>
-    <APPDATA.INPUT type="number" name="amt" min=0.00 step=0.05 value="5.00" onchange="applyDonation(${index})">
+    <input type="number" name="amt" min=0.00 step=0.05 value="5.00" onchange="applyDonation(${index})">
     <label for="target">Target</label>
     <select name="target" onchange="applyDonation(${index})">
           <option disabled selected value> -- select a goal -- </option>
@@ -742,13 +753,16 @@ getElement('donate').addEventListener('click', function() {
   getElement('donations').appendChild(fieldset);
 });
 
-function applySpread(goals, target, tarAmt, spreadAmt) {
-  for (let i = 0; i < goals.length; i++) {
-    let current = goals[i].elements["goal-" + (i + 1) + "-A"];
-    if ((i + 1) == target) {
-      current.value = round(parseFloat(current.value) + tarAmt, 2);
+function applySpread(data, index) {
+  for (let i = 0; i < APPDATA.INPUT.Goal.Data.length; i++) {
+    let current = getElement("goal-" + (i + 1) + "-donors");
+    APPDATA.INPUT.Goal.Data[i].donation.last = index;
+    if ((i + 1) == data.target) {
+      APPDATA.INPUT.Goal.Data[i].donation.total += data.tarAmt;
+      current.innerHTML = `<li>+$${round(data.tarAmt,2)} from ${data.name}'s $${data.amt}</li>` + current.innerHTML;
     } else {
-      current.value = round(parseFloat(current.value) + spreadAmt, 2);
+      APPDATA.INPUT.Goal.Data[i].donation.total += data.spreadAmt;
+      current.innerHTML = `<li>+$${round(data.spreadAmt,2)} from ${data.name}'s $${data.amt}</li>` + current.innerHTML;
     }
   }
 }
@@ -756,18 +770,40 @@ function applySpread(goals, target, tarAmt, spreadAmt) {
 function updateDonor(index) {
   let donation = getElement('donations').children[index];
   let name = donation.elements['donor'].value;
-  if (DONORDATA[index]) {
-    DONORDATA[index].name = name;
+  if (APPDATA.INPUT.Item.Data[index]) {
+    APPDATA.INPUT.Item.Data[index].name = name;
   }
+}
+
+function updateDonations() {
+  // Clear goal donation data
+  APPDATA.INPUT.Goal.Data.map((goal, i) => {
+    // Clear log
+    let e = getElement("goal-" + (i + 1) + "-donors");
+    while (e.firstChild) {
+      e.removeChild(e.firstChild);
+    }
+    // Clear data
+    goal.donation = { last: -1, total: 0 };
+  });
+  // Re-Process all donations
+  APPDATA.INPUT.Item.Data.map((item, i) => {
+    // Update donations
+    applySpread(item, i);
+  });
+
+  // Redraw goals
+  RedrawProgressBar();
+  RedrawText();
 }
 
 // Apply changes to Donation slots
 let applyDonation = function(index) {
   let donation = getElement('donations').children[index];
   let name = donation.elements['donor'].value;
-  let amt = donation.elements['amt'].value;
+  let amt = parseFloat(donation.elements['amt'].value);
   let target = donation.elements['target'].value;
-  let split = getElement('split').value;
+  let split = parseFloat(getElement('split').value);
 
   // Skip if target not set
   if (!target) return;
@@ -777,38 +813,18 @@ let applyDonation = function(index) {
     amt: amt,
     target: target,
     split: split,
-    tarAmt: round(amt * split, 2),
-    spreadAmt: round(amt * (1 - split) / 3, 2)
+    tarAmt: amt * split,
+    spreadAmt: amt * (1 - split) / 3
   };
 
-  let goals = getElement('goals').children;
-
-  if (!DONORDATA[index]) {
+  if (!APPDATA.INPUT.Item.Data[index]) {
     // Save the new data
-    DONORDATA.push(data);
-    // update Goals
-    applySpread(goals, data.target, data.tarAmt, data.spreadAmt);
-
+    APPDATA.INPUT.Item.Data.push(data);
   } else {
-    // If changing the target, undo old and apply new
-    if (target != DONORDATA[index].target) {
-      // Remove old
-      applySpread(goals, DONORDATA[index].target, -DONORDATA[index].tarAmt, -DONORDATA[index].spreadAmt);
-      // Apply new
-      applySpread(goals, data.target, data.tarAmt, data.spreadAmt);
-
-    } else { // Otherwise calculate the difference and update
-      // Get Diff
-      let diffTarget = data.tarAmt - DONORDATA[index].tarAmt;
-      let diffSpread = data.spreadAmt - DONORDATA[index].spreadAmt;
-      // update Goals
-      applySpread(goals, data.target, diffTarget, diffSpread);
-      // update data
-      DONORDATA[index] = data;
-    }
+    // Update slot
+    APPDATA.INPUT.Item.Data[index] = data;
   }
-  // Redraw goals
-  updateGoalTextLayers();
+  updateDonations();
 };
 
 // Preload fonts into cache for quicker display
@@ -855,6 +871,26 @@ function RestoreFieldData() { // TODO: Create the HTML elements needed
     getElement(id + '-cropW').value = headshot.w || PLACEHOLDER.w;
     getElement(id + '-cropH').value = headshot.h || PLACEHOLDER.h;
   });
+  // Donation Data
+  APPDATA.INPUT.Item.Data.map(function(item, i) {
+    if (!isNullOrEmpty(item)) {
+      let html = `<label for="donor">Donor Name</label>
+    <input type="text" name="donor" value="${item.name}" onchange="updateDonor(${i})">
+    <label for="amt">Amount</label>
+    <input type="number" name="amt" min=0.00 step=0.05 value="${item.amt}" onchange="applyDonation(${i})">
+    <label for="target">Target</label>
+    <select name="target" onchange="applyDonation(${i})">
+          <option disabled value> -- select a goal -- </option>
+          <option ${(item.target ==1) ? "selected" : ""} value="1">Goal 1</option>
+          <option ${(item.target ==2) ? "selected" : ""} value="2">Goal 2</option>
+          <option ${(item.target ==3) ? "selected" : ""} value="3">Goal 3</option>
+          <option ${(item.target ==4) ? "selected" : ""} value="4">Goal 4</option>
+      </select>`;
+      let fieldset = document.createElement('fieldset');
+      fieldset.innerHTML = html;
+      getElement('donations').appendChild(fieldset);
+    }
+  });
 }
 
 // =========================
@@ -865,6 +901,7 @@ if (!isNullOrEmpty(localStorage.getItem(APPNAME))) {
   APPDATA = JSON.parse(localStorage.getItem(APPNAME));
   if (APPDATA.version == VERSION) {
     console.log("Restoring saved data...");
+    updateDonations();
     RedrawProgressBar();
     RedrawText();
     RedrawHeadshot();
@@ -878,6 +915,7 @@ if (!isNullOrEmpty(localStorage.getItem(APPNAME))) {
   }
 } else {
   console.log("No existing data found. Populating with placeholders...");
+  updateDonations();
   RedrawProgressBar();
   RedrawText();
   RedrawHeadshot();

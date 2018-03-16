@@ -172,24 +172,28 @@
                 <input type="text" id="goal-1" name="goal-1" value="Goal A">
                 <input type="number" id="goal-1-A" name="goal-1-A" value="0">
                 <input type="number" id="goal-1-B" name="goal-1-B" value="100">
+                <ol id="goal-1-donors"></ol>
               </fieldset>
               <fieldset class="text-editing">
                 <legend>Goal 2</legend>
                 <input type="text" id="goal-2" name="goal-2" value="Goal B">
                 <input type="number" id="goal-2-A" name="goal-2-A" value="499">
                 <input type="number" id="goal-2-B" name="goal-2-B" value="500">
+                <ol id="goal-2-donors"></ol>
               </fieldset>
               <fieldset class="text-editing">
                 <legend>Goal 3</legend>
                 <input type="text" id="goal-3" name="goal-3" value="Goal C">
                 <input type="number" id="goal-3-A" name="goal-3-A" value="30">
                 <input type="number" id="goal-3-B" name="goal-3-B" value="50">
+                <ol id="goal-3-donors"></ol>
               </fieldset>
               <fieldset class="text-editing">
                 <legend>Goal 4</legend>
                 <input type="text" id="goal-4" name="goal-4" value="Goal D">
                 <input type="number" id="goal-4-A" name="goal-4-A" value="10">
                 <input type="number" id="goal-4-B" name="goal-4-B" value="150">
+                <ol id="goal-4-donors"></ol>
               </fieldset>
             </div>
           </fieldset>
@@ -281,6 +285,7 @@
 
         <aside id="gapi">
           <h2>Donation Data</h2>
+          <p>Simulate the effect of adding a new donation.</p>
 
           <fieldset class="text-editing">
             <legend>Recent Donations</legend>
@@ -296,6 +301,7 @@
             </div>
             <div id="donations">
             </div>
+            <button id="resetDonations">Clear all Donations</button>
             <button id="donate">Add Donation Data</button>
           </fieldset>
 
