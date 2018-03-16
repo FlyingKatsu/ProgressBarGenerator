@@ -10,6 +10,7 @@ https://flyingkatsu.github.io/ProgressBarGenerator/
 
 ### Version 0.3.x
 
+- (0.3.6.1) Separate tab for headshot editing
 - (0.3.6) Donations can be cleared, saved, and restored. Goals get donation logs.
 - (0.3.6) Re-Add support for Simulated Donations which was broken somewhere around v0.3.4
 - (0.3.5) Title and goal text data now saved locally and restored on page load.

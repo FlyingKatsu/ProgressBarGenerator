@@ -46,7 +46,8 @@
     }
     
     #settings,
-    #gapi {
+    #gapi,
+    #headshot {
       display: none;
     }
     
@@ -106,11 +107,12 @@
       <div id="side-wrapper" class="right">
         <div>
           <button id="ShowData">Edit Goal Data</button>
-          <button id="ShowSettings">Edit Appearance</button>
+          <button id="ShowHead">Edit Headshots</button>
+          <button id="ShowSettings">Edit Style</button>
           <button id="ShowGAPI">Edit Donations</button>
         </div>
         <aside id="settings">
-          <h2>Appearance Settings</h2>
+          <h2>Appearance Style</h2>
 
           <fieldset>
             <legend>Title Settings</legend>
@@ -197,6 +199,10 @@
               </fieldset>
             </div>
           </fieldset>
+        </aside>
+
+        <aside id="headshot">
+          <h2>Headshot Data</h2>
 
           <fieldset class="img-uploads">
             <legend>Headshot 1</legend>

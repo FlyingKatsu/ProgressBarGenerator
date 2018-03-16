@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.6";
+const VERSION = "v0.3.6.1";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -630,16 +630,25 @@ function UpdateTitleData(i, path, type) {
 // Add Event Listeners
 
 getElement('ShowSettings').addEventListener("click", () => {
+  getElement('headshot').style.display = 'none';
   getElement('data').style.display = 'none';
   getElement('settings').style.display = 'block';
   getElement('gapi').style.display = 'none';
 });
 getElement('ShowData').addEventListener("click", () => {
+  getElement('headshot').style.display = 'none';
   getElement('data').style.display = 'block';
   getElement('settings').style.display = 'none';
   getElement('gapi').style.display = 'none';
 });
+getElement('ShowHead').addEventListener("click", () => {
+  getElement('headshot').style.display = 'block';
+  getElement('data').style.display = 'none';
+  getElement('settings').style.display = 'none';
+  getElement('gapi').style.display = 'none';
+});
 getElement('ShowGAPI').addEventListener("click", () => {
+  getElement('headshot').style.display = 'none';
   getElement('data').style.display = 'none';
   getElement('settings').style.display = 'none';
   getElement('gapi').style.display = 'block';
