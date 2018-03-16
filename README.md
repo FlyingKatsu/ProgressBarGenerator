@@ -10,6 +10,7 @@ https://flyingkatsu.github.io/ProgressBarGenerator/
 
 ### Version 0.3.x
 
+- (0.3.6.3) Fix support for Download button, which broke when we rearranged the UI.
 - (0.3.6.2) Fix typo that cast goal progress to string. If values look wrong on the graph, try deleting `ProgressBarGenerator-FK` from local storage.
 - (0.3.6.1) Separate tab for headshot editing
 - (0.3.6) Donations can be cleared, saved, and restored. Goals get donation logs.

@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.6.2";
+const VERSION = "v0.3.6.3";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -690,8 +690,9 @@ for (let i = 0; i < 2; i++) {
 // Download using APPDATA.INPUT filename
 getElement('download').addEventListener('click', function() {
   // Download file
+  const d = new Date();
   viewport.scene.download({
-    fileName: getElement('filename').value || 'genTipJarProgress.png'
+    fileName: `generated-${d.getTime()}.png`
   });
 });
 
