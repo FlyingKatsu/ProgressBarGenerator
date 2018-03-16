@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.6.1";
+const VERSION = "v0.3.6.2";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -678,8 +678,8 @@ for (let i = 0; i < 4; i++) {
 for (let i = 0; i < 4; i++) {
   let id = `goal-${(i + 1)}`;
   getElement(id).addEventListener("change", UpdateGoalData(i, "name", "string"), false);
-  getElement(`${id}-A`).addEventListener("change", UpdateGoalData(i, "progress.a", "string"), false);
-  getElement(`${id}-B`).addEventListener("change", UpdateGoalData(i, "progress.b", "string"), false);
+  getElement(`${id}-A`).addEventListener("change", UpdateGoalData(i, "progress.a", "num"), false);
+  getElement(`${id}-B`).addEventListener("change", UpdateGoalData(i, "progress.b", "num"), false);
 }
 
 for (let i = 0; i < 2; i++) {
