@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.4.2";
+const VERSION = "v0.3.5";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -158,9 +158,9 @@ APPDATA = {
     },
     Item: {
       Data: [
-        { name: "Person", amt: 10, target: 0 },
-        { name: "Someone", amt: 20, target: 0 },
-        { name: "Another", amt: 15, target: 0 }
+        // { name: "Person", amt: 10, target: 0 },
+        // { name: "Someone", amt: 20, target: 0 },
+        // { name: "Another", amt: 15, target: 0 }
       ],
       Style: {
         Position: { x: 0, y: 16 },
@@ -370,6 +370,7 @@ function RedrawText() {
       y: APPDATA.INPUT.Title.Data[1].y + APPDATA.INPUT.Title.Font.size + APPDATA.INPUT.Item.Style.Position.y + APPDATA.INPUT.Item.Font.y + (APPDATA.INPUT.Item.Font.size + APPDATA.INPUT.Item.Style.Space.y) * i
     });
   });
+  SaveData();
 }
 
 function RedrawProgressBar() {
@@ -423,6 +424,7 @@ function RedrawProgressBar() {
       percent: percent
     });
   });
+  SaveData();
 }
 
 function RedrawHeadshot() {
@@ -642,11 +644,16 @@ getElement('ShowGAPI').addEventListener("click", () => {
   getElement('gapi').style.display = 'block';
 });
 
+getElement('goal-W').addEventListener("change", UpdateProperty("Goal.Style.Size.w", "int"), false);
+getElement('goal-H').addEventListener("change", UpdateProperty("Goal.Style.Size.h", "int"), false);
+getElement('goal-X').addEventListener("change", UpdateProperty("Goal.Style.Position.x", "int"), false);
+getElement('goal-Y').addEventListener("change", UpdateProperty("Goal.Style.Position.y", "int"), false);
+getElement('spacing').addEventListener("change", UpdateProperty("Goal.Style.Space.y", "int"), false);
+
 getElement('upload-W').addEventListener("change", UpdateProperty("Headshot.Style.Size.w", "int"), false);
 getElement('upload-H').addEventListener("change", UpdateProperty("Headshot.Style.Size.h", "int"), false);
 getElement('upload-X').addEventListener("change", UpdateProperty("Headshot.Style.Position.x", "int"), false);
 getElement('upload-Y').addEventListener("change", UpdateProperty("Headshot.Style.Position.y", "int"), false);
-getElement('spacing').addEventListener("change", UpdateProperty("Goal.Style.Space.y", "int"), false);
 
 for (let i = 0; i < 4; i++) {
   let id = `upload-${(i + 1)}`;
@@ -813,8 +820,12 @@ testFonts('//ABCDEFGHIJK\nLMNOPQRSTUVWXYZ\n!@#$%^*()[]', '32px Open Sans Extra B
 LAYERS.text.scene.clear();
 
 function RestoreFieldData() { // TODO: Create the HTML elements needed
-  // Text Settings TODO
-
+  // Text Settings TODO Add Font things
+  getElement('goal-W').value = APPDATA.INPUT.Goal.Style.Size.w;
+  getElement('goal-H').value = APPDATA.INPUT.Goal.Style.Size.h;
+  getElement('goal-X').value = APPDATA.INPUT.Goal.Style.Position.x;
+  getElement('goal-Y').value = APPDATA.INPUT.Goal.Style.Position.y;
+  getElement('spacing').value = APPDATA.INPUT.Goal.Style.Space.y;
   // Text Data
   APPDATA.INPUT.Title.Data.map(function(title, i) {
     let id = `title-${(i + 1)}`;
@@ -833,7 +844,6 @@ function RestoreFieldData() { // TODO: Create the HTML elements needed
   getElement('upload-H').value = APPDATA.INPUT.Headshot.Style.Size.h;
   getElement('upload-X').value = APPDATA.INPUT.Headshot.Style.Position.x;
   getElement('upload-Y').value = APPDATA.INPUT.Headshot.Style.Position.y;
-  getElement('spacing').value = APPDATA.INPUT.Goal.Style.Space.y;
   // Image Data
   APPDATA.INPUT.Headshot.Data.map(function(headshot, i) {
     if (isNullOrEmpty(headshot)) headshot = PLACEHOLDER;
