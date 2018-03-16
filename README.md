@@ -10,6 +10,11 @@ https://flyingkatsu.github.io/ProgressBarGenerator/
 
 ### Version 0.3.x
 
+- COMING SOON: Google API support to pull latest data from a Google Sheet
+- COMING SOON: Masked/Clipped Headshots for fancy shapes and borders
+- COMING SOON: The winning contributor's name will no longer be overwritten if additional donations are applied
+- COMING SOON: Progress bar graphic will loop indefinitely, instead of running off the canvas after being 200% complete.
+- (0.3.6.4) Named donations that fill up a goal will now only appear if a donation was simulated. Otherwise it remains `Value / Value`.
 - (0.3.6.3) Fix support for Download button, which broke when we rearranged the UI.
 - (0.3.6.2) Fix typo that cast goal progress to string. If values look wrong on the graph, try deleting `ProgressBarGenerator-FK` from local storage.
 - (0.3.6.1) Separate tab for headshot editing

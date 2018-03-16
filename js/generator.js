@@ -21,7 +21,7 @@ function isNullOrEmpty(obj) {
 }
 
 // VERSIONING
-const VERSION = "v0.3.6.3";
+const VERSION = "v0.3.6.4";
 getElement('bodytitle').innerText = `ProgressBarGenerator ${VERSION}`;
 getElement('headtitle').innerText = `ProgressBarGenerator ${VERSION} | FlyingKatsu`;
 
@@ -321,10 +321,10 @@ function RedrawText() {
     let font = APPDATA.INPUT.Goal.Font.Progress;
     if (progress > 1) {
       font = APPDATA.INPUT.Goal.Font.Overflow;
-      progressTxt = `MAXED OUT by ${lastname} +${-round(remainder,2)}`;
+      progressTxt = (lastname.length > 0) ? `MAXED OUT by ${lastname} +${-round(remainder,2)}` : `${sum} / ${goal.progress.b}`;
     } else if (progress == 1) {
       font = APPDATA.INPUT.Goal.Font.Overflow;
-      progressTxt = `${lastname} filled 100%`;
+      progressTxt = (lastname.length > 0) ? `${lastname} filled 100%` : `${sum} / ${goal.progress.b}`;
     } else {
       font = APPDATA.INPUT.Goal.Font.Progress;
       progressTxt = `${sum} / ${goal.progress.b}`;
